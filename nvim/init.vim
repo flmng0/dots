@@ -1,12 +1,15 @@
 call plug#begin("~/.local/share/nvim/plugged")
 	" Autocompletion
 	Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-	
-	" Rust compatibility
-	Plug 'rust-lang/rust.vim'
+
+	" Ctags support
+	Plug 'majutsushi/tagbar'
 
 	" Syntax highlighting and linting
 	Plug 'vim-syntastic/syntastic'
+	
+	" Rust compatibility
+	Plug 'rust-lang/rust.vim'
 call plug#end()
 
 " Extension settings
@@ -28,13 +31,17 @@ augroup numbertoggle
 	autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 augroup END
 
-"" Unmap arrow keys.
-" Normal mode.
+"" Normal mode.
+" Unmap arrow keys.
 nnoremap <up> <nop>
 nnoremap <down> <nop>
 nnoremap <left> <nop>
 nnoremap <right> <nop>
 
+" Use semicolon for colon.
+nnoremap ; :
+
+"" Insert mode.
 " Leave insert mode with 'jk'.
 inoremap jk <ESC>
 

@@ -11,3 +11,9 @@ autoload -U promptinit; promptinit
 
 zstyle :prompt:pure:path color 014
 prompt pure
+
+alias py=python3
+
+export PATH=$HOME/bin:$PATH
+export RUSTC_WRAPPER=sccache
+

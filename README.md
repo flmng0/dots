@@ -1,5 +1,5 @@
 # dots
-flmng0's personal OSX dotfiles.
+Timothy Davis' personal OSX dotfiles.
 
 # Specifications:
 - Operating System: [MacOS](https://apple.com/macos)

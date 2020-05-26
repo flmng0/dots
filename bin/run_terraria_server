@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 server_path="$TERRARIA_SERVER_DIR"
 

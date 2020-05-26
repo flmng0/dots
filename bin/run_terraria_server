@@ -1,0 +1,14 @@
+#!/bin/bash
+
+server_path="$TERRARIA_SERVER_DIR"
+
+if [ -z $server_path ]
+then
+	echo "No TERRARIA_SERVER_DIR defined in environment"
+
+	server_path="$HOME/Library/Application Support/Steam/steamapps/common/Terraria/Terraria.app/Contents/MacOS"
+	echo "Using deafult server path: $server_path"
+fi
+
+"$server_path"/TerrariaServer.bin.osx
+

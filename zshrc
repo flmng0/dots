@@ -14,6 +14,6 @@ prompt pure
 
 alias py=python3
 
-export PATH=$HOME/bin:$PATH
+export PATH=$HOME/dots/bin:$PATH
 export RUSTC_WRAPPER=sccache
 

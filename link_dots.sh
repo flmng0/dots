@@ -1,12 +1,8 @@
 #!/bin/zsh
 
-# Configs that have individual files need to have their
-# appropriate directories created, before the configs
-# can be linked.
-#
-# So this routine to create configuration directories and
-# link the respective files.
-link_config_file() {
+# Configurations need to have their parent directories
+# created before they can be symlinked.
+link_config() {
     src="$1"
     dst="$2"
 
@@ -17,5 +13,4 @@ link_config_file() {
 link_config "$PWD/alacritty.yml" "$HOME/.config/alacritty/alacritty.yml"
 link_config "$PWD/zshrc" "$HOME/.zshrc"
 
-# Directories can be linked directly as they are simple.
-ln -s "$PWD/nvim" "$HOME/.config/nvim"
+link_config "$PWD/nvim" "$HOME/.config/nvim"

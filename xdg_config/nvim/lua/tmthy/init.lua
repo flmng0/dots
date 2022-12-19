@@ -8,4 +8,4 @@ require('tmthy.keys')
 require('tmthy.lsp')
 require('tmthy.completion')
 
-
+require('tmthy.autocmds')

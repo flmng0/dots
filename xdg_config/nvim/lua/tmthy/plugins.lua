@@ -28,13 +28,13 @@ packer.init {
 
 return packer.startup(function(use)
     -- packer can manage itself
-    use { 'wbthomason/packer.nvim' }
+    use 'wbthomason/packer.nvim'
 
     -- color scheme
     use {
         'folke/tokyonight.nvim',
         config = function()
-            vim.cmd [[colorscheme tokyonight-moon]]
+            vim.cmd [[colorscheme tokyonight]]
         end
     }
 
@@ -44,7 +44,8 @@ return packer.startup(function(use)
         branch = '0.1.x',
         requires = {
             { 'nvim-lua/plenary.nvim' }
-        }
+        },
+        config = require('tmthy.config.telescope')
     }
 
     -- file tree.. just in case
@@ -84,6 +85,7 @@ return packer.startup(function(use)
     -- better prompt line
     use {
         'nvim-lualine/lualine.nvim',
+        config = require('tmthy.config.lualine')
     }
 
     -- treesitter!!!
@@ -94,6 +96,7 @@ return packer.startup(function(use)
                 with_sync = true
             }
         end,
+        config = require('tmthy.config.treesitter')
     }
 
     use {

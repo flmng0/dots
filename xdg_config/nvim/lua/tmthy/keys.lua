@@ -1,9 +1,9 @@
--- Key mappings that don't require plugins 
+-- Key mappings that don't require plugins
 
 local map = vim.keymap.set
 local api = vim.api
 
-map({'n','v'}, '<Space>', '<Nop>', { silent = true })
+map({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 map('n', '<leader>q', function() api.nvim_buf_delete() end)
 
@@ -13,6 +13,11 @@ map('i', 'jk', '<Esc>')
 -- Key mappings that do require plugins
 
 local ts = require('telescope.builtin')
+local tree = require('nvim-tree.api').tree
+
+map('n', '<leader>fn', tree.open, { desc = "Open File Tree" })
+map('n', '<leader>ff', tree.focus, { desc = "Open and Focus File Tree" })
+map('n', '<leader>fd', tree.close, { desc = 'Close File Tree' })
 
 -- "s" for search, e.g. "sf" => "search files"
 map('n', '<leader>sf', ts.find_files)
@@ -25,7 +30,7 @@ map('n', '<leader>s\'', ts.registers)
 map('n', '<leader>sh', ts.help_tags)
 
 -- LSP keybinds are only for buffers where a language-server has loaded
-local on_attach = function(client, bufnr)
+local on_attach = function(_, bufnr)
     local nmap = function(keys, func, desc)
         map('n', keys, func, { buffer = bufnr, desc = desc, remap = false })
     end
@@ -33,6 +38,17 @@ local on_attach = function(client, bufnr)
     -- Source [a]ctions
     nmap('<leader>ar', vim.lsp.buf.rename, 'LSP: Rename Symbol')
     nmap('<leader>av', vim.lsp.buf.code_action, 'LSP: View Code Actions')
+    nmap(
+        '<leader>af',
+        function()
+            if vim.lsp.buf.format then
+                vim.lsp.buf.format()
+            elseif vim.lsp.buf.formatting then
+                vim.lsp.buf.formatting()
+            end
+        end,
+        'LSP: Format Current Buffer'
+    )
 
     -- [g]oto commands
     nmap('<leader>gd', vim.lsp.buf.definition, 'LSP: Goto Definition')

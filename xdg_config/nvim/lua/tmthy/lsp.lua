@@ -25,4 +25,30 @@ for _, lsp in ipairs(servers) do
     }
 end
 
+-- Setup vim lua stuff
+local rtp = vim.split(package.path, ';')
+table.insert(rtp, 'lua/?.lua')
+table.insert(rtp, 'lua/?/init.lua')
+
+lspconfig.sumneko_lua.setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    settings = {
+        Lua = {
+            runtime = {
+                version = 'LuaJIT',
+                path = rtp
+            },
+            diagnostics = {
+                globals = { 'vim' }
+            },
+            workspace = {
+                library = vim.api.nvim_get_runtime_file('', true),
+                checkThirdParty = false
+            },
+            telementry = { enable = false }
+        }
+    }
+}
+
 require('fidget').setup()

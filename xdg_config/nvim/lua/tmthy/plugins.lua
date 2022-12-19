@@ -1,25 +1,37 @@
 local fn = vim.fn
 
 local source_repo = 'wbthomason/packer.nvim'
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-local source = 'https://github.com/'..source_repo
+local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+local source = 'https://github.com/' .. source_repo
 
 local was_bootstrap = false
 
 if fn.empty(fn.glob(install_path)) > 0 then
     was_bootstrap = true
-    fn.system({'git', 'clone', '--depth', '1', source, install_path})
+    fn.system({ 'git', 'clone', '--depth', '1', source, install_path })
     vim.cmd [[packadd packer.nvim]]
 end
 
 local packer = require('packer')
 
-return packer.startup(function(use)
-	-- packer can manage itself
-	use 'wbthomason/packer.nvim'
+packer.init {
+    display = {
+        open_fn = function()
+            return require('packer.util').float { border = 'rounded' }
+        end
+    },
+    git = {
+        clone_timeout = 300
+    }
+}
 
-	-- color scheme
-	use {
+
+return packer.startup(function(use)
+    -- packer can manage itself
+    use 'wbthomason/packer.nvim'
+
+    -- color scheme
+    use {
         'folke/tokyonight.nvim',
         config = function()
             vim.cmd [[colorscheme tokyonight]]
@@ -31,12 +43,37 @@ return packer.startup(function(use)
         'nvim-telescope/telescope.nvim',
         branch = '0.1.x',
         requires = {
-            {'nvim-lua/plenary.nvim'}
-        }
+            { 'nvim-lua/plenary.nvim' }
+        },
+        config = require('tmthy.config.telescope')
     }
 
-	-- surround keybinds
-	use { 'kylechui/nvim-surround', tag = '*' }
+    -- file tree.. just in case
+    use {
+        'nvim-tree/nvim-tree.lua',
+        requires = { 'nvim-tree/nvim-web-devicons' },
+        tag = 'nightly',
+        config = function()
+            require('nvim-tree').setup()
+        end
+    }
+
+    -- comment toggling
+    use {
+        'numToStr/Comment.nvim',
+        config = function()
+            require('Comment').setup()
+        end
+    }
+
+    -- surround keybinds
+    use {
+        'kylechui/nvim-surround',
+        tag = '*',
+        config = function()
+            require('nvim-surround').setup()
+        end
+    }
 
     -- buffer line (pseudo-tabs)
     use {
@@ -45,13 +82,23 @@ return packer.startup(function(use)
         requires = { 'nvim-tree/nvim-web-devicons' }
     }
 
+    -- better prompt line
+    use {
+        'nvim-lualine/lualine.nvim',
+        config = require('tmthy.config.lualine')
+    }
+
     -- treesitter!!!
     use {
         'nvim-treesitter/nvim-treesitter',
         run = function()
-            pcall(require('nvim-treesitter.install').update, {with_sync = true})
-        end
+            require('nvim-treesitter.install').update {
+                with_sync = true
+            }
+        end,
+        config = require('tmthy.config.treesitter')
     }
+
     use {
         'nvim-treesitter/nvim-treesitter-textobjects',
         after = 'nvim-treesitter'
@@ -61,10 +108,10 @@ return packer.startup(function(use)
     use {
         'neovim/nvim-lspconfig',
         requires = {
-			{'williamboman/mason.nvim'},
-			{'williamboman/mason-lspconfig.nvim'},
+            { 'williamboman/mason.nvim' },
+            { 'williamboman/mason-lspconfig.nvim' },
 
-            {'j-hui/fidget.nvim'}
+            { 'j-hui/fidget.nvim' }
         }
     }
 
@@ -72,12 +119,12 @@ return packer.startup(function(use)
     use {
         'hrsh7th/nvim-cmp',
         requires = {
-            {'hrsh7th/cmp-nvim-lsp'},
-            {'hrsh7th/cmp-buffer'},
+            { 'hrsh7th/cmp-nvim-lsp' },
+            { 'hrsh7th/cmp-buffer' },
 
             -- snippet engine
-			{'L3MON4D3/LuaSnip'},
-            {'saadparwaiz1/cmp_luasnip'},
+            { 'L3MON4D3/LuaSnip' },
+            { 'saadparwaiz1/cmp_luasnip' },
 
             -- for devicons as kind
             { 'nvim-tree/nvim-web-devicons' },
@@ -85,9 +132,8 @@ return packer.startup(function(use)
         }
     }
 
-	-- sync if first launch
-	if was_bootstrap then
-		packer.sync()
-	end
+    -- sync if first launch
+    if was_bootstrap then
+        packer.sync()
+    end
 end)
-

@@ -22,3 +22,9 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = 'yes'
 
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
+
+vim.opt.mouse = 'a'
+
+vim.g.loaded_netrw = true
+vim.g.loaded_netrwPlugin = true
+

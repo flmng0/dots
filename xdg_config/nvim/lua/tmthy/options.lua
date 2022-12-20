@@ -23,7 +23,7 @@ vim.opt.scrolloff = 8
 
 vim.opt.signcolumn = 'yes'
 
-vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
+vim.opt.completeopt = { 'menu', 'menuone', 'preview' }
 
 vim.opt.mouse = 'a'
 

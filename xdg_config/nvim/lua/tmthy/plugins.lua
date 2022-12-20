@@ -57,7 +57,8 @@ return packer.startup(function(use)
     use {
         'nvim-tree/nvim-tree.lua',
         requires = { 'nvim-tree/nvim-web-devicons' },
-        tag = 'nightly',
+        -- Will wait for #1841 to be merged to nightly to un-comment
+        -- tag = 'nightly',
     }
 
     -- comment toggling

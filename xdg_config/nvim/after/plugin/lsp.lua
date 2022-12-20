@@ -32,14 +32,19 @@ local on_attach = function(_, bufnr)
     nmap('<leader>ss', ts.lsp_document_symbols, 'LSP: View Document Symbols')
 end
 
-require('mason').setup()
+require('mason').setup {
+    ui = {
+        border = "rounded",
+    }
+}
 
 local servers = {
     'clangd',
     'rust_analyzer',
     'tsserver',
     'sumneko_lua',
-    'gopls'
+    'gopls',
+    'svelte',
 }
 
 require('mason-lspconfig').setup {

@@ -13,6 +13,7 @@ map('n', '<leader>fd', tree.close, { desc = 'Close File Tree' })
 map('n', '<leader>sf', ts.find_files)
 map('n', '<leader>sg', ts.git_files)
 map('n', '<leader>sr', ts.oldfiles)
+map('n', '<leader>sk', ts.keymaps)
 
 map('n', '<leader>sd', ts.diagnostics)
 

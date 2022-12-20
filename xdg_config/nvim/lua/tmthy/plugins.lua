@@ -31,10 +31,16 @@ return packer.startup(function(use)
     use 'wbthomason/packer.nvim'
 
     -- color scheme
+    -- use {
+    --     'folke/tokyonight.nvim',
+    --     config = function()
+    --         vim.cmd [[colorscheme tokyonight]]
+    --     end
+    -- }
     use {
-        'folke/tokyonight.nvim',
+        'navarasu/onedark.nvim',
         config = function()
-            vim.cmd [[colorscheme tokyonight]]
+            vim.cmd [[colorscheme onedark]]
         end
     }
 
@@ -44,8 +50,7 @@ return packer.startup(function(use)
         branch = '0.1.x',
         requires = {
             { 'nvim-lua/plenary.nvim' }
-        },
-        config = require('tmthy.config.telescope')
+        }
     }
 
     -- file tree.. just in case
@@ -53,9 +58,6 @@ return packer.startup(function(use)
         'nvim-tree/nvim-tree.lua',
         requires = { 'nvim-tree/nvim-web-devicons' },
         tag = 'nightly',
-        config = function()
-            require('nvim-tree').setup()
-        end
     }
 
     -- comment toggling
@@ -83,10 +85,10 @@ return packer.startup(function(use)
     }
 
     -- better prompt line
-    use {
-        'nvim-lualine/lualine.nvim',
-        config = require('tmthy.config.lualine')
-    }
+    use { 'nvim-lualine/lualine.nvim' }
+
+    -- better splits
+    use { 'mrjones2014/smart-splits.nvim' }
 
     -- treesitter!!!
     use {
@@ -95,8 +97,7 @@ return packer.startup(function(use)
             require('nvim-treesitter.install').update {
                 with_sync = true
             }
-        end,
-        config = require('tmthy.config.treesitter')
+        end
     }
 
     use {

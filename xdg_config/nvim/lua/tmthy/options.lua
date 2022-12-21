@@ -1,5 +1,7 @@
 vim.opt.guicursor = "i:ver100"
 
+vim.opt.background = 'dark'
+
 vim.opt.number = true
 vim.opt.relativenumber = true
 

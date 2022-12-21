@@ -31,12 +31,6 @@ return packer.startup(function(use)
     use 'wbthomason/packer.nvim'
 
     -- color scheme
-    -- use {
-    --     'folke/tokyonight.nvim',
-    --     config = function()
-    --         vim.cmd [[colorscheme tokyonight]]
-    --     end
-    -- }
     use {
         'navarasu/onedark.nvim',
         config = function()

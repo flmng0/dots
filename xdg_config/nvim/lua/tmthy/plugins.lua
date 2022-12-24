@@ -26,7 +26,7 @@ packer.init {
 }
 
 
-return packer.startup(function(use)
+packer.startup(function(use)
     -- packer can manage itself
     use 'wbthomason/packer.nvim'
 
@@ -133,3 +133,5 @@ return packer.startup(function(use)
         packer.sync()
     end
 end)
+
+return was_bootstrap

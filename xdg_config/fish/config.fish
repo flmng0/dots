@@ -1,3 +1,4 @@
+
 if status is-interactive
     infocmp alacritty >/dev/null 2>/dev/null
     if test $status -eq 0
@@ -27,6 +28,20 @@ function fish_greeting
     echo
 end
 
+set -x XDG_CONFIG_HOME "$HOME/.config"
+
 fish_add_path -m ~/.local/bin
 fish_add_path ~/.cargo/bin
 fish_add_path /usr/local/go/bin
+
+
+function remove_windows_paths
+    for p in $PATH
+        if not string match -q -- '/mnt/c/*' $p
+            set new_path $new_path $p
+        end
+    end
+
+    set -x PATH $new_path
+end
+

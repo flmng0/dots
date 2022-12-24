@@ -1,3 +1,26 @@
+-- vim.opt.formatoptions = {
+--     't',
+--     'c',
+--     -- 'r',
+--     -- 'o',
+--     -- '/',
+--     'q',
+--     -- 'w',
+--     -- 'a',
+--     -- 'n',
+--     -- '2',
+--     -- 'v',
+--     -- 'b',
+--     -- 'l',
+--     -- 'm',
+--     -- 'M',
+--     -- 'B',
+--     -- '1',
+--     -- ']',
+--     'j',
+--     -- 'p',
+-- }
+
 vim.opt.guicursor = "i:ver100"
 
 vim.opt.background = 'dark'
@@ -25,7 +48,7 @@ vim.opt.scrolloff = 8
 
 vim.opt.signcolumn = 'yes'
 
-vim.opt.completeopt = { 'menu', 'menuone', 'preview' }
+vim.opt.completeopt = { 'menu', 'menuone', 'preview', 'noselect' }
 
 vim.opt.mouse = 'a'
 

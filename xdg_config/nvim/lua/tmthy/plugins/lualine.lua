@@ -6,10 +6,9 @@ function M.config()
     require('lualine').setup {
         options = {
             icons_enabled = true,
-            theme = 'onedark',
+            theme = 'auto',
             component_separators = '|',
             sections_separators = '',
-            disabled_filetypes = { 'NvimTree' },
         },
     }
 end

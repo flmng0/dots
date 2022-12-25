@@ -17,8 +17,8 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 require('lazy').setup('tmthy.plugins', {
-    ui = {
-        border = "rounded",
+    change_detection = {
+        enabled = false,
     },
     install = {
         colorscheme = { 'onedark', 'habamax' },

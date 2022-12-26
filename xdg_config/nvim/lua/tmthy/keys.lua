@@ -12,5 +12,5 @@ nmap('<leader>q', function()
 end, 'Close Current Buffer')
 
 local bufferline = require('bufferline')
-nmap('<C-PageDown>', function() bufferline.cycle(1) end, 'Open Next Buffer')
-nmap('<C-PageUp>', function() bufferline.cycle(-1) end, 'Open Previous Buffer')
+nmap('<C-]>', function() bufferline.cycle(1) end, 'Open Next Buffer')
+nmap('<C-[>', function() bufferline.cycle(-1) end, 'Open Previous Buffer')

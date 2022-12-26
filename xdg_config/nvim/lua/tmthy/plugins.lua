@@ -5,4 +5,5 @@ return {
         'nvim-treesitter/nvim-treesitter-textobjects',
         dependencies = { 'nvim-treesitter' }
     },
+    { 'akinsho/toggleterm.nvim', version = '*', config = true },
 }

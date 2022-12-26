@@ -4,9 +4,9 @@ local M = {
     dependencies = {
         'nvim-lua/plenary.nvim',
         {
-            'nvim-telescope/telescope-file-browser.nvim',
-            lazy = false,
-        }
+            'nvim-telescope/telescope-fzf-native.nvim',
+            build = 'make',
+        },
     },
 }
 
@@ -27,8 +27,9 @@ function M.config()
                     ['q'] = actions.close,
                 },
             },
-            layout_strategy = 'horizontal',
             sorting_strategy = 'ascending',
+            scroll_strategy = 'limit',
+            layout_strategy = 'horizontal',
             layout_config = {
                 horizontal = {
                     prompt_position = 'top',
@@ -43,14 +44,9 @@ function M.config()
                 preview_cutoff = 120,
             },
         },
-        extensions = {
-            file_browser = {
-                hijack_netrw = true,
-            },
-        },
     }
 
-    telescope.load_extension "file_browser"
+    telescope.load_extension 'fzf'
 end
 
 function M.init()
@@ -58,20 +54,7 @@ function M.init()
     local ts = require('telescope.builtin')
 
     -- "s" for search, e.g. "sf" => "search files"
-    nmap('<leader><space>', function()
-        if vim.loop.fs_stat(".git") then
-            ts.git_files()
-        else
-            local opts = {}
-            local client = vim.lsp.get_active_clients()[1]
-
-            if client then
-                opts.cwd = client.config.root_dir
-            end
-
-            ts.find_files(opts)
-        end
-    end, "Search Files")
+    nmap('<leader><space>', ts.find_files, "Search Files")
 
     nmap('<leader>sg', ts.git_files, "Search Git Files")
     nmap('<leader>sr', ts.oldfiles, "Search Recent Files")
@@ -83,11 +66,6 @@ function M.init()
     nmap('<leader>sh', ts.help_tags, "Search Help Tags")
 
     nmap('<leader>sb', ts.buffers, "Search Active Buffers")
-
-    local file_browser = require('telescope').extensions.file_browser
-
-    nmap('<leader>ff', function() file_browser.file_browser { files = true } end, 'Open File Browser')
-    nmap('<leader>fb', function() file_browser.file_browser { files = false } end, 'Open Folder Browser')
 end
 
 return M

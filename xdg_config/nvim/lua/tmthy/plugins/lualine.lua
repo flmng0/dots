@@ -9,6 +9,9 @@ function M.config()
             theme = 'auto',
             component_separators = '|',
             sections_separators = '',
+            disabled_filetypes = {
+                'NvimTree',
+            },
         },
     }
 end

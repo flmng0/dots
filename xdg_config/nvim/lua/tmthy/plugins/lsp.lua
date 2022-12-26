@@ -4,7 +4,7 @@ local M = {
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
 
-        'j-hui/fidget.nvim'
+        'j-hui/fidget.nvim',
     },
 }
 

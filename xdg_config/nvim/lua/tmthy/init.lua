@@ -21,7 +21,7 @@ require('lazy').setup('tmthy.plugins', {
         enabled = false,
     },
     install = {
-        colorscheme = { 'onedark', 'habamax' },
+        colorscheme = { 'tokyonight', 'habamax' },
     },
 })
 

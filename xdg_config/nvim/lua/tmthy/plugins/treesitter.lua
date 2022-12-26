@@ -9,7 +9,7 @@ local M = {
 
 function M.config()
     require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'go', 'rust', 'typescript', 'help', 'vim', 'lua' },
+        ensure_installed = { 'go', 'rust', 'typescript', 'help', 'vim', 'lua', 'svelte' },
 
         highlight = { enable = true },
         indent = { enable = true },

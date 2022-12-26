@@ -14,6 +14,16 @@ function M.config()
             show_tab_indicators = false,
             show_close_icon = false,
             always_show_bufferline = false,
+            offsets = {
+                filetype = 'NvimTree',
+                text = function()
+                    local cwd = vim.fn.getcwd()
+                    local home = vim.fn.expand("$HOME")
+
+                    return cwd:gsub(home, "~")
+                end,
+                text_align = 'left',
+            },
         }
     }
 end

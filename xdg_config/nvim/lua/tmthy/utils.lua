@@ -1,8 +1,13 @@
 local M = {}
 
-M.map = vim.keymap.set
-function M.nmap(keys, func, desc)
-    M.map('n', keys, func, { desc = desc })
+function M.map(modes, keys, func, desc)
+    vim.keymap.set(modes, keys, func, { desc = desc })
+end
+
+for _, mode in ipairs({ 'i', 'v', 'n' }) do
+    M[mode .. 'map'] = function(keys, func, desc)
+        vim.keymap.set(mode, keys, func, { desc = desc })
+    end
 end
 
 function M.has_words_before()

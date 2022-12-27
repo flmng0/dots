@@ -5,10 +5,11 @@ local M = {
 
 function M.config()
     require('toggleterm').setup {
-        open_mapping = '<Leader>t',
+        open_mapping = [[<A-Space>]],
         direction = 'float',
+        shading_factor = '2',
         float_opts = {
-            winblend = 0,
+            winblend = 3,
         },
     }
 end

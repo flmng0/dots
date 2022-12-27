@@ -9,7 +9,7 @@ local M = {
 function M.config()
     require('nvim-tree').setup {
         diagnostics = {
-            enabled = true,
+            enable = true,
         },
         view = {
             adaptive_size = true,

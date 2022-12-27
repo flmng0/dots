@@ -15,12 +15,15 @@ function M.init()
         vim.keymap.set('n', keys, func, { desc = desc })
     end
 
-    nmap('<leader>r', splits.start_resize_mode, "Start Resize Mode")
+    nmap('<A-h>', splits.resize_left, 'Resize Window Left')
+    nmap('<A-j>', splits.resize_down, 'Resize Window Below')
+    nmap('<A-k>', splits.resize_up, 'Resize Window Above')
+    nmap('<A-l>', splits.resize_right, 'Resize Window Right')
 
-    nmap('<C-h>', splits.move_cursor_left)
-    nmap('<C-j>', splits.move_cursor_down)
-    nmap('<C-k>', splits.move_cursor_up)
-    nmap('<C-l>', splits.move_cursor_right)
+    nmap('<C-h>', splits.move_cursor_left, 'Move To Window Left')
+    nmap('<C-j>', splits.move_cursor_down, 'Move To Window Below')
+    nmap('<C-k>', splits.move_cursor_up, 'Move To Window Above')
+    nmap('<C-l>', splits.move_cursor_right, 'Move To Window Right')
 end
 
 return M

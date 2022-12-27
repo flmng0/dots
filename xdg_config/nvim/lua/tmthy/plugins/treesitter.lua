@@ -9,7 +9,7 @@ local M = {
 
 function M.config()
     require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'go', 'rust', 'typescript', 'help', 'vim', 'lua', 'svelte' },
+        ensure_installed = { 'go', 'rust', 'javascript', 'typescript', 'help', 'vim', 'lua', 'svelte' },
 
         highlight = { enable = true },
         indent = { enable = true },
@@ -30,19 +30,23 @@ function M.config()
                 enable = true,
                 set_jumps = true,
                 goto_next_start = {
-                    [']m'] = '@function.outer',
+                    [']a'] = '@parameter.inner',
+                    [']f'] = '@function.outer',
                     [']]'] = '@class.outer',
                 },
                 goto_next_end = {
-                    [']M'] = '@function.outer',
+                    [']A'] = '@parameter.inner',
+                    [']F'] = '@function.outer',
                     [']['] = '@class.outer',
                 },
                 goto_previous_start = {
-                    ['[m'] = '@function.outer',
+                    ['[a'] = '@parameter.inner',
+                    ['[f'] = '@function.outer',
                     ['[['] = '@class.outer',
                 },
                 goto_previous_end = {
-                    ['[M'] = '@function.outer',
+                    ['[A'] = '@parameter.inner',
+                    ['[F'] = '@function.outer',
                     ['[]'] = '@class.outer',
                 },
             },

@@ -26,7 +26,13 @@ function M.init()
     local nmap = require('tmthy.utils').nmap
     local tree = require('nvim-tree.api').tree
 
-    nmap('\\', tree.toggle, 'Open File Tree')
+    nmap('\\', function()
+        if vim.bo.filetype ~= 'NvimTree' then
+            tree.focus()
+        else
+            tree.close()
+        end
+    end, 'Open File Tree')
 end
 
 return M

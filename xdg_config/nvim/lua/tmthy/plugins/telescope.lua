@@ -3,6 +3,7 @@ local M = {
     lazy = false,
     dependencies = {
         'nvim-lua/plenary.nvim',
+        'ThePrimeagen/refactoring.nvim',
         {
             'nvim-telescope/telescope-fzf-native.nvim',
             build = 'make',
@@ -13,6 +14,8 @@ local M = {
 function M.config()
     local actions = require('telescope.actions')
     local telescope = require('telescope')
+
+    require('refactoring').setup {}
 
     telescope.setup {
         defaults = {
@@ -47,25 +50,35 @@ function M.config()
     }
 
     telescope.load_extension 'fzf'
+    telescope.load_extension 'refactoring'
 end
 
 function M.init()
-    local nmap = require('tmthy.utils').nmap
+    local utils = require('tmthy.utils')
+    local nmap = utils.nmap
+    local vmap = utils.vmap
     local ts = require('telescope.builtin')
 
     -- "s" for search, e.g. "sf" => "search files"
-    nmap('<leader><space>', ts.find_files, "Search Files")
+    nmap('<leader><space>', ts.find_files, 'Search Files')
 
-    nmap('<leader>sg', ts.git_files, "Search Git Files")
-    nmap('<leader>sr', ts.oldfiles, "Search Recent Files")
-    nmap('<leader>sk', ts.keymaps, "Search Keymaps")
+    nmap('<leader>sg', ts.git_files, 'Search Git Files')
+    nmap('<leader>sp', ts.oldfiles, 'Search Previously Opened Files')
+    nmap('<leader>sk', ts.keymaps, 'Search Keymaps')
 
-    nmap('<leader>sd', ts.diagnostics, "Search Diagnostic Messages")
+    nmap('<leader>sd', ts.diagnostics, 'Search Diagnostic Messages')
 
-    nmap('<leader>s\'', ts.registers, "Search Registers")
-    nmap('<leader>sh', ts.help_tags, "Search Help Tags")
+    nmap('<leader>s\'', ts.registers, 'Search Registers')
+    nmap('<leader>sh', ts.help_tags, 'Search Help Tags')
 
-    nmap('<leader>sb', ts.buffers, "Search Active Buffers")
+    nmap('<leader>sb', ts.buffers, 'Search Active Buffers')
+
+    -- Reminder: done in a string so that it enters normal mode first
+    vmap(
+        '<leader>r',
+        [[<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>]],
+        'Search Available Refactors'
+    )
 end
 
 return M

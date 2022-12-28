@@ -1,6 +1,6 @@
 local M = {
     'nvim-telescope/telescope.nvim',
-    lazy = false,
+    cmd = 'Telescope',
     dependencies = {
         'nvim-lua/plenary.nvim',
         'ThePrimeagen/refactoring.nvim',
@@ -62,6 +62,7 @@ function M.init()
     -- "s" for search, e.g. "sf" => "search files"
     nmap('<leader><space>', ts.find_files, 'Search Files')
 
+    nmap('<leader>sl', ts.live_grep, 'Search With Live Grep')
     nmap('<leader>sg', ts.git_files, 'Search Git Files')
     nmap('<leader>sp', ts.oldfiles, 'Search Previously Opened Files')
     nmap('<leader>sk', ts.keymaps, 'Search Keymaps')

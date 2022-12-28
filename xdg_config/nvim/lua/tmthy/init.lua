@@ -1,32 +1,8 @@
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-vim.g.mapleader = ' '
-
+-- Vim options (vim.opt, etc.)
 require('tmthy.options')
 
--- Initialize Lazy.nvim
-local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-        'git',
-        'clone',
-        '--filter=blob:none',
-        '--single-branch',
-        'https://github.com/folke/lazy.nvim.git',
-        lazypath,
-    })
-end
-vim.opt.runtimepath:prepend(lazypath)
-
-require('lazy').setup('tmthy.plugins', {
-    change_detection = {
-        enabled = false,
-    },
-    install = {
-        colorscheme = { 'tokyonight', 'habamax' },
-    },
-})
-
-
+-- Key rebinds that don't fit into plugin setups
 require('tmthy.keys')
-require('tmthy.autocmds')
 
+-- AutoCmds...
+require('tmthy.autocmds')

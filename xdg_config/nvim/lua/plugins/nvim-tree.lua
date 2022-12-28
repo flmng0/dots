@@ -14,9 +14,20 @@ function M.config()
         view = {
             adaptive_size = true,
         },
+        renderer = {
+            group_empty = true,
+            full_name = true,
+            highlight_opened_files = "all",
+        },
         actions = {
             open_file = {
                 quit_on_open = true,
+            },
+            change_dir = {
+                global = true,
+            },
+            expand_all = {
+                exclude = { '.git', 'target', 'build', 'node_modules' },
             },
         },
     }

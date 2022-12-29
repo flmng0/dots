@@ -28,6 +28,8 @@ function M.config()
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-s>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.abort(),
+        ['<C-j>'] = cmp.mapping.select_next_item(),
+        ['<C-k>'] = cmp.mapping.select_prev_item(),
     }
 
     local mappings = {
@@ -75,6 +77,7 @@ function M.config()
                 return lspkind_format(entry, vim_item)
             end
         },
+        preselect = cmp.PreselectMode.Item,
         mapping = mappings,
         sources = {
             { name = 'nvim_lsp' },

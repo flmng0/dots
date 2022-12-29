@@ -1,32 +1,34 @@
--- vim.opt.formatoptions = {
---     't',
---     'c',
---     -- 'r',
---     -- 'o',
---     -- '/',
---     'q',
---     -- 'w',
---     -- 'a',
---     -- 'n',
---     -- '2',
---     -- 'v',
---     -- 'b',
---     -- 'l',
---     -- 'm',
---     -- 'M',
---     -- 'B',
---     -- '1',
---     -- ']',
---     'j',
---     -- 'p',
--- }
+vim.o.formatoptions = ''
+    .. 't'
+    .. 'c'
+    -- .. 'r'
+    -- .. 'o'
+    -- '/',
+    .. 'q'
+    -- .. 'w'
+    -- .. 'a'
+    -- .. 'n'
+    -- .. '2'
+    -- .. 'v'
+    -- .. 'b'
+    -- .. 'l'
+    -- .. 'm'
+    -- .. 'M'
+    -- .. 'B'
+    -- .. '1'
+    -- ']',
+    .. 'j'
+    -- .. 'p'
+
 
 vim.opt.guicursor = "i:ver100"
 
 vim.opt.background = 'dark'
+vim.opt.termguicolors = true
 
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.signcolumn = 'yes'
 
 vim.opt.cursorline = true
 
@@ -42,13 +44,9 @@ vim.opt.wrap = false
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
 
-vim.opt.termguicolors = true
-
 vim.opt.scrolloff = 8
 
-vim.opt.signcolumn = 'yes'
-
-vim.opt.completeopt = { 'menu', 'menuone', 'preview', 'noselect' }
+vim.opt.completeopt = { 'menu', 'menuone', 'preview', 'noinsert' }
 
 vim.opt.mouse = 'a'
 

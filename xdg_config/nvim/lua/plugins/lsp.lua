@@ -40,7 +40,8 @@ function M.config()
         nmap('<leader>gt', vim.lsp.buf.type_definition, 'LSP: Goto Type Definition')
 
         -- search document symbols
-        nmap('<leader>ss', ts.lsp_document_symbols, 'LSP: View Document Symbols')
+        nmap('<leader>ss', ts.lsp_document_symbols, 'LSP: Search Document Symbols')
+        nmap('<leader>sw', ts.lsp_workspace_symbols, 'LSP: Search Workspace Symbols')
     end
 
     require('mason').setup {

@@ -11,6 +11,7 @@ function M.config()
             sections_separators = '',
             disabled_filetypes = {
                 'NvimTree',
+                'alpha',
             },
         },
     }

@@ -9,7 +9,7 @@ local M = {
 function M.config()
     require('bufferline').setup {
         options = {
-            separator_style = 'slant',
+            separator_style = 'thick',
             diagnostics = 'nvim_lsp',
             show_tab_indicators = false,
             show_close_icon = false,
@@ -24,9 +24,8 @@ function M.config()
                 end,
                 text_align = 'left',
             },
-        }
+        },
     }
 end
 
 return M
-

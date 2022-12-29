@@ -64,7 +64,7 @@ function M.init()
 
     nmap('<leader>sl', ts.live_grep, 'Search With Live Grep')
     nmap('<leader>sg', ts.git_files, 'Search Git Files')
-    nmap('<leader>sp', ts.oldfiles, 'Search Previously Opened Files')
+    nmap('<leader>so', ts.oldfiles, 'Search Old Files')
     nmap('<leader>sk', ts.keymaps, 'Search Keymaps')
 
     nmap('<leader>sd', ts.diagnostics, 'Search Diagnostic Messages')

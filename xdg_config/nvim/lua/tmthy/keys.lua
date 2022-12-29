@@ -4,7 +4,6 @@ utils.vmap('J', [[:m '>+1<CR>gv=gv]], 'Move Selection Down')
 utils.vmap('K', [[:m '<-2<CR>gv=gv]], 'Move Selection Up')
 
 utils.imap('<C-Space>', '<Nop>')
-
 utils.imap('jk', '<Esc>', 'Exit Insert Mode')
 
 utils.nmap('<leader>q', function()

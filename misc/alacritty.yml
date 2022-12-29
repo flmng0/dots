@@ -12,11 +12,6 @@ font:
   normal:
     family: FiraCode Nerd Font
 
-window:
-  padding:
-    x: 8
-    y: 10
-
 working_directory: C:\Users\tmthy
 
 mouse_bindings:
@@ -30,7 +25,7 @@ key_bindings:
 # Taken from rebelot/kanagawa/extra/alacritty_kanagawa.yml
 colors:
   primary:
-    background: '0x1f1f88'
+    background: '0x1f1f28'
     foreground: '0xdcd7ba'
 
   normal:

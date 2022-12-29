@@ -44,11 +44,6 @@ function set_kanagawa
 end
 
 if status is-interactive
-    infocmp alacritty >/dev/null 2>/dev/null
-    if test $status -eq 0
-        set -x TERM "alacritty"
-    end
-
     # Commands to run in interactive sessions can go here
     if not functions -q fisher
         curl -sL https://git.io/fisher | source

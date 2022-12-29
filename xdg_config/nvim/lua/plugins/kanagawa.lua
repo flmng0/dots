@@ -1,22 +1,32 @@
 local M = {
     'rebelot/kanagawa.nvim',
     lazy = false,
-    pin = true,
+    priority = 1000,
 }
 
 function M.config()
-    local defaults = require('kanagawa.colors').setup()
-    local prompt = defaults.bg_light1
+    local colors = require('kanagawa.colors').setup()
+    local prompt = colors.bg_light1
 
     require('kanagawa').setup {
+        keywordStyle = { italic = false },
+
+        dimInactive = true,
+        terminalColors = false,
+
         overrides = {
+            ['@keyword.function'] = { 
+                fg = colors.kw,
+                italic = true
+            },
+
             TelescopeNormal = {
-                bg = defaults.bg_light0,
-                fg = defaults.fg_light0,
+                bg = colors.bg_light0,
+                fg = colors.fg_light0,
             },
             TelescopeBorder = {
-                bg = defaults.bg_light0,
-                fg = defaults.bg_light0,
+                bg = colors.bg_light0,
+                fg = colors.bg_light0,
             },
             TelescopePromptNormal = {
                 bg = prompt,
@@ -30,17 +40,17 @@ function M.config()
                 fg = prompt,
             },
             TelescopePreviewTitle = {
-                bg = defaults.bg_light0,
-                fg = defaults.bg_light0,
+                bg = colors.bg_light0,
+                fg = colors.bg_light0,
             },
             TelescopeResultsTitle = {
-                bg = defaults.bg_light0,
-                fg = defaults.bg_light0,
+                bg = colors.bg_light0,
+                fg = colors.bg_light0,
             },
         }
     }
 
-    vim.cmd [[colorscheme kanagawa]]
+    require('kanagawa').load()
 end
 
 return M

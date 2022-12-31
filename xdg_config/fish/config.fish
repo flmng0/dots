@@ -1,4 +1,11 @@
 
+# Ensure ssh-agent is set
+if test -z (pgrep ssh-agent)
+    eval (ssh-agent -c) > /dev/null
+    set -Ux SSH_AUTH_SOCK $SSH_AUTH_SOCK
+    set -Ux SSH_AGENT_PID $SSH_AGENT_PID
+end
+
 # Modified from rebelot/kanagawa.nvim/extras/kanagawa.fish
 function set_kanagawa
     # Kanagawa Fish shell theme

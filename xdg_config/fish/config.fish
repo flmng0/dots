@@ -107,6 +107,7 @@ set -x GOPATH "$XDG_DATA_HOME/go"
 fish_add_path -m ~/.local/bin
 fish_add_path ~/.cargo/bin
 fish_add_path /usr/local/go/bin
+fish_add_path $GOPATH/bin
 
 function remove_windows_paths
     for p in $PATH

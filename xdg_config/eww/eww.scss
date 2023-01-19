@@ -1,0 +1,13 @@
+// Colors from the Kanagawa NeoVim theme
+$bar-bg: #1F1F28;
+$bar-fg: #DCD7BA;
+
+.bar-main {
+    font-family: FiraCode Nerd Font, monospace;
+    font-size: 16px;
+}
+
+.bar > * {
+    background-color: rgba(#fff, 0.3);
+}
+

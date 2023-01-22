@@ -1,18 +1,2 @@
-(defpoll bspwm_desktops 
-  :interval "5s"
-  :initial_value `bspc query -T --monitor default` 
-  `bspc query -T --monitor default`)
-
-(defwidget bspwm_workspaces []
-  (box
-    :orientation "vertical"
-    (for workspace in "${bspwm_desktops == '' ? [] : bspwm_desktops.desktops}"
-      (workspace_label :workspace workspace))))
-    
-(defwidget workspace_label [workspace]
-  (label 
-    :class "workspace-label"
-    :text "${bspwm_desktops?.focusedDesktopId == workspace?.id ? 'Y' : 'N'}"))
-    
-    
-  
+(include './widgets/bar.yuck')
+(include './widgets/control.yuck')

@@ -1,0 +1,110 @@
+(defvar bar-width 32)
+
+(defwidget bar []
+  (box :class "bar-main" 
+       :orientation "vertical" 
+       :halign "center"
+       :space-evenly false
+    (bar-top)
+    (bar-bottom)))
+    
+   
+(defwidget bar-top []
+  (bar-section :class "bar-top" 
+               :valign "start"
+    (launcher)
+    (bspwm-workspaces)))
+
+(defwidget bar-bottom []
+  (bar-section :class "bar-bottom"
+               :valign "end"
+    (stats)
+    (datetime)))
+
+(defwidget bar-section [valign class]
+  (box :class "bar-section ${class}"
+       :valign valign
+       :halign 'start'
+       :width bar-width
+       :orientation "vertical"
+       :space-evenly false
+       :vexpand true
+    (children)))
+
+(defwidget icon [text ?size]
+  (label :class 'icon'
+         :style 'font-size: ${size ?: '1.7'}em'
+         :text text))
+  
+(defpoll date 
+  :interval "1s" 
+  :initial '{"month":"00","day":"00","hour":"00","minute":"00"}'
+  `date +'{"month":"%m","day":"%d","hour":"%H","minute":"%M"}'`)
+
+
+(defwidget datetime []
+  (box :class "vert-padding time"
+       :vexpand true
+       :orientation "vertical"
+       :space-evenly false
+    {date.hour}
+    {date.minute}))
+    
+(defwidget launcher []
+  (button :onclick `echo "Nope!"` ; TODO: Implement rofi launcher on this clicked
+    (label :text "" :height bar-width :xalign 0.45)))
+
+(defwidget stats []
+  (box :orientation 'vertical'
+    (network :strength network_strength)
+    (volume :level volume_level)
+    (battery)))
+
+(defpoll network_strength 
+  :interval '5s'
+  'scripts/network.fish')
+    
+(defpoll volume_level
+  :interval '1s'
+  'scripts/volume.fish')
+
+(defwidget network [strength]
+  (icon :text {strength == "" ? '󰣽' :
+               strength < 26 ? '󰣴' :
+               strength < 51 ? '󰣶' :
+               strength < 76 ? '󰣸' : '󰣺'}))
+
+(defwidget volume [level]
+  level) ; TODO: Make a ramp icon for volume. Use nf-md as the icon set
+
+(defwidget battery []
+  {EWW_BATTERY})
+
+; BSPWM Stuff {{{
+
+(defvar bspwm-focused-icon '')
+(defvar bspwm-unfocused-icon '')
+
+(deflisten bspwm-desktops
+  :initial "[]"
+  `scripts/workspaces.fish desktops`)
+
+(deflisten bspwm-focused
+  `scripts/workspaces.fish focused`)
+
+(defwidget bspwm-workspaces []
+    (box :class 'vert-padding'
+         :orientation 'vertical'
+      ; Hidden but necessary. If this is not present, the listener doesn't update.
+      (label :visible false :text bspwm-focused)
+      (for workspace in bspwm-desktops
+              (workspace-label :workspace workspace)))) 
+
+
+(defwidget workspace-label [workspace]
+  (button :class 'workspace-label'
+          :onclick 'bspc desktop --focus ${workspace}'
+    {workspace == bspwm-focused ? bspwm-focused-icon : bspwm-unfocused-icon}))
+
+; }}}
+    

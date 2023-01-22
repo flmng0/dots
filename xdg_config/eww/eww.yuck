@@ -1,44 +1,13 @@
 (include "./widgets.yuck")
 
-(defpoll date :interval "1s" 
-  `date +'{"month":"%m","day":"%d","hour":"%H","minute":"%M"}'`)
-
 (defwindow bar
   :monitor 0
   :geometry (geometry
               :x "0%"
               :y "0%"
-              :width "32px"
               :height "100%"
               :anchor "center left")
-  ; :stacking "fg"
-  ; :wm-ignore false
   :windowtype "dock"
-  :reserve (struts :distance "40px" :side "left")
-  (bar_layout))
- 
-(defwidget bar_layout []
-  (centerbox :class "bar-main" :orientation "vertical"
-    (bar_top)
-    (bar_mid)
-    (bar_bum)))
-   
-(defwidget bar_top []
-  (box :class "bar-top" 
-       :orientation "vertical"
-       :valign "start"
-       :hexpand false
-    ( bspwm_workspaces)))
-  
-(defwidget bar_mid []
-  (box :class "bar-mid"
-       :orientation "vertical"
-       :valign "center"
-    "M"))
-
-(defwidget bar_bum []
-  (box :class "bar-bum"
-       :orientation "vertical"
-       :valign "end"
-    "B"))
+  :reserve (struts :distance "72px" :side "left")
+  (bar))
 

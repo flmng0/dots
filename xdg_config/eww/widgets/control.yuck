@@ -1,0 +1,19 @@
+
+(defwidget powermenu []
+  (box :orientation 'horizontal'
+       :space-evenly false
+       :spacing 5
+    (powermenu-button :icon '󰐥' :action 'systemctl poweroff' :tooltip 'Power Off')
+    (powermenu-button :icon '󰜉' :action 'systemctl reboot' :tooltip 'Restart')
+    (powermenu-button :icon '󰤄' :action 'systemctl suspend' :tooltip 'Sleep')
+    (powermenu-button :icon '󰜗' :action 'systemctl hibernate' :tooltip 'Hibernate')
+    (powermenu-button :icon '󰍃' :action 'loginctl kill-session self' :tooltip 'Sign Out')))
+
+(defwidget powermenu-button [icon action tooltip]
+  (button :class 'bar-widget'
+          :onclick action
+          :width bar-width
+          :height bar-width
+          :tooltip tooltip
+    (icon :text icon)))
+  

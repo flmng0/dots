@@ -51,10 +51,8 @@ function set_kanagawa
 end
 
 if status is-interactive
-    # Commands to run in interactive sessions can go here
     if not functions -q fisher
-        curl -sL https://git.io/fisher | source
-        fisher install jorgebucaran/fisher
+        curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
     end
 
     # set_tokyonight

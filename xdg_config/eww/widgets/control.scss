@@ -1,0 +1,65 @@
+.control {
+    font-size: 16px;
+}
+
+.control-main {
+    background-color: $main-bg;
+    border-radius: .5em;
+    padding: .8em;
+}
+
+.control-widget {
+    border-radius: .5em;
+    padding: .5em .6em;
+    background-color: $widget-bg;
+}
+
+.powermenu-button {
+    padding: 0 .7em;
+    min-width: 2em;
+    background-color: #252535;
+}
+
+.greeting {
+    font-weight: bold;
+
+    .username {
+        color: #D27E99;
+        font-style: italic;
+    }
+
+    .date {
+        font-size: .9em;
+        color: #54546D;
+        font-weight: normal;
+    }
+}
+
+.quick-controls {
+    font-size: .9em;
+
+    .control-widget.active {
+        background-color: #363646;
+        font-weight: 600;
+    }
+
+    .control-widget:not(.active) label + label {
+        color: #54546D;
+    }
+
+    .control-widget:hover label + label {
+        text-decoration: underline;
+    }
+}
+
+scale trough {
+    border-radius: 1em;
+    background-color: #54546D;
+    min-height: .7em;
+
+    highlight {
+        background-color: currentColor;
+        border-radius: 1em;
+    }
+}
+

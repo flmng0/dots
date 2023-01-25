@@ -1,4 +1,4 @@
-(defvar bar-width 32)
+(defvar widget-width 32)
 
 (defwidget bar []
   (box :class "bar-main" 
@@ -18,14 +18,14 @@
 (defwidget bar-bottom []
   (bar-section :class "bar-bottom"
                :valign "end"
-    (stats)
-    (datetime)))
+    (status-icons)
+    (time)))
 
 (defwidget bar-section [valign class]
   (box :class "bar-section ${class}"
        :valign valign
        :halign 'start'
-       :width bar-width
+       :width widget-width
        :orientation "vertical"
        :space-evenly false
        :vexpand true
@@ -36,61 +36,29 @@
          :style 'font-size: ${size ?: '1.7'}em'
          :text text))
   
-(defpoll date 
-  :interval "1s" 
-  :initial '{"month":"00","day":"00","hour":"00","minute":"00"}'
-  `date +'{"month":"%m","day":"%d","hour":"%H","minute":"%M"}'`)
 
-
-(defwidget datetime []
+(defwidget time []
   (box :class "vert-padding time"
        :vexpand true
        :orientation "vertical"
        :space-evenly false
-    {date.hour}
-    {date.minute}))
+    {time.hour}
+    {time.minute}))
     
 (defwidget launcher []
   (button :onclick `echo "Nope!"` ; TODO: Implement rofi launcher on this clicked
-    (label :text "" :height bar-width :xalign 0.45)))
+    (label :text "" :height widget-width :xalign 0.45)))
 
-(defwidget stats []
-  (box :orientation 'vertical'
-    (network :strength network_strength)
-    (volume :level volume_level)
-    (battery)))
-
-(defpoll network_strength 
-  :interval '5s'
-  'scripts/network.fish')
+(defwidget status-icons []
+  (button :class 'stats'
+          :onclick '${EWW_CMD} open control --toggle'
+    (box :orientation 'vertical'
+      (network-icon)
+      (volume-icon)
+      (battery-icon :visible {EWW_BATTERY != ""}))))
     
-(defpoll volume_level
-  :interval '1s'
-  'scripts/volume.fish')
-
-(defwidget network [strength]
-  (icon :text {strength == "" ? '󰣽' :
-               strength < 26 ? '󰣴' :
-               strength < 51 ? '󰣶' :
-               strength < 76 ? '󰣸' : '󰣺'}))
-
-(defwidget volume [level]
-  level) ; TODO: Make a ramp icon for volume. Use nf-md as the icon set
-
-(defwidget battery []
-  {EWW_BATTERY})
 
 ; BSPWM Stuff {{{
-
-(defvar bspwm-focused-icon '')
-(defvar bspwm-unfocused-icon '')
-
-(deflisten bspwm-desktops
-  :initial "[]"
-  `scripts/workspaces.fish desktops`)
-
-(deflisten bspwm-focused
-  `scripts/workspaces.fish focused`)
 
 (defwidget bspwm-workspaces []
     (box :class 'vert-padding'
@@ -103,6 +71,7 @@
 
 (defwidget workspace-label [workspace]
   (button :class 'workspace-label'
+          :height widget-width
           :onclick 'bspc desktop --focus ${workspace}'
     {workspace == bspwm-focused ? bspwm-focused-icon : bspwm-unfocused-icon}))
 

@@ -1,19 +1,132 @@
+(defvar inline-spacing 8)
+
+(defwidget control []
+  (box :class 'control-main'
+       :orientation 'vertical'
+       :spacing 16
+       :space-evenly false
+    (greeting)
+    (sliders)
+    (quick-controls)
+    (powermenu)))
+
+(defwidget slider [min max value color ?visible ?onchange]
+  (box :class 'control-widget'
+       :orientation 'horizontal'
+       :hexpand true
+       :space-evenly false
+       :spacing 8
+    (children)
+    (scale :orientation 'horizontal'
+           :valign 'center'
+           :hexpand true
+           :style 'color: ${color}'
+           :min min
+           :max max
+           :value value
+           :visible {visible ?: true}
+           :onchange onchange
+           :active {onchange != ""})))
+
+(defwidget greeting []
+  (box :orientation 'vertical'
+       :class 'control-widget vert-padding greeting'
+    (box :halign 'center'
+         :space-evenly false
+      "Good ${time.hour < 12 ? 'Morning' : 'Afternoon'}, "
+      (label :class 'username' :text username))
+    (label :class 'date' :text date)))
+
+(defwidget sliders []
+  (box :class 'vert-padding'
+       :orientation 'vertical'
+       :space-evenly true
+       :spacing inline-spacing
+    (backlight-slider)
+    (volume-slider)
+    (battery-slider)))
+
+(defwidget backlight-slider []
+  (slider :color '#FF9E3B'
+          :min 0.0
+          :max 101.0
+          :value backlight
+          :onchange `scripts/backlight.fish set {}`
+    (backlight-icon)))
+
+(defwidget volume-slider []
+  (slider :color '#957FB8' 
+          :min 0.0 
+          :max 101.0 
+          :value {volume.level}
+          :onchange `scripts/volume.fish set {}`
+    (volume-icon)))
+
+(defwidget battery-slider []
+  (slider :visible {EWW_BATTERY != ""}
+          :color {EWW_BATTERY.BAT1.status == 'Discharging' ? '#FFA066' : '#98BB6C'}
+          :min 0.0
+          :max 101.0
+          :value {EWW_BATTERY.BAT1.capacity}
+    (battery-icon)))
+  
+
+(defwidget quick-controls []
+  (box :class 'quick-controls'
+       :orientation 'vertical'
+       :hexpand true
+       :space-evenly true
+       :spacing inline-spacing
+    (box :orientation 'horizontal'
+         :hexpand true
+         :space-evenly true
+         :spacing inline-spacing
+      (network-info)
+      (bluetooth-info))))
+    ; ; Kept here for future use
+    ; (box :orientation 'horizontal'
+    ;      :hexpand true
+    ;      :space-evenly true
+    ;      :spacing 5
+    ;   (label :class 'control-widget' :text 'C')
+    ;   (label :class 'control-widget' :text 'D'))))
+
+(defwidget network-info []
+  (button :class 'control-widget no-hover ${network != '' ? 'active' : ''}'
+          :onclick 'scripts/network.fish toggle'
+    (box :orientation 'horizontal'
+         :hexpand false
+         :space-evenly false
+         :spacing 12
+      (network-icon)
+      {network == '' ? 'Not Connected' : network.name})))
+
+(defwidget bluetooth-info []
+  (button :class 'control-widget no-hover ${bluetooth.enabled != false ? 'active' : ''}'
+          :onclick `scripts/bluetooth.fish toggle`
+    (box :orientation 'horizontal'
+         :hexpand false
+         :space-evenly false
+         :spacing 12
+      (bluetooth-icon)
+      {!bluetooth.enabled ? 'Disabled' : bluetooth.device == '' ? 'Enabled' : bluetooth.device})))
+    
 
 (defwidget powermenu []
   (box :orientation 'horizontal'
-       :space-evenly false
-       :spacing 5
-    (powermenu-button :icon '󰐥' :action 'systemctl poweroff' :tooltip 'Power Off')
-    (powermenu-button :icon '󰜉' :action 'systemctl reboot' :tooltip 'Restart')
-    (powermenu-button :icon '󰤄' :action 'systemctl suspend' :tooltip 'Sleep')
-    (powermenu-button :icon '󰜗' :action 'systemctl hibernate' :tooltip 'Hibernate')
-    (powermenu-button :icon '󰍃' :action 'loginctl kill-session self' :tooltip 'Sign Out')))
+       :halign 'fill'
+       :space-evenly true
+       :spacing inline-spacing
+    (powermenu-button :icon '󰐥' :action 'systemctl poweroff' :tooltip 'Power Off' :color '#C34043')
+    (powermenu-button :icon '󰜉' :action 'systemctl reboot' :tooltip 'Restart' :color '#DCA561')
+    (powermenu-button :icon '󰤄' :action 'systemctl suspend' :tooltip 'Sleep' :color '#9CABCA')
+    (powermenu-button :icon '󰜗' :action 'systemctl hibernate' :tooltip 'Hibernate' :color '#658594')
+    (powermenu-button :icon '󰍃' :action 'loginctl kill-session self' :tooltip 'Sign Out' :color '#D27E99')))
 
-(defwidget powermenu-button [icon action tooltip]
-  (button :class 'bar-widget'
+(defwidget powermenu-button [icon action tooltip color]
+  (button :class 'control-widget powermenu-button'
           :onclick action
-          :width bar-width
-          :height bar-width
           :tooltip tooltip
-    (icon :text icon)))
-  
+          :style 'color: ${color}'
+    (icon :size 2 :text icon)))
+

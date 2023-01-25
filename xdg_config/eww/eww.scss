@@ -1,5 +1,5 @@
 // Colors from the Kanagawa NeoVim theme
-$bar-bg: #16161D;
+$main-bg: #16161D;
 
 $widget-bg: #1F1F28;
 $widget-fg: #DCD7BA;
@@ -16,49 +16,17 @@ $hover-bg: #363646;
 
 $border-radius: 4px;
 
+@import "./widgets/bar.scss";
+@import "./widgets/control.scss";
+
 * { all: unset; }
 
-button:hover {
+button:not(.no-hover):hover {
     background-color: $hover-bg;
 }
 
 .vert-padding {
     padding-top: 8px;
     padding-bottom: 8px;
-}
-
-.bar {
-    background-color: $bar-bg;
-    font-family: FiraCode Nerd Font, monospace;
-    font-size: 16px;
-}
-
-.bar-main {
-    padding: 8px;
-}
-
-.bar-section {
-    border-radius: 4px;
-    background-color: $widget-bg;
-}
-
-.bar-section > *:not(:last-child) {
-    border-bottom: 1px solid $section-separator;
-}
-
-.bar-widget {
-    background-color: $widget-bg;
-    color: $widget-fg;
-    border-radius: $border-radius;
-    // border: $widget-border;
-}
-
-.launcher {
-    font-size: 20px;
-}
-
-.powermenu-button {
-    font-size: 1.7em;
-    padding: 0;
 }
 

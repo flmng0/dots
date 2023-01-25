@@ -1,13 +1,24 @@
-(include "./widgets.yuck")
+(include './variables.yuck')
+
+(include './widgets/common.yuck')
+(include './widgets/bar.yuck')
+(include './widgets/control.yuck')
 
 (defwindow bar
-  :monitor 0
   :geometry (geometry
-              :x "0%"
-              :y "0%"
               :height "100%"
               :anchor "center left")
   :windowtype "dock"
-  :reserve (struts :distance "72px" :side "left")
+  :reserve (struts :distance "56px" :side "left")
   (bar))
+
+(defwindow control
+  :geometry (geometry 
+              :x "56px"
+              :y "-8px"
+              :anchor "bottom left")
+  :windowtype "dialog"
+  :wm-ignore true
+  (control))
+  
 

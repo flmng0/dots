@@ -14,6 +14,6 @@ bspc config gapless_monocle      true
 
 picom &
 set -l BSPWM_BG "$HOME/Pictures/Background.png"
-feh --bg-fill $BSPWM_BG &
+~/.fehbg &
 eww open bar &
 

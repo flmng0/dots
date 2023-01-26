@@ -4,11 +4,28 @@
 
 # terminal emulator
 super + Return
-	alacritty
+	kitty
 
 # program launcher
-super + @space
-	eww open control_center
+super + shift + @space
+	eww open control --toggle
+
+XF86MonBrightness{Up,Down}  
+    brightnessctl s 5{+,-}
+
+XF86Audio{Raise,Lower}Volume  
+    pactl -- set-sink-volume 0 {+,-}5%
+
+XF86AudioMute
+    pactl -- set-sink-mute 0 toggle
+
+# Should be rofi eventually
+#
+# super + @space
+#     rofi
+
+alt + shift + x
+    betterlockscreen --lock blur
 
 # make sxhkd reload its configuration files:
 super + Escape
@@ -71,8 +88,8 @@ super + bracket{left,right}
 	bspc desktop -f {prev,next}.local
 
 # focus the last node/desktop
-super + {grave,Tab}
-	bspc {node,desktop} -f last
+{alt,super} + Tab
+	bspc {node,desktop} -f last{.local,}
 
 # focus the older or newer node in the focus history
 super + {o,i}
@@ -84,25 +101,25 @@ super + {o,i}
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '^{1-9,10}'
 
+# #
+# # preselect
+# #
 #
-# preselect
+# # preselect the direction
+# super + ctrl + {h,j,k,l}
+# 	bspc node -p {west,south,north,east}
 #
-
-# preselect the direction
-super + ctrl + {h,j,k,l}
-	bspc node -p {west,south,north,east}
-
-# preselect the ratio
-super + ctrl + {1-9}
-	bspc node -o 0.{1-9}
-
-# cancel the preselection for the focused node
-super + ctrl + space
-	bspc node -p cancel
-
-# cancel the preselection for the focused desktop
-super + ctrl + shift + space
-	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+# # preselect the ratio
+# super + ctrl + {1-9}
+# 	bspc node -o 0.{1-9}
+#
+# # cancel the preselection for the focused node
+# super + ctrl + space
+# 	bspc node -p cancel
+#
+# # cancel the preselection for the focused desktop
+# super + ctrl + shift + space
+# 	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
 #
 # move/resize

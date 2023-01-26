@@ -6,6 +6,9 @@
 super + Return
 	kitty
 
+super + @space
+    rofi -show drun
+
 # program launcher
 super + shift + @space
 	eww open control --toggle
@@ -18,11 +21,6 @@ XF86Audio{Raise,Lower}Volume
 
 XF86AudioMute
     pactl -- set-sink-mute 0 toggle
-
-# Should be rofi eventually
-#
-# super + @space
-#     rofi
 
 alt + shift + x
     betterlockscreen --lock blur

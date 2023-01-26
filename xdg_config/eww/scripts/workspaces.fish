@@ -15,7 +15,7 @@ function subscribe_focused
 end
 
 function _get_desktops
-    set -l initial (bspc query -D --monitor default)
+    set -l initial (bspc query -D --monitor)
     echo (_json_list $initial)
 end
 

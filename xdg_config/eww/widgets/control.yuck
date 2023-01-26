@@ -1,14 +1,24 @@
 (defvar inline-spacing 8)
+(defvar inside-control false)
 
 (defwidget control []
-  (box :class 'control-main'
-       :orientation 'vertical'
-       :spacing 16
-       :space-evenly false
-    (greeting)
-    (sliders)
-    (quick-controls)
-    (powermenu)))
+  (eventbox :class 'control-lightbox'
+            :onclick {inside-control ? '' : '${EWW_CMD} close control'}
+            :cursor 'pointer'
+    (eventbox :onhover '${EWW_CMD} update inside-control=true'
+              :onhoverlost '${EWW_CMD} update inside-control=false'
+              :cursor 'arrow'
+              :valign 'center'
+              :halign 'center'
+      (box :class 'control-main'
+           :orientation 'vertical'
+           :spacing 16
+           :space-evenly false
+        (greeting)
+        (sliders)
+        (quick-controls)
+        (powermenu)))))
+    
 
 (defwidget slider [min max value color ?visible ?onchange]
   (box :class 'control-widget'

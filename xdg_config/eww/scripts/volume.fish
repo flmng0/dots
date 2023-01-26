@@ -1,26 +1,28 @@
 #!/usr/bin/env fish
 
 function get_volume
-    set -l output (amixer sget Master)
+    set -l volume (pactl -- get-sink-volume 0 | awk -F"/" '{print $2}' | string trim)
+    set -l level (string sub "$volume" -e -2)
 
-    set -l parts (echo $output | awk -F"[][]" '/Left:/ { print $2; print $4 }')
-
-    set -l level (string sub $parts[1] -e -1)
-    if test "$parts[2]" = "on"
+    if test (pactl -- get-sink-mute 0 | awk -F":" '{print $2}' | string trim) = "no"
         set muted "false"
     else
         set muted "true"
     end
+
     echo "{\"muted\":$muted,\"level\":\"$level\"}"
 end
 
 function set_volume
-    amixer sset Master "$argv[1]%" > /dev/null
+    pactl -- set-sink-volume 0 "$argv[1]%"
 end
 
 function toggle_mute
-    amixer sset Master toggle > /dev/null
+    pactl -- set-sink-mute 0 toggle
 end
+
+# TODO: Subscribe to volume using pactl
+# https://stackoverflow.com/questions/34936783/watch-for-volume-changes-in-alsa-pulseaudio
 
 switch $argv[1]
     case get

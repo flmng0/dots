@@ -1,21 +1,21 @@
 .control {
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .control-lightbox {
-    background-color: rgba(80, 80, 80, 30%);
+    background-color: rgba(30, 30, 30, 30%);
 }
 
 .control-main {
-    background-color: $main-bg;
-    border-radius: .5em;
+    // background-color: $main-bg;
     padding: .8em;
 }
 
 .control-widget {
     border-radius: .5em;
     padding: .5em .6em;
-    background-color: $widget-bg;
+    // background-color: $widget-bg;
+    background-color: $main-bg;
 }
 
 .powermenu-button {
@@ -24,35 +24,45 @@
     background-color: #252535;
 }
 
+.connection {
+    font-size: 0.9em;
+    padding: 0 1.2em;
+
+    &:hover .device {
+        text-decoration: underline
+    }
+
+    .text {
+        padding: 0 .8em;
+    }
+
+    transition: background-color 250ms ease-out;
+
+    .device {
+        font-size: .8em;
+    }
+}
+
 .greeting {
     font-weight: bold;
 
-    .username {
-        color: #D27E99;
-        font-style: italic;
+    // .username {
+    //     color: #D27E99;
+    //     font-style: italic;
+    // }
+
+    label {
+        padding: 0;
+    }
+
+    .time {
+        font-size: 3em;
     }
 
     .date {
         font-size: .9em;
         color: #54546D;
         font-weight: normal;
-    }
-}
-
-.quick-controls {
-    font-size: .9em;
-
-    .control-widget.active {
-        background-color: #363646;
-        font-weight: 600;
-    }
-
-    .control-widget:not(.active) label + label {
-        color: #54546D;
-    }
-
-    .control-widget:hover label + label {
-        text-decoration: underline;
     }
 }
 

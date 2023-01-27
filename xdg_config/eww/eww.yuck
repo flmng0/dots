@@ -2,7 +2,8 @@
 
 (include './widgets/common.yuck')
 (include './widgets/bar.yuck')
-(include './widgets/control.yuck')
+; (include './widgets/control.yuck')
+(include './widgets/control-new.yuck')
 
 (defwindow bar
   :geometry (geometry

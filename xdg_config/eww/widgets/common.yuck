@@ -1,6 +1,12 @@
+(defwidget icon [text ?size]
+  (label :class 'icon'
+         :style 'font-size: ${size ?: '1.7'}em'
+         :text text))
+
 ;
 ; NOTE: Writing these ramps all sucked.
 ;
+
 (defwidget network-icon []
   (network-ramp :strength {network == '' ? '' : network.strength}))
   

@@ -130,7 +130,7 @@
     (powermenu-button :icon '󰐥' :action 'systemctl poweroff' :tooltip 'Power Off' :color '#C34043')
     (powermenu-button :icon '󰜉' :action 'systemctl reboot' :tooltip 'Restart' :color '#DCA561')
     (powermenu-button :icon '󰤄' :action 'systemctl suspend' :tooltip 'Sleep' :color '#9CABCA')
-    (powermenu-button :icon '󰜗' :action 'systemctl hibernate' :tooltip 'Hibernate' :color '#658594')
+    ; (powermenu-button :icon '󰜗' :action 'systemctl hibernate' :tooltip 'Hibernate' :color '#658594')
     (powermenu-button :icon '󰍃' :action 'loginctl kill-session self' :tooltip 'Sign Out' :color '#D27E99')))
 
 (defwidget powermenu-button [icon action tooltip color]

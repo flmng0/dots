@@ -33,11 +33,6 @@
 (defvar bspwm-unfocused-icon '')
 
 (deflisten bspwm-state
+  :initial '{"desktops": []}'
   `scripts/bspwm.fish`)
 
-; (deflisten bspwm-desktops
-;   :initial "[]"
-;   `scripts/workspaces.fish desktops`)
-;
-; (deflisten bspwm-focused
-;   `scripts/workspaces.fish focused`)

@@ -33,12 +33,6 @@
        :vexpand true
     (children)))
 
-(defwidget icon [text ?size]
-  (label :class 'icon'
-         :style 'font-size: ${size ?: '1.7'}em'
-         :text text))
-  
-
 (defwidget time []
   (box :class "vert-padding time"
        :vexpand true

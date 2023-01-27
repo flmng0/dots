@@ -9,17 +9,13 @@
               :height "100%"
               :anchor "center left")
   :windowtype "dock"
-  :reserve (struts :distance "56px" :side "left")
+  :reserve (struts :distance "52px" :side "left")
   (bar))
 
 (defwindow control
   :geometry (geometry
               :width "100%"
               :height "100%")
-              
-              ; :x "56px"
-              ; :y "-8px"
-              ; :anchor "bottom left")
   :windowtype "dialog"
   :wm-ignore true
   (control))

@@ -7,13 +7,15 @@
        :space-evenly false
     (bar-top)
     (bar-bottom)))
-    
    
 (defwidget bar-top []
   (bar-section :class "bar-top" 
                :valign "start"
     (launcher)
-    (bspwm-workspaces)))
+    (bspwm-desktops)))
+
+(defwidget spinner []
+  (label :text '.'))
 
 (defwidget bar-bottom []
   (bar-section :class "bar-bottom"
@@ -60,20 +62,17 @@
 
 ; BSPWM Stuff {{{
 
-(defwidget bspwm-workspaces []
-    (box :class 'vert-padding'
-         :orientation 'vertical'
-      ; Hidden but necessary. If this is not present, the listener doesn't update.
-      (label :visible false :text bspwm-focused)
-      (for workspace in bspwm-desktops
-              (workspace-label :workspace workspace)))) 
+(defwidget bspwm-desktops []
+  (box :class 'vert-padding'
+       :orientation 'vertical'
+    (for desktop in {bspwm-state.desktops}
+      (desktop-label :desktop {desktop}))))
 
-
-(defwidget workspace-label [workspace]
+(defwidget desktop-label [desktop]
   (button :class 'workspace-label'
-          :height widget-width
-          :onclick 'bspc desktop --focus ${workspace}'
-    {workspace == bspwm-focused ? bspwm-focused-icon : bspwm-unfocused-icon}))
+    :height widget-width
+    :onclick 'bspc desktop --focus ${desktop.id}'
+    {bspwm-state.focusedDesktopId == desktop.id ? bspwm-focused-icon : bspwm-unfocused-icon}))
 
 ; }}}
     

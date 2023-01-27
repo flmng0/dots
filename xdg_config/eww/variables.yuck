@@ -15,10 +15,9 @@
   :initial '{"name": "Not Connected", "strength": 0}'
   'scripts/network.fish get')
     
-(defpoll volume
-  :interval '1s'
-  :initial `{"muted":false,"level":"0"}`
-  'scripts/volume.fish get')
+(deflisten volume
+  :initial '{"muted":false,"level":"0"}'
+  'scripts/volume.fish subscribe')
 
 (defpoll backlight
   :interval '1s'
@@ -33,9 +32,12 @@
 (defvar bspwm-focused-icon '')
 (defvar bspwm-unfocused-icon '')
 
-(deflisten bspwm-desktops
-  :initial "[]"
-  `scripts/workspaces.fish desktops`)
+(deflisten bspwm-state
+  `scripts/bspwm.fish`)
 
-(deflisten bspwm-focused
-  `scripts/workspaces.fish focused`)
+; (deflisten bspwm-desktops
+;   :initial "[]"
+;   `scripts/workspaces.fish desktops`)
+;
+; (deflisten bspwm-focused
+;   `scripts/workspaces.fish focused`)

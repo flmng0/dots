@@ -21,8 +21,14 @@ function toggle_mute
     pactl -- set-sink-mute 0 toggle
 end
 
-# TODO: Subscribe to volume using pactl
-# https://stackoverflow.com/questions/34936783/watch-for-volume-changes-in-alsa-pulseaudio
+function subscribe
+    echo (get_volume)
+    pactl subscribe | while read -l event
+        if string match -e "sink" $event > /dev/null
+            echo (get_volume)
+        end
+    end
+end
 
 switch $argv[1]
     case get
@@ -31,4 +37,6 @@ switch $argv[1]
         set_volume $argv[2]
     case mute
         toggle_mute
+    case subscribe
+        subscribe
 end

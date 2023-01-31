@@ -45,11 +45,7 @@
 
 .greeting {
     font-weight: bold;
-
-    // .username {
-    //     color: #D27E99;
-    //     font-style: italic;
-    // }
+    padding: .5em 1.3em;
 
     label {
         padding: 0;
@@ -66,7 +62,33 @@
     }
 }
 
-scale trough {
+.music {
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    border-radius: .5em;
+
+    &-controls {
+        border-radius: inherit;
+
+        background-image: linear-gradient(to top, rgba(0, 0, 0, 60%), rgba(0, 0, 0, 20%), rgba(0, 0, 0, 80%));
+        padding: .7em .5em;
+    }
+
+    .title {
+        font-weight: bold;
+    }
+    .artist {
+        font-size: 0.8em;
+        color: #ccc;
+    }
+
+    button {
+        padding: 0 .6em;
+    }
+}
+
+.stats scale trough {
     border-radius: 1em;
     background-color: #54546D;
     min-height: .7em;

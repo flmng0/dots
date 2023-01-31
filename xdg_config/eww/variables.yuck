@@ -29,6 +29,10 @@
   :initial `{"enabled":false,"device":""}`
   'scripts/bluetooth.fish get')
 
+(deflisten music-metadata `scripts/music.fish`)
+
+(deflisten music-status `playerctl status --follow`)
+
 (defvar bspwm-focused-icon '')
 (defvar bspwm-unfocused-icon '')
 

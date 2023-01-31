@@ -63,7 +63,7 @@
       (desktop-label :desktop {desktop}))))
 
 (defwidget desktop-label [desktop]
-  (button :class 'workspace-label'
+  (button :class 'workspace-label desktop ${(desktop.root ?: 'null') == 'null' ? '' : 'occupied'}'
     :height widget-width
     :onclick 'bspc desktop --focus ${desktop.id}'
     {bspwm-state.focusedDesktopId == desktop.id ? bspwm-focused-icon : bspwm-unfocused-icon}))

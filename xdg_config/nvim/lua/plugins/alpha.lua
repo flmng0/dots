@@ -234,7 +234,7 @@ return {
         local alpha = require('alpha')
 
 
-        local config = {
+        local opts = {
             layout = {
                 { type = 'padding', val = 2 },
                 header,
@@ -254,6 +254,6 @@ return {
             }
         }
 
-        alpha.setup(config)
+        alpha.setup(opts)
     end,
 }

@@ -4,7 +4,7 @@ return {
         'stevearc/dressing.nvim',
     },
 
-    config = {
+    opts = {
         input_buffer_type = 'dressing'
     },
 

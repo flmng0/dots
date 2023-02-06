@@ -20,7 +20,7 @@ return {
         'rebelot/kanagawa.nvim',
     },
 
-    config = function()
+    opts = function()
         local colors = require('kanagawa.colors').setup()
 
         local focused = {

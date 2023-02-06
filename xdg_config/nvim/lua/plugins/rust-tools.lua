@@ -8,7 +8,7 @@ return {
         'mfussenegger/nvim-dap',
     },
 
-    config = function()
+    opts = function()
         local rt = require('rust-tools')
         local on_attach = require('plugins.lsp').on_attach
 

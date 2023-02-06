@@ -2,12 +2,12 @@
 return {
     {
         'numToStr/Comment.nvim',
-        config = true,
+        opts = {},
     },
     {
         'kylechui/nvim-surround',
         version = '*',
-        config = true,
+        opts = {},
     },
     {
         'nvim-tree/nvim-web-devicons',
@@ -21,7 +21,7 @@ return {
         'nvim-treesitter/nvim-treesitter-context',
         dependencies = { 'nvim-treesitter' },
         event = 'BufReadPost',
-        config = true,
+        opts = {},
     },
     {
         'JASONews/glow-hover',
@@ -34,19 +34,12 @@ return {
         },
     },
     {
-        'karb94/neoscroll.nvim',
-        event = 'VeryLazy',
-        opts = {
-            mappings = { '<C-u>', '<C-d>', '<C-b>', '<C-f>', '<C-y>', '<C-e>' },
-        },
-    },
-    {
         'rmagatti/auto-session',
         lazy = false,
-        config = true,
+        opts = {},
     },
     {
         'windwp/nvim-autopairs',
-        config = true,
+        opts = {},
     },
 }

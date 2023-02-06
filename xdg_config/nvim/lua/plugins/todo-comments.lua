@@ -4,7 +4,7 @@ return {
         'nvim-lua/plenary.nvim',
     },
 
-    config = true,
+    opts = {},
 
     init = function()
         local nmap = require('tmthy.utils').nmap

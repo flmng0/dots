@@ -2,7 +2,7 @@ return {
     'lewis6991/gitsigns.nvim',
     event = 'BufReadPre',
 
-    config = function()
+    opts = function()
         require('gitsigns').setup {
             signs = {
                 add = { hl = "GitSignsAdd", text = "▍", numhl = "GitSignsAddNr", linehl = "GitSignsAddLn" },

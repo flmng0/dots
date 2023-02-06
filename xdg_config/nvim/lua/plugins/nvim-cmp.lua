@@ -12,7 +12,7 @@ return {
         'onsails/lspkind.nvim',
     },
 
-    config = function()
+    opts = function()
         local cmp = require('cmp')
         local luasnip = require('luasnip')
         local lspkind = require('lspkind')
@@ -26,7 +26,7 @@ return {
         local insert_mappings = cmp.mapping.preset.insert {
             ['<C-u>'] = cmp.mapping.scroll_docs(-4),
             ['<C-d>'] = cmp.mapping.scroll_docs(4),
-            ['<C-Space>'] = cmp.mapping.complete(),
+            ['<C-Space>'] = cmp.mapping.complete({}),
             ['<C-e>'] = cmp.mapping.abort(),
             ['<C-j>'] = cmp.mapping.select_next_item(),
             ['<C-k>'] = cmp.mapping.select_prev_item(),

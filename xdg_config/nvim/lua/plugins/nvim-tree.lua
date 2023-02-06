@@ -5,7 +5,7 @@ return {
         'nvim-tree/nvim-web-devicons',
     },
 
-    config = function()
+    opts = function()
         require('nvim-tree').setup {
             hijack_unnamed_buffer_when_opening = true,
             diagnostics = {

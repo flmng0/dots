@@ -2,7 +2,7 @@ return {
     'nvim-lualine/lualine.nvim',
     event = 'VeryLazy',
 
-    config = function()
+    opts = function()
         require('lualine').setup {
             options = {
                 icons_enabled = true,

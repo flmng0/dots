@@ -189,7 +189,7 @@ return {
     },
 
     new_project = function()
-        vim.ui.input('Project Name:', function(name)
+        vim.ui.input({ label = 'Project Name:' }, function(name)
             if not name then
                 vim.notify('No Project Name Provided, Canceling')
                 return
@@ -202,13 +202,13 @@ return {
     end,
 
     new_external = function()
-        vim.ui.input('Repository Path:', function(url)
+        vim.ui.input({ label = 'Repository Path:' }, function(url)
             if not url then
                 vim.notify('No Reposity URL Provided, Canceling')
                 return
             end
 
-            local parts = vim.split(url, '/')
+            local parts = vim.split(url, '/', {})
             local partn = #parts
 
             if partn == 2 then
@@ -230,11 +230,10 @@ return {
         end)
     end,
 
-    config = function()
+    opts = function()
         local alpha = require('alpha')
 
-
-        local opts = {
+        alpha.setup {
             layout = {
                 { type = 'padding', val = 2 },
                 header,
@@ -253,7 +252,5 @@ return {
                 -- margin = 3,
             }
         }
-
-        alpha.setup(opts)
     end,
 }

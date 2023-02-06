@@ -1,6 +1,6 @@
 return {
     'stevearc/dressing.nvim',
-    config = {
+    opts = {
         input = {
             override = function(conf)
                 conf.col = -1

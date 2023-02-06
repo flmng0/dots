@@ -48,7 +48,7 @@ return {
 
     on_attach = on_attach,
 
-    config = function()
+    opts = function()
         local servers = {
             clangd = {},
             tsserver = {},

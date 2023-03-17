@@ -4,7 +4,7 @@ return {
         'nvim-tree/nvim-web-devicons',
     },
 
-    opts = {},
+    config = true,
 
     init = function()
         local utils = require('tmthy.utils')

@@ -11,7 +11,7 @@ return {
         'windwp/nvim-ts-autotag',
     },
 
-    opts = function()
+    config = function()
         require('nvim-treesitter.configs').setup {
             autotag = {
                 enable = true,

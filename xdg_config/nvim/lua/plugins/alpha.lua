@@ -183,7 +183,6 @@ return {
     -- name = 'alpha',
     cond = vim.fn.argc() == 0,
     lazy = false,
-    -- enabled = false,
     dependencies = {
         'nvim-tree/nvim-web-devicons',
     },
@@ -230,7 +229,7 @@ return {
         end)
     end,
 
-    opts = function()
+    config = function()
         local alpha = require('alpha')
 
         alpha.setup {

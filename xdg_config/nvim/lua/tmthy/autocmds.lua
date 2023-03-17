@@ -6,7 +6,7 @@ api.nvim_create_autocmd('TextYankPost', {
     group = general_group,
     callback = function()
         vim.highlight.on_yank()
-    end
+    end,
 })
 
 -- Set the formatoptions for every language.

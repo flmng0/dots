@@ -4,7 +4,7 @@ return {
     -- Will look into it more though.
     enabled = false,
 
-    opts = function()
+    config = function()
         require('illuminate').configure {
             filetypes_denylist = { 'NvimTree', 'alpha' },
         }

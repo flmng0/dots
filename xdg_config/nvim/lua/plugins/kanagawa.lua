@@ -3,7 +3,7 @@ return {
     lazy = false,
     priority = 1000,
 
-    opts = function()
+    config = function()
         local colors = require('kanagawa.colors').setup()
         local prompt = colors.bg_light1
 

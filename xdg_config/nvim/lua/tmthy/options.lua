@@ -4,7 +4,7 @@ local opt = vim.opt
 
 function M.set_format_options()
     opt.formatoptions = opt.formatoptions
-        + 't'
+        - 't'
         + 'c'
         + 'r'
         - 'o'
@@ -28,7 +28,7 @@ end
 
 M.set_format_options()
 
-opt.guicursor = "i:ver100"
+opt.guicursor = 'i:ver100'
 
 opt.background = 'dark'
 opt.termguicolors = true

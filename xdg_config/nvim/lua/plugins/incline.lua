@@ -20,7 +20,7 @@ return {
         'rebelot/kanagawa.nvim',
     },
 
-    opts = function()
+    config = function()
         local colors = require('kanagawa.colors').setup()
 
         local focused = {
@@ -93,7 +93,7 @@ return {
                 filetypes = { 'NvimTree' },
             },
             hide = {
-                cursorline =  'focused_win',
+                cursorline = 'focused_win',
             },
         }
     end,

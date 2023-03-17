@@ -1,11 +1,9 @@
 return {
     'mrjones2014/smart-splits.nvim',
 
-    opts = function()
-        require('smart-splits').setup {
-            tmux_integration = false,
-        }
-    end,
+    opts = {
+        tmux_integration = false,
+    },
 
     init = function()
         local splits = require('smart-splits')

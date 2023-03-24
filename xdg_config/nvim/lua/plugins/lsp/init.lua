@@ -28,9 +28,12 @@ return {
     },
 
     config = function()
+        -- setup neovim library completions
+        require('neodev').setup()
+
         local servers = {
             clangd = {},
-            sumneko_lua = {
+            lua_ls = {
                 settings = {
                     Lua = {
                         diagnostics = {
@@ -121,9 +124,6 @@ return {
             'stylua',
             'prettierd',
         }
-
-        -- setup neovim library completions
-        require('neodev').setup()
 
         local capabilities = vim.lsp.protocol.make_client_capabilities()
         capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)

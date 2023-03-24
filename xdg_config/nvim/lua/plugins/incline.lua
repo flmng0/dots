@@ -4,7 +4,10 @@ local function get_diagnostics(props)
 
     local result = {}
     for severity, icon in pairs(icons) do
-        local n = #vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity[string.upper(severity)] })
+        local n = #vim.diagnostic.get(
+            props.buf,
+            { severity = vim.diagnostic.severity[string.upper(severity)] }
+        )
         if n > 0 then
             table.insert(result, { icon .. ' ' .. n .. ' ', group = 'DiagnosticSign' .. severity })
         end
@@ -24,13 +27,13 @@ return {
         local colors = require('kanagawa.colors').setup()
 
         local focused = {
-            guifg = colors.fg,
-            guibg = colors.bg_dark,
+            guifg = colors.theme.ui.fg,
+            guibg = colors.theme.ui.bg,
         }
 
         local unfocused = {
-            guifg = colors.fg_comment,
-            guibg = colors.bg_dim,
+            guifg = colors.theme.syn.comment,
+            guibg = colors.theme.ui.bg_dim,
         }
 
         local end_characters = {
@@ -58,12 +61,12 @@ return {
                     { filetype_icon, guifg = has_focus and color or nil },
                     padding_char,
                     { filename, gui = 'italic,bold' },
-                    modified and { padding_char .. '●' } or nil
+                    modified and { padding_char .. '●' } or nil,
                 }
 
                 -- If there were diagnostics, then add them to the result.
                 if #diagnostics > 0 then
-                    table.insert(result, 1, { '| ', guifg = colors.fujiGray })
+                    table.insert(result, 1, { '| ', guifg = colors.palette.fujiGray })
                     table.insert(result, 1, diagnostics)
                 end
 
@@ -87,7 +90,7 @@ return {
                 groups = {
                     InclineNormal = focused,
                     InclineNormalNC = unfocused,
-                }
+                },
             },
             ignore = {
                 filetypes = { 'NvimTree' },

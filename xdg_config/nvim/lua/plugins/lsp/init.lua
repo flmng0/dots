@@ -31,6 +31,26 @@ return {
         -- setup neovim library completions
         require('neodev').setup()
 
+        local css_langs = {
+            'aspnetcorerazor',
+            'astro',
+            'astro-markdown',
+            'html',
+            'markdown',
+            'mdx',
+            'css',
+            'less',
+            'postcss',
+            'sass',
+            'scss',
+            'javascript',
+            'javascriptreact',
+            'typescript',
+            'typescriptreact',
+            'svelte',
+            'vue',
+        }
+
         local servers = {
             clangd = {},
             lua_ls = {
@@ -70,25 +90,11 @@ return {
             gopls = {},
             svelte = {},
             tailwindcss = {
-                filetypes = {
-                    'aspnetcorerazor',
-                    'astro',
-                    'astro-markdown',
-                    'html',
-                    'markdown',
-                    'mdx',
-                    'css',
-                    'less',
-                    'postcss',
-                    'sass',
-                    'scss',
-                    'javascript',
-                    'javascriptreact',
-                    'typescript',
-                    'typescriptreact',
-                    'svelte',
-                    'vue',
-                },
+                filetypes = css_langs,
+            },
+            unocss = {
+                filetypes = css_langs,
+                root_dir = require('lspconfig.util').root_pattern('uno.config.ts'),
             },
 
             -- These below servers are setup by their respective plugins, however,

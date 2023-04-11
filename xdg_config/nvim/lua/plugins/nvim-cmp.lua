@@ -20,13 +20,13 @@ return {
         local has_words_before = require('tmthy.utils').has_words_before
 
         local lspkind_format = lspkind.cmp_format {
-            mode = 'symbol'
+            mode = 'symbol',
         }
 
         local insert_mappings = cmp.mapping.preset.insert {
             ['<C-u>'] = cmp.mapping.scroll_docs(-4),
             ['<C-d>'] = cmp.mapping.scroll_docs(4),
-            ['<C-Space>'] = cmp.mapping.complete({}),
+            ['<C-Space>'] = cmp.mapping.complete {},
             ['<C-e>'] = cmp.mapping.abort(),
             ['<C-j>'] = cmp.mapping.select_next_item(),
             ['<C-k>'] = cmp.mapping.select_prev_item(),
@@ -62,7 +62,7 @@ return {
                 else
                     fallback()
                 end
-            end, { 'i', 's' })
+            end, { 'i', 's' }),
         }
 
         for key, value in pairs(insert_mappings) do
@@ -73,7 +73,7 @@ return {
             snippet = {
                 expand = function(args)
                     luasnip.lsp_expand(args.body)
-                end
+                end,
             },
             formatting = {
                 format = function(entry, vim_item)
@@ -86,7 +86,7 @@ return {
                         end
                     end
                     return lspkind_format(entry, vim_item)
-                end
+                end,
             },
             preselect = cmp.PreselectMode.Item,
             completion = {
@@ -94,16 +94,16 @@ return {
             },
             window = {
                 documentation = {
-                    border = 'rounded'
+                    border = 'rounded',
                 },
             },
             mapping = mappings,
             sources = cmp.config.sources({
-                { name = 'nvim_lsp' },
+                { name = 'nvim_lsp', option = { ['unocss'] = { keyword_pattern = [[\k*-]] } } },
                 { name = 'luasnip' },
             }, {
-                { name = 'buffer' }
+                { name = 'buffer' },
             }),
         }
-    end
+    end,
 }

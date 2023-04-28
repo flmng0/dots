@@ -24,22 +24,22 @@ return {
         opts = {},
     },
     {
-        'JASONews/glow-hover',
-        cond = os.execute('command -v ' .. vim.fn.expand('$GOPATH/bin/glow')) == 0,
-        event = 'VeryLazy',
-        opts = {
-            max_width = 50,
-            padding = 3,
-            glow_path = vim.fn.expand("$GOPATH/bin/glow"),
-        },
-    },
-    {
         'rmagatti/auto-session',
         lazy = false,
-        opts = {},
+        opts = {
+            pre_save_cmds = {
+                function()
+                    require('nvim-tree.api').tree.close()
+                end,
+            },
+        },
     },
     {
         'windwp/nvim-autopairs',
         opts = {},
+    },
+    {
+        'sindrets/diffview.nvim',
+        dependencies = { 'nvim-lua/plenary.nvim' },
     },
 }

@@ -39,7 +39,8 @@ M.on_attach = function(client, bufnr)
     -- [g]oto commands
     nmap('<leader>gd', vim.lsp.buf.definition, 'LSP: Goto Definition')
     nmap('<leader>gD', vim.lsp.buf.declaration, 'LSP: Goto Decleration')
-    nmap('<leader>gr', ts.lsp_references, 'LSP: Goto References')
+    -- I use trouble here instead.
+    -- nmap('<leader>gr', ts.lsp_references, 'LSP: Goto References')
     nmap('<leader>gi', vim.lsp.buf.implementation, 'LSP: Goto Implementation')
     nmap('<leader>gt', vim.lsp.buf.type_definition, 'LSP: Goto Type Definition')
 

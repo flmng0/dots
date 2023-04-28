@@ -8,6 +8,7 @@ return {
 
         -- Formatters
         'jose-elias-alvarez/null-ls.nvim',
+        'jay-babu/mason-null-ls.nvim',
 
         {
             'b0o/SchemaStore.nvim',
@@ -24,6 +25,11 @@ return {
                 'nvim-lua/plenary.nvim',
                 'mfussenegger/nvim-dap',
             },
+        },
+
+        -- TypeScript!
+        {
+            'jose-elias-alvarez/typescript.nvim',
         },
     },
 
@@ -92,14 +98,10 @@ return {
             tailwindcss = {
                 filetypes = css_langs,
             },
-            unocss = {
-                filetypes = css_langs,
-                root_dir = require('lspconfig.util').root_pattern('uno.config.ts'),
-            },
 
-            -- These below servers are setup by their respective plugins, however,
-            -- since we're using mason-lspconfig, the servers can still be configured
-            -- here.
+            -- These below servers either have custom logic, or are setup by their
+            -- respective plugins, however, since we're using mason-lspconfig, the
+            -- servers can still be configured here.
 
             -- Setup is done by typescript.nvim
             tsserver = {},
@@ -135,7 +137,6 @@ return {
         capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
         require('mason').setup {
-            ensure_installed = formatters,
             ui = {
                 border = 'single',
             },
@@ -144,6 +145,12 @@ return {
         local mlsp = require('mason-lspconfig')
         mlsp.setup {
             ensure_installed = vim.tbl_keys(servers),
+        }
+
+        require('mason-null-ls').setup {
+            ensure_installed = formatters,
+            automatic_installation = false,
+            handlers = {},
         }
 
         local on_attach = function(client, buf)
@@ -187,6 +194,14 @@ return {
                     server = opts,
                 }
             end,
+
+            ['tsserver'] = function()
+                local opts = get_opts('tsserver')
+
+                require('typescript').setup {
+                    server = opts,
+                }
+            end,
         }
 
         require('fidget').setup {}
@@ -198,6 +213,7 @@ return {
                     extra_filetypes = { 'svelte' },
                 },
                 nls.builtins.formatting.stylua,
+                require('typescript.extensions.null-ls.code-actions'),
             },
         }
     end,

@@ -3,6 +3,7 @@ return {
     event = 'InsertEnter',
     dependencies = {
         'hrsh7th/cmp-nvim-lsp',
+        'hrsh7th/cmp-nvim-lsp-signature-help',
         'hrsh7th/cmp-buffer',
 
         'hrsh7th/cmp-vsnip',
@@ -41,9 +42,9 @@ return {
                     return lspkind_format(entry, vim_item)
                 end,
             },
-            preselect = cmp.PreselectMode.Item,
+            preselect = cmp.PreselectMode.None,
             completion = {
-                completeopt = 'menu,menuone,noinsert',
+                completeopt = 'menu,menuone,noinsert,noselect,preview',
             },
             window = {
                 documentation = {
@@ -57,14 +58,20 @@ return {
                 ['<C-e>'] = cmp.mapping.abort(),
                 ['<C-j>'] = cmp.mapping.select_next_item(),
                 ['<C-k>'] = cmp.mapping.select_prev_item(),
-                ['<CR>'] = cmp.mapping.confirm { select = true },
+                ['<CR>'] = cmp.mapping.confirm { select = false },
             },
             sources = cmp.config.sources({
                 { name = 'nvim_lsp' },
+                { name = 'nvim_lsp_signature_help' },
                 { name = 'vsnip' },
             }, {
                 { name = 'buffer' },
             }),
         }
+
+        -- Insert parentheses after function
+        local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+
+        cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
     end,
 }

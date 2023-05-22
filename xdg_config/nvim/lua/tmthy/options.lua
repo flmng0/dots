@@ -53,7 +53,7 @@ opt.incsearch = true
 
 opt.scrolloff = 8
 
-opt.completeopt = { 'menu', 'menuone', 'preview', 'noinsert' }
+opt.completeopt = { 'menu', 'menuone', 'preview', 'noinsert', 'noselect' }
 
 opt.mouse = 'a'
 

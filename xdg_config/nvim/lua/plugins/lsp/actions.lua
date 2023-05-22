@@ -53,6 +53,12 @@ M.on_attach = function(client, bufnr)
             rust_set_windows(client, opts)
         end, { nargs = '*' })
     end
+
+    if client.name == 'dartls' then
+        nmap('<leader>F', function()
+            require('plugins.lsp.util').choose_flutter_action()
+        end, 'Flutter: Choose Flutter Action')
+    end
 end
 
 return M

@@ -27,6 +27,16 @@ return {
             },
         },
 
+        -- Flutter!
+        {
+            'akinsho/flutter-tools.nvim',
+            lazy = false,
+            dependencies = {
+                'nvim-lua/plenary.nvim',
+                'stevearc/dressing.nvim',
+            },
+        },
+
         -- TypeScript!
         {
             'jose-elias-alvarez/typescript.nvim',
@@ -105,6 +115,7 @@ return {
 
             -- Setup is done by typescript.nvim
             tsserver = {},
+
             -- Setup is done by rust-tools
             rust_analyzer = {
                 cmd = { 'rustup', 'run', 'nightly', 'rust-analyzer' },
@@ -202,6 +213,14 @@ return {
                     server = opts,
                 }
             end,
+        }
+
+        require('flutter-tools').setup {
+            decorations = { device = true },
+            lsp = {
+                on_attach = on_attach,
+                capabilities = capabilities,
+            },
         }
 
         require('fidget').setup {}

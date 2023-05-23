@@ -23,6 +23,17 @@ return {
             mode = 'symbol',
         }
 
+        local function t(cmd)
+            return vim.api.nvim_replace_termcodes(cmd, true, true, true)
+        end
+
+        local function jump_forward()
+            vim.api.nvim_feedkeys(t('<Plug>(vsnip-jump-next)'), 'm', true)
+        end
+        local function jump_backward()
+            vim.api.nvim_feedkeys(t('<Plug>(vsnip-jump-prev)'), 'm', true)
+        end
+
         cmp.setup {
             snippet = {
                 expand = function(args)
@@ -44,6 +55,8 @@ return {
             },
             preselect = cmp.PreselectMode.Item,
             completion = {
+                ---@diagnostic disable-next-line: assign-type-mismatch
+                autocomplete = false,
                 completeopt = 'menu,menuone,noinsert,preview',
             },
             window = {
@@ -51,14 +64,74 @@ return {
                     border = 'rounded',
                 },
             },
-            mapping = cmp.mapping.preset.insert {
-                ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-                ['<C-d>'] = cmp.mapping.scroll_docs(4),
-                ['<C-Space>'] = cmp.mapping.complete {},
-                ['<C-e>'] = cmp.mapping.abort(),
-                ['<C-j>'] = cmp.mapping.select_next_item(),
-                ['<C-k>'] = cmp.mapping.select_prev_item(),
-                ['<CR>'] = cmp.mapping.confirm { select = true },
+            mapping = {
+                ['<Tab>'] = cmp.mapping {
+                    c = function()
+                        if cmp.visible() then
+                            cmp.select_next_item { behaviour = cmp.SelectBehavior.Insert }
+                        else
+                            cmp.complete()
+                        end
+                    end,
+                    i = function(fallback)
+                        if cmp.visible() then
+                            cmp.select_next_item { behaviour = cmp.SelectBehavior.Insert }
+                        elseif vim.fn['vsnip#jumpable'](1) == 1 then
+                            jump_forward()
+                        else
+                            fallback()
+                        end
+                    end,
+                    s = function(fallback)
+                        if vim.fn['vsnip#jumpable'](1) == 1 then
+                            jump_forward()
+                        else
+                            fallback()
+                        end
+                    end,
+                },
+                ['<S-Tab>'] = cmp.mapping {
+                    c = function()
+                        if cmp.visible() then
+                            cmp.select_prev_item { behaviour = cmp.SelectBehavior.Insert }
+                        else
+                            cmp.complete()
+                        end
+                    end,
+                    i = function(fallback)
+                        if cmp.visible() then
+                            cmp.select_prev_item { behaviour = cmp.SelectBehavior.Insert }
+                        elseif vim.fn['vsnip#jumpable'](-1) == 1 then
+                            jump_backward()
+                        else
+                            fallback()
+                        end
+                    end,
+                    s = function(fallback)
+                        if vim.fn['vsnip#jumpable'](-1) == 1 then
+                            jump_backward()
+                        else
+                            fallback()
+                        end
+                    end,
+                },
+                ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'c', 'i' }),
+                ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'c', 'i' }),
+                ['<C-Space>'] = cmp.mapping(cmp.mapping.complete {}, { 'c', 'i' }),
+                ['<C-e>'] = cmp.mapping(cmp.mapping.abort(), { 'c', 'i' }),
+                ['<CR>'] = cmp.mapping {
+                    c = function(fallback)
+                        if cmp.visible() then
+                            cmp.confirm { behaviour = cmp.ConfirmBehavior.Replace, select = false }
+                        else
+                            fallback()
+                        end
+                    end,
+                    i = cmp.mapping.confirm {
+                        behaviour = cmp.ConfirmBehavior.Replace,
+                        select = false,
+                    },
+                },
             },
             sources = cmp.config.sources({
                 { name = 'nvim_lsp' },
@@ -73,5 +146,9 @@ return {
         local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 
         cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+
+        cmp.event:on('confirm_done', function()
+            cmp.abort()
+        end)
     end,
 }

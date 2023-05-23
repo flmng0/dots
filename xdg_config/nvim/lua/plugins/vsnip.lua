@@ -1,6 +1,10 @@
 return {
     'hrsh7th/vim-vsnip',
 
+    dependencies = {
+        'hrsh7th/vim-vsnip-integ',
+    },
+
     init = function()
         local map = require('tmthy.utils').map
 

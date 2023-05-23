@@ -42,9 +42,9 @@ return {
                     return lspkind_format(entry, vim_item)
                 end,
             },
-            preselect = cmp.PreselectMode.None,
+            preselect = cmp.PreselectMode.Item,
             completion = {
-                completeopt = 'menu,menuone,noinsert,noselect,preview',
+                completeopt = 'menu,menuone,noinsert,preview',
             },
             window = {
                 documentation = {
@@ -58,7 +58,7 @@ return {
                 ['<C-e>'] = cmp.mapping.abort(),
                 ['<C-j>'] = cmp.mapping.select_next_item(),
                 ['<C-k>'] = cmp.mapping.select_prev_item(),
-                ['<CR>'] = cmp.mapping.confirm { select = false },
+                ['<CR>'] = cmp.mapping.confirm { select = true },
             },
             sources = cmp.config.sources({
                 { name = 'nvim_lsp' },

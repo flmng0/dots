@@ -55,8 +55,9 @@ return {
             },
             preselect = cmp.PreselectMode.Item,
             completion = {
-                ---@diagnostic disable-next-line: assign-type-mismatch
-                autocomplete = false,
+                keyword_length = 1,
+                -- ---@diagnostic disable-next-line: assign-type-mismatch
+                -- autocomplete = false,
                 completeopt = 'menu,menuone,noinsert,preview',
             },
             window = {
@@ -134,9 +135,9 @@ return {
                 },
             },
             sources = cmp.config.sources({
-                { name = 'nvim_lsp' },
-                { name = 'nvim_lsp_signature_help' },
                 { name = 'vsnip' },
+                { name = 'nvim_lsp' },
+                -- { name = 'nvim_lsp_signature_help' },
             }, {
                 { name = 'buffer' },
             }),

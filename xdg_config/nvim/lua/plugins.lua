@@ -30,6 +30,7 @@ return {
             pre_save_cmds = {
                 function()
                     require('nvim-tree.api').tree.close()
+                    require('trouble').close()
                 end,
             },
         },

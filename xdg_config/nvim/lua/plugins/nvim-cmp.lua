@@ -23,17 +23,6 @@ return {
             mode = 'symbol',
         }
 
-        local function t(cmd)
-            return vim.api.nvim_replace_termcodes(cmd, true, true, true)
-        end
-
-        local function jump_forward()
-            vim.api.nvim_feedkeys(t('<Plug>(vsnip-jump-next)'), 'm', true)
-        end
-        local function jump_backward()
-            vim.api.nvim_feedkeys(t('<Plug>(vsnip-jump-prev)'), 'm', true)
-        end
-
         cmp.setup {
             snippet = {
                 expand = function(args)
@@ -53,12 +42,12 @@ return {
                     return lspkind_format(entry, vim_item)
                 end,
             },
-            preselect = cmp.PreselectMode.Item,
+            preselect = cmp.PreselectMode.None,
             completion = {
                 keyword_length = 1,
                 -- ---@diagnostic disable-next-line: assign-type-mismatch
                 -- autocomplete = false,
-                completeopt = 'menu,menuone,noinsert,preview',
+                completeopt = 'menu,menuone,preview,noinsert,noselect',
             },
             window = {
                 documentation = {
@@ -66,64 +55,68 @@ return {
                 },
             },
             mapping = {
-                ['<Tab>'] = cmp.mapping {
-                    c = function()
-                        if cmp.visible() then
-                            cmp.select_next_item { behaviour = cmp.SelectBehavior.Insert }
-                        else
-                            cmp.complete()
+                ['<C-Space>'] = cmp.mapping(function(fallback)
+                    if not cmp.get_active_entry() then
+                        if not cmp.visible() then
+                            cmp.complete { reason = cmp.ContextReason.Manual }
                         end
-                    end,
-                    i = function(fallback)
-                        if cmp.visible() then
-                            cmp.select_next_item { behaviour = cmp.SelectBehavior.Insert }
-                        elseif vim.fn['vsnip#jumpable'](1) == 1 then
-                            jump_forward()
+                        cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
+                    else
+                        fallback()
+                    end
+                end, { 'c', 'i' }),
+
+                ['<C-j>'] = cmp.mapping(function(fallback)
+                    local active = cmp.get_active_entry()
+
+                    if active ~= nil then
+                        local entries = cmp.get_entries()
+                        local length = #entries
+
+                        if active == entries[length] then
+                            cmp.select_prev_item {
+                                behavior = cmp.SelectBehavior.Insert,
+                                count = length - 1,
+                            }
                         else
-                            fallback()
+                            cmp.select_next_item {
+                                behavior = cmp.SelectBehavior.Insert,
+                            }
                         end
-                    end,
-                    s = function(fallback)
-                        if vim.fn['vsnip#jumpable'](1) == 1 then
-                            jump_forward()
+                    else
+                        fallback()
+                    end
+                end, { 'c', 'i' }),
+
+                ['<C-k>'] = cmp.mapping(function(fallback)
+                    local active = cmp.get_active_entry()
+
+                    if active ~= nil then
+                        local entries = cmp.get_entries()
+                        local length = #entries
+
+                        if active == entries[1] then
+                            cmp.select_next_item {
+                                behavior = cmp.SelectBehavior.Insert,
+                                count = length - 1,
+                            }
                         else
-                            fallback()
+                            cmp.select_prev_item {
+                                behavior = cmp.SelectBehavior.Insert,
+                            }
                         end
-                    end,
-                },
-                ['<S-Tab>'] = cmp.mapping {
-                    c = function()
-                        if cmp.visible() then
-                            cmp.select_prev_item { behaviour = cmp.SelectBehavior.Insert }
-                        else
-                            cmp.complete()
-                        end
-                    end,
-                    i = function(fallback)
-                        if cmp.visible() then
-                            cmp.select_prev_item { behaviour = cmp.SelectBehavior.Insert }
-                        elseif vim.fn['vsnip#jumpable'](-1) == 1 then
-                            jump_backward()
-                        else
-                            fallback()
-                        end
-                    end,
-                    s = function(fallback)
-                        if vim.fn['vsnip#jumpable'](-1) == 1 then
-                            jump_backward()
-                        else
-                            fallback()
-                        end
-                    end,
-                },
+                    else
+                        fallback()
+                    end
+                end, { 'c', 'i' }),
+
                 ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'c', 'i' }),
                 ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'c', 'i' }),
-                ['<C-Space>'] = cmp.mapping(cmp.mapping.complete {}, { 'c', 'i' }),
                 ['<C-e>'] = cmp.mapping(cmp.mapping.abort(), { 'c', 'i' }),
                 ['<CR>'] = cmp.mapping {
                     c = function(fallback)
                         if cmp.visible() then
-                            cmp.confirm { behaviour = cmp.ConfirmBehavior.Replace, select = false }
+                            cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false }
                         else
                             fallback()
                         end

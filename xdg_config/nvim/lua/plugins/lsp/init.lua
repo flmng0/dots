@@ -110,6 +110,8 @@ return {
                 filetypes = css_langs,
             },
 
+            elixirls = {},
+
             -- These below servers either have custom logic, or are setup by their
             -- respective plugins, however, since we're using mason-lspconfig, the
             -- servers can still be configured here.

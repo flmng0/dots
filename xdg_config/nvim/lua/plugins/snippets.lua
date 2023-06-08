@@ -7,15 +7,37 @@ return {
         init = function()
             local map = require('tmthy.utils').map
 
-            map({ 'i' }, '<C-j>', function()
+            map({ 'i' }, '<C-Tab>', function()
                 if vim.fn['vsnip#expandable']() == 1 then
                     return [[<Plug>(vsnip-expand)]]
                 end
-                return '<C-j>'
+                return '<C-Tab>'
             end, {
                 expr = true,
                 remap = true,
                 desc = 'Expand snippet if valid',
+            })
+
+            map({ 's', 'i' }, '<Tab>', function()
+                if vim.fn['vsnip#jumpable'](1) == 1 then
+                    return [[<Plug>(vsnip-jump-next)]]
+                end
+                return '<Tab>'
+            end, {
+                expr = true,
+                remap = true,
+                desc = 'Jump to next snippet point',
+            })
+
+            map({ 's', 'i' }, '<S-Tab>', function()
+                if vim.fn['vsnip#jumpable'](-1) == 1 then
+                    return [[<Plug>(vsnip-jump-prev)]]
+                end
+                return '<S-Tab>'
+            end, {
+                expr = true,
+                remap = true,
+                desc = 'Jump to next snippet point',
             })
         end,
     },

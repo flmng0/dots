@@ -6,6 +6,7 @@ return {
     },
 
     opts = {
+        hijack_netrw = true,
         hijack_unnamed_buffer_when_opening = true,
         diagnostics = {
             enable = true,

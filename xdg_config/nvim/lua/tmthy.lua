@@ -25,5 +25,8 @@ vim.api.nvim_create_autocmd('User', {
 
         -- Set diagnostic signs
         require('tmthy.icons').set_signs()
-    end
+
+        -- Autoformat on save
+        require('tmthy.format').setup()
+    end,
 })

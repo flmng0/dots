@@ -8,7 +8,6 @@ return {
 
         -- Formatters
         'jose-elias-alvarez/null-ls.nvim',
-        'jay-babu/mason-null-ls.nvim',
 
         {
             'b0o/SchemaStore.nvim',
@@ -57,11 +56,6 @@ return {
             }
         end
 
-        local formatters = {
-            'stylua',
-            'prettierd',
-        }
-
         local capabilities = vim.lsp.protocol.make_client_capabilities()
         capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
@@ -76,16 +70,7 @@ return {
             ensure_installed = vim.tbl_keys(servers),
         }
 
-        require('mason-null-ls').setup {
-            ensure_installed = formatters,
-            automatic_installation = false,
-            handlers = {},
-        }
-
-        local on_attach = function(client, buf)
-            require('plugins.lsp.format').on_attach(client, buf)
-            require('plugins.lsp.actions').on_attach(client, buf)
-        end
+        local on_attach = require('plugins.lsp.actions').on_attach
 
         local default_opts = {
             on_attach = on_attach,
@@ -145,8 +130,10 @@ return {
 
         local nls = require('null-ls')
         nls.setup {
+            debug = true,
+            log_level = 'debug',
             sources = {
-                nls.builtins.formatting.prettierd.with {
+                nls.builtins.formatting.eslint_d.with {
                     extra_filetypes = { 'svelte' },
                 },
                 nls.builtins.formatting.stylua,

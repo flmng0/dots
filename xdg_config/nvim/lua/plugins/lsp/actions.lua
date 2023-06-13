@@ -32,8 +32,7 @@ M.on_attach = function(client, bufnr)
     -- nmap('<leader>r', vim.lsp.buf.rename, 'LSP: Rename Symbol')
     nmap('<leader>ca', vim.lsp.buf.code_action, 'LSP: View Code Actions')
     nmap('<leader>f', function()
-        local buf = vim.api.nvim_get_current_buf()
-        require('plugins.lsp.format').format(buf)
+        require('tmthy.format').format()
     end, 'LSP: Format Current Buffer')
 
     -- [g]oto commands

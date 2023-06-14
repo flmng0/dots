@@ -133,9 +133,12 @@ return {
             debug = true,
             log_level = 'debug',
             sources = {
-                nls.builtins.formatting.eslint_d.with {
+                nls.builtins.formatting.prettierd.with {
                     extra_filetypes = { 'svelte' },
                 },
+                -- nls.builtins.formatting.eslint_d.with {
+                --     extra_filetypes = { 'svelte' },
+                -- },
                 nls.builtins.formatting.stylua,
                 require('typescript.extensions.null-ls.code-actions'),
             },

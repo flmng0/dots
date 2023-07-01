@@ -16,6 +16,8 @@ local css_langs = {
     'typescriptreact',
     'svelte',
     'vue',
+    'heex',
+    'elixir',
 }
 
 local servers = {
@@ -59,6 +61,34 @@ local servers = {
     svelte = {},
     tailwindcss = {
         filetypes = css_langs,
+        init_options = {
+            userLanguages = {
+                elixir = 'phoenix-heex',
+                heex = 'phoenix-heex',
+                -- svelte = "html",
+            },
+        },
+        includeLanguages = {
+            ['phoenix-heex'] = 'html',
+        },
+    },
+
+    emmet_ls = {
+        filetypes = {
+            'css',
+            'eruby',
+            'html',
+            'javascript',
+            'javascriptreact',
+            'less',
+            'sass',
+            'scss',
+            'svelte',
+            'pug',
+            'typescriptreact',
+            'vue',
+            'heex',
+        },
     },
 
     elixirls = {},

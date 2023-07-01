@@ -15,5 +15,22 @@ for i = 1, harpoon_buttons do
     local keys = string.format('<leader>%s', i)
     local desc = string.format('Goto Harpooned File #%s', i)
 
-    utils.nmap(keys, function() require('harpoon.ui').nav_file(i) end, desc)
+    utils.nmap(keys, function()
+        require('harpoon.ui').nav_file(i)
+    end, desc)
 end
+
+utils.imap('>', function()
+    local col = vim.fn.col('.')
+    local line = vim.fn.getline('.')
+
+    if line:sub(col - 1, col) == '><' then
+        return '<CR><C-o>O'
+    end
+
+    return '>'
+end, {
+    remap = false,
+    expr = true,
+    desc = 'Maybe insert newline for tag',
+})

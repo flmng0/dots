@@ -1,6 +1,9 @@
 -- See: https://github.com/folke/lazy.nvim
 return {
     {
+        'numToStr/prettierrc.nvim',
+    },
+    {
         'numToStr/Comment.nvim',
         opts = {},
     },
@@ -37,6 +40,7 @@ return {
     },
     {
         'windwp/nvim-autopairs',
+        event = 'InsertEnter',
         opts = {},
     },
     {

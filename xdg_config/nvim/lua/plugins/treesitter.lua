@@ -9,11 +9,17 @@ return {
 
     dependencies = {
         'windwp/nvim-ts-autotag',
+        'nvim-treesitter/nvim-treesitter-textobjects',
+        'nvim-treesitter/playground',
     },
 
     config = function()
         require('nvim-treesitter.configs').setup {
             autotag = {
+                enable = true,
+            },
+
+            playground = {
                 enable = true,
             },
 

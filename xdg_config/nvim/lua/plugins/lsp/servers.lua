@@ -20,6 +20,8 @@ local css_langs = {
     'elixir',
 }
 
+local root_pattern = require('lspconfig.util').root_pattern
+
 local servers = {
     astro = {},
     clangd = {},
@@ -71,23 +73,34 @@ local servers = {
         includeLanguages = {
             ['phoenix-heex'] = 'html',
         },
+        root_dir = root_pattern(
+            'tailwind.config.js',
+            'tailwind.config.mjs',
+            'tailwind.config.cjs',
+            'tailwind.config.ts'
+        ),
+    },
+
+    unocss = {
+        filetypes = css_langs,
     },
 
     emmet_ls = {
+        init_options = {
+            jsx = {
+                options = {
+                    ['markup.attributes'] = {
+                        ['className'] = 'class',
+                    },
+                },
+            },
+        },
         filetypes = {
-            'css',
-            'eruby',
             'html',
-            'javascript',
-            'javascriptreact',
-            'less',
-            'sass',
-            'scss',
             'svelte',
-            'pug',
-            'typescriptreact',
-            'vue',
             'heex',
+            'typescriptreact',
+            'javascriptreact',
         },
     },
 

@@ -7,6 +7,10 @@ return {
         }
     end,
 
+    dependencies = {
+        'windwp/nvim-ts-autotag',
+    },
+
     config = function()
         require('nvim-treesitter.configs').setup {
             ensure_installed = {
@@ -19,6 +23,28 @@ return {
                 'vim',
                 'lua',
                 'svelte',
+            },
+
+            autotag = {
+                enable = true,
+                enable_rename = true,
+                enable_close = true,
+                enable_close_on_slash = true,
+                filetypes = {
+                    'html',
+                    'javascript',
+                    'typescript',
+                    'javascriptreact',
+                    'typescriptreact',
+                    'svelte',
+                    'tsx',
+                    'jsx',
+                    'xml',
+                    'markdown',
+                    'astro',
+                    'heex',
+                    'elixir',
+                },
             },
 
             highlight = { enable = true },

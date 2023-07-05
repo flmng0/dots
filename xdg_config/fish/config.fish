@@ -117,3 +117,8 @@ function remove_windows_paths
     set -x PATH $new_path
 end
 
+function nvimgd
+    nvim --listen ~/.cache/nvim/godot.pipe .
+end
+
+nvm use lts

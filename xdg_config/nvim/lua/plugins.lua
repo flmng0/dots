@@ -1,6 +1,9 @@
 -- See: https://github.com/folke/lazy.nvim
 return {
     {
+        'numToStr/prettierrc.nvim',
+    },
+    {
         'numToStr/Comment.nvim',
         opts = {},
     },
@@ -33,10 +36,14 @@ return {
     },
     {
         'windwp/nvim-autopairs',
+        event = 'InsertEnter',
         opts = {},
     },
     {
         'sindrets/diffview.nvim',
         dependencies = { 'nvim-lua/plenary.nvim' },
+    },
+    {
+        'mattn/emmet-vim',
     },
 }

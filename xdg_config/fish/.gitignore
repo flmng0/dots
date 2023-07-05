@@ -1,0 +1,7 @@
+completions
+conf.d
+fishd.*
+functions
+vars.fish
+local.fish
+fish_variables

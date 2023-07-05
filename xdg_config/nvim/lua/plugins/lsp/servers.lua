@@ -16,7 +16,11 @@ local css_langs = {
     'typescriptreact',
     'svelte',
     'vue',
+    'heex',
+    'elixir',
 }
+
+local root_pattern = require('lspconfig.util').root_pattern
 
 local servers = {
     astro = {},
@@ -59,6 +63,45 @@ local servers = {
     svelte = {},
     tailwindcss = {
         filetypes = css_langs,
+        init_options = {
+            userLanguages = {
+                elixir = 'phoenix-heex',
+                heex = 'phoenix-heex',
+                -- svelte = "html",
+            },
+        },
+        includeLanguages = {
+            ['phoenix-heex'] = 'html',
+        },
+        root_dir = root_pattern(
+            'tailwind.config.js',
+            'tailwind.config.mjs',
+            'tailwind.config.cjs',
+            'tailwind.config.ts'
+        ),
+    },
+
+    unocss = {
+        filetypes = css_langs,
+    },
+
+    emmet_ls = {
+        init_options = {
+            jsx = {
+                options = {
+                    ['markup.attributes'] = {
+                        ['className'] = 'class',
+                    },
+                },
+            },
+        },
+        filetypes = {
+            'html',
+            'svelte',
+            'heex',
+            'typescriptreact',
+            'javascriptreact',
+        },
     },
 
     elixirls = {},

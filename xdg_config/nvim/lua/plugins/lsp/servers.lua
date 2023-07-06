@@ -106,12 +106,19 @@ local servers = {
 
     elixirls = {},
 
+    denols = {
+        root_dir = root_pattern('deno.json'),
+    },
+
     -- These below servers either have custom logic, or are setup by their
     -- respective plugins, however, since we're using mason-lspconfig, the
     -- servers can still be configured here.
 
     -- Setup is done by typescript.nvim
-    tsserver = {},
+    tsserver = {
+        root_dir = root_pattern('package.json', 'package.jsonc'),
+        single_file_support = false,
+    },
 
     -- Setup is done by rust-tools
     rust_analyzer = {

@@ -57,6 +57,8 @@ opt.completeopt = { 'menu', 'menuone', 'preview', 'noinsert', 'noselect' }
 
 opt.mouse = 'a'
 
+opt.sessionoptions = 'curdir'
+
 vim.g.switchbuf = 'vsplit'
 
 vim.g.loaded_netrw = true

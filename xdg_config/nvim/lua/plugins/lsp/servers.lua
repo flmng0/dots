@@ -81,6 +81,8 @@ local servers = {
         ),
     },
 
+    cssls = {},
+
     unocss = {
         filetypes = css_langs,
     },

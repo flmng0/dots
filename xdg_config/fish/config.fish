@@ -1,4 +1,3 @@
-
 # Ensure ssh-agent is set
 if not pgrep ssh-agent | string collect > /dev/null
     eval (ssh-agent -c) > /dev/null
@@ -121,4 +120,7 @@ function nvimgd
     nvim --listen ~/.cache/nvim/godot.pipe .
 end
 
-nvm use lts
+nvm use lts > /dev/null 2> /dev/null; or true
+
+# opam configuration
+source /home/tmthy/.opam/opam-init/init.fish > /dev/null 2> /dev/null; or true

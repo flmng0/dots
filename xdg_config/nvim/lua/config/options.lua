@@ -5,3 +5,7 @@
 local opt = vim.opt
 
 opt.formatoptions = "crqj" -- to/wan2vblmMBl]p
+
+opt.smartindent = false
+
+opt.completeopt = "menu,menuone,noinsert,noselect"

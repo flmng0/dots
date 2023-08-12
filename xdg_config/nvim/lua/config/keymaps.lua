@@ -4,5 +4,7 @@
 
 vim.keymap.set("i", "jk", "<Esc>")
 
-vim.keymap.set("n", "gl", "$")
-vim.keymap.set("n", "gh", "^")
+vim.keymap.set({ "n", "v" }, "gl", "$")
+vim.keymap.set({ "n", "v" }, "gh", "^")
+
+vim.keymap.set("n", "U", ":redo<CR>", { silent = true })

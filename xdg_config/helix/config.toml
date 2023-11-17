@@ -1,0 +1,33 @@
+theme = "kanagawa"
+
+[editor]
+line-number = "relative"
+rulers = [100]
+bufferline = "always"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+# hidden = false
+
+[editor.indent-guides]
+render = true
+skip-levels = 1
+
+[editor.lsp]
+display-messages = true
+auto-signature-help = false
+
+[keys.normal]
+"C-j" = ["extend_to_line_bounds", "delete_selection", "paste_after"]
+"C-k" = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
+
+[keys.normal.space]
+f = ":format"
+space = "file_picker"
+
+[keys.insert]
+j = { k = "normal_mode" }

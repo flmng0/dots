@@ -1,0 +1,29 @@
+[[language]]
+name = "typescript"
+language-servers = [ 
+  { name = "efm-prettierd", only-features = ["format"] }, 
+  { name = "typescript-language-server", except-features = ["format"] },
+]
+
+[[language]]
+name = "elixir"
+language-servers = [ 
+  "elixir-ls", 
+  "credo" 
+]
+
+[language-server.elixir-ls]
+command = "elixir-ls"
+config = { elixirLS.dialyzerEnabled = true }
+
+[language-server.credo]
+command = "credo-language-server"
+args = ["--stdio=true", "--port=999"]
+
+[language-server.efm-prettierd]
+command = "efm-langserver"
+
+[language-server.efm-prettierd.config]
+documentFormatting = true
+languages = { typescript = [ { formatCommand = "prettierd ${INPUT}", formatStdin = true } ] }
+

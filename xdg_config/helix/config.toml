@@ -11,7 +11,7 @@ normal = "block"
 select = "underline"
 
 [editor.file-picker]
-# hidden = false
+hidden = false
 
 [editor.indent-guides]
 render = true
@@ -21,12 +21,17 @@ skip-levels = 1
 display-messages = true
 auto-signature-help = false
 
+[editor.smart-tab]
+enable = false
+
 [keys.normal]
 "C-j" = ["extend_to_line_bounds", "delete_selection", "paste_after"]
 "C-k" = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
 
+"H" = "buffer-previous"
+"L" = "buffer-next"
+
 [keys.normal.space]
-f = ":format"
 space = "file_picker"
 
 [keys.insert]

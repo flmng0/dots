@@ -8,8 +8,7 @@ language-servers = [
 [[language]]
 name = "elixir"
 language-servers = [ 
-  "elixir-ls", 
-  "credo" 
+  "elixir-ls"
 ]
 
 [language-server.elixir-ls]

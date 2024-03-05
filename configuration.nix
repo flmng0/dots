@@ -104,6 +104,8 @@ in
   #  wget
     git
     gitui
+    gh
+    
     kitty
     fira-code-nerdfont
 

@@ -28,8 +28,8 @@ enable = false
 "C-j" = ["extend_to_line_bounds", "delete_selection", "paste_after"]
 "C-k" = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
 
-"H" = "buffer-previous"
-"L" = "buffer-next"
+"H" = "goto_next_buffer"
+"L" = "goto_previous_buffer"
 
 [keys.normal.space]
 space = "file_picker"

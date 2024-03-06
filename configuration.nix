@@ -90,7 +90,6 @@ in
     packages = with pkgs; [
       firefox
     ];
-    shell = pkgs.zsh;
   };
 
   # Allow unfree packages
@@ -148,6 +147,7 @@ in
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
 
+  # ZSH configuration
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -156,6 +156,10 @@ in
 
     promptInit = "source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
   };
+
+  # Set ZSH as default
+  users.defaultUserShell = pkgs.zsh;
+  
   # programs.mtr.enable = true;
   # programs.gnupg.agent = {
   #   enable = true;

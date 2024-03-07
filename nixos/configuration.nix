@@ -13,11 +13,7 @@ in
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ] 
-    ++ (
-      if (builtins.pathExists ./machine.nix) 
-      then [./machine.nix] 
-      else []
-    );
+    ++ (lib.optional (builtins.pathExists ./machine.nix) ./machine.nix);
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;

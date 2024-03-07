@@ -1,1 +1,4 @@
 */helix/runtime
+
+/nixos/hardware-configuration.nix
+/nixos/machine.nix

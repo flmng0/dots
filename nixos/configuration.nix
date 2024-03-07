@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   unstable = import <unstable> { config = { allowUnfree = true; }; };
@@ -11,14 +11,19 @@ in
 {
   imports =
     [ # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix
-    ];
+      ./hardware-configuration.nix
+    ] 
+    ++ (
+      if (builtins.pathExists ./machine.nix) 
+      then [./machine.nix] 
+      else []
+    );
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "iMango"; # Define your hostname.
+  networking.hostName = lib.mkDefault "iMango"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary

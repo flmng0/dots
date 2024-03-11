@@ -11,7 +11,6 @@ return {
 		require("mini.splitjoin").setup()
 		require("mini.pairs").setup()
 		require("mini.files").setup()
-		require("mini.completion").setup()
 
 		vim.keymap.set("n", "<leader>e", function()
 			if not MiniFiles.close() then

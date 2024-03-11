@@ -132,6 +132,7 @@ in
     ## Unstable packages
     unstable.neovim
     unstable.helix
+    unstable.obsidian
   ] ++ (with pkgs.nodePackages_latest; [
     ## JavaScript packages using nodePackages_latest
     nodejs
@@ -145,8 +146,8 @@ in
   ]);
 
   environment.variables = {
-    EDITOR = "hx";
-    VISUAL = "hx";
+    EDITOR = "nvim";
+    VISUAL = "nvim";
   };
 
   # Some programs need SUID wrappers, can be configured further or are

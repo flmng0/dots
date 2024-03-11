@@ -106,16 +106,17 @@ in
     
     kitty
     fira-code-nerdfont
+    inotify-tools
 
     cmake
     gnumake
 
-    postgresql
+    exfat
 
     ## Languages and Language Servers
     # C
     gcc
-    clang
+    # clang
 
     # Lua
     stylua
@@ -128,17 +129,20 @@ in
     ocaml
     dune_3
 
-    # JavaScript
-    nodejs
-    typescript
-    efm-langserver
-    prettierd
-    nodePackages.typescript-language-server
-
     ## Unstable packages
     unstable.neovim
     unstable.helix
-  ];
+  ] ++ (with pkgs.nodePackages_latest; [
+    ## JavaScript packages using nodePackages_latest
+    nodejs
+    pnpm
+
+    typescript
+    typescript-language-server
+
+    efm-langserver
+    prettierd
+  ]);
 
   environment.variables = {
     EDITOR = "hx";
@@ -147,6 +151,10 @@ in
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
+
+  # PostgreSQL
+  services.postgresql.enable = true;
+  services.postgresql.package = pkgs.postgresql_16;
 
   # ZSH configuration
   programs.zsh = {

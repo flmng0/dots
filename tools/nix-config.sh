@@ -6,6 +6,8 @@ CONFIG_PATH="/etc/nixos/configuration.nix"
 
 # Follow it incase it's a symlink.
 CONFIG_PATH=$(readlink -f "$CONFIG_PATH")
+CONFIG_DIR=$(dirname "$CONFIG_PATH")
+CONFIG_FILES=$(find "$CONFIG_DIR" -type f -name "*.nix")
 
 # Get the owner, and use sudoedit if the owner is root.
 CONFIG_OWNER=$(ls -l $CONFIG_PATH | awk '{print $3}')
@@ -25,11 +27,11 @@ LINE_ARG=$(grep -n "systemPackages" "$CONFIG_PATH" | awk '{print $1}' | sed -e '
 
 # Get the check sum before and after modification, to check whether a
 # change was actually made or not.
-SUM_BEFORE="$(md5sum $CONFIG_PATH)"
+SUM_BEFORE="$(md5sum $CONFIG_FILES)"
 
 $EDIT_CMD "$CONFIG_PATH" "$LINE_ARG"
 
-SUM_AFTER="$(md5sum $CONFIG_PATH)"
+SUM_AFTER="$(md5sum $CONFIG_FILES)"
 
 if [ "$SUM_BEFORE" = "$SUM_AFTER" ]; then
   echo "No modification detected, exiting..."

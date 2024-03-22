@@ -7,9 +7,9 @@ function bootstrap(name, url, branch, ex_args)
 			"git",
 			"clone",
 			"--filter=blob:none",
+			"--branch=" .. branch,
 			ex_args,
 			url,
-			"--branch=" .. branch,
 			path,
 		})
 
@@ -19,10 +19,8 @@ function bootstrap(name, url, branch, ex_args)
 	vim.opt.rtp:prepend(path)
 end
 
-hotpotver = "v0.11.1"
-
-bootstrap("lazy.nvim", "https://github.com/folke/lazy.nvim.git", "main")
-bootstrap("hotpot.nvim", "https://github.com/rktjmp/hotpot.nvim.git", hotpotver, { "--single-branch" })
+bootstrap("lazy.nvim", "https://github.com/folke/lazy.nvim.git", "stable")
+bootstrap("hotpot.nvim", "https://github.com/rktjmp/hotpot.nvim.git", "v0.11.1")
 
 require("hotpot").setup()
 

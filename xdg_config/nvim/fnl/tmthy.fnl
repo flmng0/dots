@@ -2,6 +2,6 @@
 
 (let [lazy (require :lazy)
       plugin-spec (require :plugins)
-      options { :change_detection {:enabled false} }]
+      options {:change_detection {:enabled false}}]
   (lazy.setup plugin-spec options))
 

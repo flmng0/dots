@@ -1,7 +1,7 @@
 (local unpack (or table.unpack _G.unpack))
 
 [; Make sure to actually track hotpot!
- {1 :rktjmp/hotpot.nvim :tag _G.hotpotver}
+ :rktjmp/hotpot.nvim
  ; Auto indent size and more
  :tpope/vim-sleuth
  ; ColorScheme

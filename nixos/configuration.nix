@@ -120,6 +120,9 @@ in
 
     # Lua
     stylua
+    # Not sure if I need this yet
+    # luajitPackages.fennel
+    fnlfmt
 
     # Elixir
     elixir
@@ -132,7 +135,6 @@ in
     ## Unstable packages
     unstable.neovim
     unstable.helix
-    unstable.obsidian
   ] ++ (with pkgs.nodePackages_latest; [
     ## JavaScript packages using nodePackages_latest
     nodejs

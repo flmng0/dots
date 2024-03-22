@@ -1,56 +1,27 @@
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+function bootstrap(name, url, branch, ex_args)
+	local ex_args = ex_args or {}
+	local path = vim.fn.stdpath("data") .. "/lazy/" .. name
 
-vim.opt.number = true
-vim.opt.relativenumber = true
+	if not vim.loop.fs_stat(path) then
+		args = vim.tbl_flatten({
+			"git",
+			"clone",
+			"--filter=blob:none",
+			ex_args,
+			url,
+			"--branch=" .. branch,
+			path,
+		})
 
-vim.opt.clipboard = "unnamedplus"
+		vim.fn.system(args)
+	end
 
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
-vim.opt.signcolumn = "auto"
-
-vim.opt.updatetime = 250
-vim.opt.timeoutlen = 300
-
-vim.opt.inccommand = "split"
-
-vim.opt.cursorline = true
-
-vim.opt.scrolloff = 7
-
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-
-vim.opt.hlsearch = true
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-
-if not vim.loop.fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable",
-		lazypath,
-	})
+	vim.opt.rtp:prepend(path)
 end
 
-vim.opt.rtp:prepend(lazypath)
+bootstrap("lazy.nvim", "https://github.com/folke/lazy.nvim.git", "stable")
+bootstrap("hotpot.nvim", "https://github.com/rktjmp/hotpot.nvim.git", "v0.11.0", { "--single-branch" })
 
-require("lazy").setup("plugins", {
-	change_detection = {
-		enabled = false,
-	},
-})
+require("hotpot").setup()
 
-vim.keymap.set("i", "jk", "<Esc>")
-
-vim.keymap.set("n", "gs", "^")
-vim.keymap.set("n", "gl", "$")
+require("tmthy")

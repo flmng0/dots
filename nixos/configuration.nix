@@ -80,6 +80,10 @@ in
     #media-session.enable = true;
   };
 
+  # Enable bluetooth
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
@@ -131,6 +135,12 @@ in
     # OCaml
     ocaml
     dune_3
+
+    # Clojure
+    temurin-jre-bin-17
+    clojure
+    clojure-lsp
+    leiningen
 
     ## Unstable packages
     unstable.neovim

@@ -1,4 +1,5 @@
 (require :options)
+(require :keys)
 
 (let [lazy (require :lazy)
       plugin-spec (require :plugins)

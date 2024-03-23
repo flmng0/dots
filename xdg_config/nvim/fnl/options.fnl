@@ -21,10 +21,3 @@
                   :splitbelow true
                   :hlsearch true})
 
-(vim.keymap.set :n :<Esc> :<cmd>nohlsearch<CR>)
-
-(vim.keymap.set :n :gs "^")
-(vim.keymap.set :n :gl "$")
-
-(vim.keymap.set :i :jk :<Esc>)
-

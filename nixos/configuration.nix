@@ -108,6 +108,7 @@ in
     gitui
     gh
     
+    wezterm
     kitty
     fira-code-nerdfont
     inotify-tools
@@ -164,6 +165,14 @@ in
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
+
+  # PICOM PLEASE SAVE ME
+  services.picom = {
+    enable = true;
+    backend = "xrender";
+    vSync = true;
+    settings = { unreder-if-possible = false; };
+  };
 
   # PostgreSQL
   services.postgresql.enable = true;

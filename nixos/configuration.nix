@@ -126,8 +126,9 @@ in
     # Lua
     stylua
     # Not sure if I need this yet
-    luajitPackages.luarocks
-    luajitPackages.fennel
+    unstable.luajitPackages.luarocks
+    unstable.luajitPackages.fennel
+    unstable.fennel-ls
     fnlfmt
 
     # Elixir

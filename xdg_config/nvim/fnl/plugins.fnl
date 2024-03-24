@@ -1,9 +1,12 @@
 (local unpack (or table.unpack _G.unpack))
 
-[; Make sure to actually track hotpot!
+[(require :plugins.lspconfig)
+ ; Make sure to actually track hotpot!
  :rktjmp/hotpot.nvim
  ; Auto indent size and more
  :tpope/vim-sleuth
+ ; Parenthesis handling for lisp-like languages
+ {1 :gpanders/nvim-parinfer}
  ; ColorScheme
  {1 :rebelot/kanagawa.nvim
   :lazy false
@@ -90,7 +93,7 @@
                               :format_on_save {:timeout_ms 500
                                                :lsp_fallback true}})
               (vim.api.nvim_create_user_command :Format
-                                                (fn [] (conform.format)) {})))}
- ;keep
- ]
+                                                (fn [] (conform.format)) {})))}]
+
+;keep
 

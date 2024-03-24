@@ -4,7 +4,8 @@
                 :emmet_language_server {}
                 :lua_ls {}})
 
-(local system-servers {:fennel_ls {}})
+(local system-servers
+       {:fennel_ls {:settings {:fennel-ls {:extra-globals "love vim"}}}})
 
 {1 :neovim/nvim-lspconfig
  :dependencies [:williamboman/mason.nvim :williamboman/mason-lspconfig.nvim]

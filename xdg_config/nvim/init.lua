@@ -22,6 +22,9 @@ end
 bootstrap("lazy.nvim", "https://github.com/folke/lazy.nvim.git", "stable")
 bootstrap("hotpot.nvim", "https://github.com/rktjmp/hotpot.nvim.git", "v0.11.1")
 
-require("hotpot").setup()
+require("hotpot").setup({
+	provide_require_fennel = true,
+	enable_hotpot_diagnostics = false,
+})
 
 require("tmthy")

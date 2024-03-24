@@ -121,12 +121,12 @@ in
     ## Languages and Language Servers
     # C
     gcc
-    # clang
+    ccls
 
     # Lua
     stylua
     # Not sure if I need this yet
-    # luajitPackages.fennel
+    luajitPackages.fennel
     fnlfmt
 
     # Elixir

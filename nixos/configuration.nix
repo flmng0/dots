@@ -107,6 +107,7 @@ in
     git
     gitui
     gh
+    unzip
     
     wezterm
     kitty
@@ -121,17 +122,16 @@ in
     ## Languages and Language Servers
     # C
     gcc
-    ccls
 
     # Lua
     stylua
     # Not sure if I need this yet
+    luajitPackages.luarocks
     luajitPackages.fennel
     fnlfmt
 
     # Elixir
     elixir
-    elixir-ls
     
     # OCaml
     ocaml
@@ -140,22 +140,16 @@ in
     # Clojure
     temurin-jre-bin-17
     clojure
-    clojure-lsp
     leiningen
 
     ## Unstable packages
     unstable.neovim
-    unstable.helix
   ] ++ (with pkgs.nodePackages_latest; [
     ## JavaScript packages using nodePackages_latest
     nodejs
     pnpm
 
     typescript
-    typescript-language-server
-
-    efm-langserver
-    prettierd
   ]);
 
   environment.variables = {

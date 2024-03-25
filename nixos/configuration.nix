@@ -104,6 +104,7 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
   #  wget
+    tmux
     git
     gitui
     gh

@@ -164,7 +164,7 @@ in
   # PICOM PLEASE SAVE ME
   services.picom = {
     enable = true;
-    backend = "xrender";
+    backend = "glx";
     vSync = true;
     settings = { unreder-if-possible = false; };
   };

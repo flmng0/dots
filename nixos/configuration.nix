@@ -143,6 +143,7 @@ in
     temurin-jre-bin-17
     clojure
     leiningen
+    cljfmt
 
     ## Unstable packages
     unstable.neovim

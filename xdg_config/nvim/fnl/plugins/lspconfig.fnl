@@ -1,5 +1,6 @@
 (local servers {:astro {}
                 :clangd {}
+                :clojure_lsp {}
                 :elixirls {}
                 :emmet_language_server {}
                 :lua_ls {}})

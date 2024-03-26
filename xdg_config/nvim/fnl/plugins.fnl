@@ -87,8 +87,12 @@
             (let [conform (require :conform)
                   formatters_by_ft {:lua [:stylua]
                                     :javascript [:prettierd]
+                                    :clojure [:cljfmt]
                                     :ocaml [:ocamlformat]
-                                    :fennel [:fnlfmt]}]
+                                    :fennel [:fnlfmt]}
+                  formatters {:cljfmt {:command :cljfmt
+                                       :args [:fix]
+                                       :stdin false}}]
               (conform.setup {: formatters_by_ft
                               :format_on_save {:timeout_ms 500
                                                :lsp_fallback true}})

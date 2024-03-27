@@ -4,10 +4,6 @@
 
 { config, pkgs, lib, ... }:
 
-let
-  unstable = import <unstable> { config = { allowUnfree = true; }; };
-in
-
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -55,9 +51,9 @@ in
   services.xserver.desktopManager.plasma5.enable = true;
 
   # Configure keymap in X11
-  services.xserver = {
+  services.xserver.xkb = {
     layout = "au";
-    xkbVariant = "";
+    variant = "";
   };
 
   # Enable CUPS to print documents.
@@ -110,6 +106,7 @@ in
     gh
     unzip
     
+    neovim
     wezterm
     kitty
     fira-code-nerdfont
@@ -122,18 +119,22 @@ in
 
     ## Languages and Language Servers
     # C
-    gcc
+    # gcc
+    clang
+    clang-tools
 
     # Lua
     stylua
     # Not sure if I need this yet
-    unstable.luajitPackages.luarocks
-    unstable.luajitPackages.fennel
-    unstable.fennel-ls
+    lua-language-server
+    luajitPackages.luarocks
+    luajitPackages.fennel
     fnlfmt
+    fennel-ls
 
     # Elixir
     elixir
+    elixir-ls
     
     # OCaml
     ocaml
@@ -141,16 +142,18 @@ in
 
     # Clojure
     temurin-jre-bin-17
+    clojure-lsp
     clojure
     leiningen
     cljfmt
 
-    ## Unstable packages
-    unstable.neovim
+    emmet-language-server
   ] ++ (with pkgs.nodePackages_latest; [
     ## JavaScript packages using nodePackages_latest
     nodejs
     pnpm
+
+    nodePackages_latest."@astrojs/language-server"
 
     typescript
   ]);

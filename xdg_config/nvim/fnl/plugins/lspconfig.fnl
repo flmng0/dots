@@ -1,27 +1,15 @@
 (local servers {:astro {}
                 :clangd {}
-                :clojure_lsp {}
                 :elixirls {}
                 :emmet_language_server {}
                 :lua_ls {}})
 
-(local system-servers
-       {:fennel_ls {:settings {:fennel-ls {:extra-globals "love vim"}}}})
-
 {1 :neovim/nvim-lspconfig
- :dependencies [:williamboman/mason.nvim :williamboman/mason-lspconfig.nvim]
  :config (fn []
            (let [lspconfig (require :lspconfig)
-                 mason (require :mason)
-                 mason-lspconfig (require :mason-lspconfig)
                  capabilities ((. (require :cmp_nvim_lsp) :default_capabilities))
-                 default-opts {: capabilities}
-                 make-options (fn [opts]
-                                (vim.tbl_extend :force default-opts opts))
-                 all-servers (vim.tbl_extend :error servers system-servers)]
-             (do
-               (mason.setup)
-               (mason-lspconfig.setup {:ensure_installed (vim.tbl_keys servers)})
-               (each [server opts (pairs all-servers)]
-                 ((. (. lspconfig server) :setup) (make-options opts))))))}
+                 default-opts {: capabilities}]
+             (each [server-name server-opts (pairs servers)]
+               (let [opts (vim.tbl_extend :force default-opts server-opts)]
+                 ((. (. lspconfig server-name) :setup) opts)))))}
 

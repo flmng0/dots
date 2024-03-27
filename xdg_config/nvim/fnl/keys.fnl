@@ -18,3 +18,9 @@
 
 (imap :jk :<Esc>)
 
+(let [group (vim.api.nvim_create_augroup :UserLspConfig {})
+      callback (fn [ev]
+                 (let [opts {:buffer ev.buf}]
+                   (nmap :K vim.lsp.buf.signature_help opts)))]
+  (vim.api.nvim_create_autocmd :LspAttach {: group : callback}))
+

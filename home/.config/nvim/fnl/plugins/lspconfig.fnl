@@ -1,7 +1,9 @@
 (local servers {:astro {}
+                :tsserver {}
                 :clangd {}
                 :elixirls {}
                 :emmet_language_server {}
+                :gopls {}
                 :lua_ls {}})
 
 {1 :neovim/nvim-lspconfig

@@ -33,3 +33,5 @@ precmd() { echo -ne '\e[6 q' }
 
 alias nix-zsh="nix-shell --command zsh"
 
+export QMK_HOME="$HOME/.local/share/qmk_firmware"
+

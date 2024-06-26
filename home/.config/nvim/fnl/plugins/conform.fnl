@@ -3,7 +3,9 @@
  :config (fn []
            (let [conform (require :conform)
                  formatters_by_ft {:lua [:stylua]
-                                   :javascript [:prettierd]
+                                   :javascript [:prettierd :prettier]
+                                   :typescript [:prettierd :prettier]
+                                   :svelte [:prettierd :prettier]
                                    :clojure [:cljfmt]
                                    :ocaml [:ocamlformat]
                                    :fennel [:fnlfmt]}

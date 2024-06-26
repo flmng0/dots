@@ -3,6 +3,7 @@
                 :clangd {}
                 :elixirls {}
                 :emmet_language_server {}
+                :svelte {}
                 :gopls {}
                 :lua_ls {}})
 

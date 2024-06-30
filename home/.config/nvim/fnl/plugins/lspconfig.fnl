@@ -1,8 +1,16 @@
+(local emmet_language_server
+  { :filetypes [:astro 
+                :html 
+                :javascript 
+                :javascriptreact 
+                :typescriptreact]})
+                
+
 (local servers {:astro {}
                 :tsserver {}
                 :clangd {}
                 :elixirls {}
-                :emmet_language_server {}
+                : emmet_language_server
                 :svelte {}
                 :gopls {}
                 :lua_ls {}})

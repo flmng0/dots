@@ -1,33 +1,37 @@
-# Lines configured by zsh-newuser-install
-HISTFILE=~/.cache/zsh-histfile
-HISTSIZE=1000
-SAVEHIST=1000
-# End of lines configured by zsh-newuser-install
+# Oh My ZSH Setup
+#
+export ZSH="$HOME/.oh-my-zsh"
 
-bindkey -v
+ZSH_THEME=""
 
-function zle-keymap-select {
-  if [[ ${KEYMAP} == vicmd ]] ||
-     [[ $1 = 'block' ]]; then
-    echo -ne '\e[0 q'
-  elif [[ ${KEYMAP} == main ]] ||
-       [[ ${KEYMAP} == viins ]] ||
-       [[ ${KEYMAP} = '' ]] ||
-       [[ $1 = 'beam' ]]; then
-    echo -ne '\e[6 q'
-  fi
-}
-zle -N zle-keymap-select
+CASE_SENSITIVE="true"
 
-precmd() { echo -ne '\e[6 q' }
+# zstyle ':omz:update' mode disabled  # disable automatic updates
+# zstyle ':omz:update' mode auto      # update automatically without asking
+zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
-# export QMK_HOME="$HOME/.local/share/qmk_firmware"
+# Attempt to auto-update OMZ every N days
+zstyle ':omz:update' frequency 13
 
-eval "$(starship init zsh)"
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Lazy load nvm
+zstyle ':omz:plugins:nvm' lazy yes
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+plugins=(
+	git 
+	nvm 
+	zsh-syntax-highlighting
+)
+
+source $ZSH/oh-my-zsh.sh
+
+
+# User configuration
+#
+export EDITOR='nvim'
 
 alias hx=helix
+
+[ -s "$HOME/.cargo/env" ] && \. "$HOME/.cargo/env"
+
+# Used for the prompt
+eval "$(starship init zsh)"

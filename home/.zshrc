@@ -15,6 +15,7 @@ zstyle ':omz:update' frequency 13
 
 # Lazy load nvm
 zstyle ':omz:plugins:nvm' lazy yes
+zstyle ':omz:plugins:nvm' lazy-cmd nvim
 
 plugins=(
 	git 
@@ -35,3 +36,6 @@ alias hx=helix
 
 # Used for the prompt
 eval "$(starship init zsh)"
+
+# opam configuration
+[[ ! -r $HOME/.opam/opam-init/init.zsh ]] || source $HOME/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null

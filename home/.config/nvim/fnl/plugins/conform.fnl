@@ -3,6 +3,7 @@
  :config (fn []
            (let [conform (require :conform)
                  formatters_by_ft {:lua [:stylua]
+                                   :elm [:elm_format]
                                    :javascript [:prettierd :prettier]
                                    :typescript [:prettierd :prettier]
                                    :svelte [:prettierd :prettier]

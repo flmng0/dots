@@ -11,6 +11,7 @@
                 :clangd {}
                 :elixirls {}
                 : emmet_language_server
+                :ocamllsp {}
                 :svelte {}
                 :gopls {}
                 :lua_ls {}})

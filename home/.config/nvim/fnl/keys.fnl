@@ -3,8 +3,8 @@
 (local imap (partial map :i))
 (local vmap (partial map :v))
 
-(vmap :C-j ":m '>+1<CR>gv=gv" {:desc "Move Selection Down"})
-(vmap :C-k ":m '<-2<CR>gv=gv" {:desc "Move Selection Up"})
+(vmap :<C-j> ":m '>+1<CR>gv=gv" {:desc "Move Selection Down"})
+(vmap :<C-k> ":m '<-2<CR>gv=gv" {:desc "Move Selection Up"})
 
 (vmap ">" :>gv)
 (vmap "<" :<gv)

@@ -20,4 +20,3 @@
                   :splitright true
                   :splitbelow true
                   :hlsearch true})
-

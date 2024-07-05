@@ -18,4 +18,3 @@
              (telescope.setup)
              (each [_ mapping (ipairs mappings)]
                (vim.keymap.set :n (unpack mapping)))))}
-

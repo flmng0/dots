@@ -11,10 +11,9 @@
   :lazy false
   :priority 1000
   :config (fn [] (vim.cmd.colorscheme :kanagawa))}
+ ; Eventually this should be automatically enumerated
  (require :plugins.lspconfig)
  (require :plugins.treesitter)
  (require :plugins.telescope)
- (require :plugins.nvim-cmp)
  (require :plugins.mini)
  (require :plugins.conform)]
-

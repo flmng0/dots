@@ -1,9 +1,9 @@
-function bootstrap(name, url, branch, ex_args)
-	local ex_args = ex_args or {}
+local function bootstrap(name, url, branch, ex_args)
+	ex_args = ex_args or {}
 	local path = vim.fn.stdpath("data") .. "/lazy/" .. name
 
 	if not vim.loop.fs_stat(path) then
-		args = vim.tbl_flatten({
+		local args = vim.iter({
 			"git",
 			"clone",
 			"--filter=blob:none",
@@ -12,6 +12,7 @@ function bootstrap(name, url, branch, ex_args)
 			url,
 			path,
 		})
+		args:flatten()
 
 		vim.fn.system(args)
 	end

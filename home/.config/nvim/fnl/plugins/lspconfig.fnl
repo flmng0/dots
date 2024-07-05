@@ -20,7 +20,9 @@
         ((. lspconfig server-name :setup) opts)))))
 
 {1 :neovim/nvim-lspconfig
- :dependencies [:williamboman/mason.nvim :williamboman/mason-lspconfig.nvim]
+ :dependencies [:williamboman/mason.nvim
+                :williamboman/mason-lspconfig.nvim
+                {1 :folke/neodev.nvim :opts {}}]
  :config (fn []
            (let [capabilities (vim.lsp.protocol.make_client_capabilities)
                  default-handler (make-default-handler capabilities)

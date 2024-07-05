@@ -11,12 +11,13 @@
                 :completion {}})
 
 (fn toggle-files []
-  (if (not (_G.MiniFiles))
+  (if (not (_G.MiniFiles.close))
       (_G.MiniFiles.open)))
 
 {1 :echasnovski/mini.nvim
+ :lazy false
  :version false
  :keys [{1 :<leader>e 2 toggle-files}]
  :config (fn []
-           (each [_ plugin (ipairs plugins)]
-             ((. (require (.. :mini. plugin)) :setup))))}
+           (each [name opts (pairs plugins)]
+             ((. (require (.. :mini. name)) :setup) opts)))}

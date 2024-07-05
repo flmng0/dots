@@ -13,9 +13,13 @@
   :config (fn [] (vim.cmd.colorscheme :kanagawa))}
  ; UI improvements
  {1 :stevearc/dressing.nvim :opts {:select {:enabled false}}}
+ {1 :nvim-telescope/telescope.nvim
+  :tag :0.1.5
+  :dependencies [:nvim-lua/plenary.nvim
+                 {1 :nvim-telescope/telescope-fzf-native.nvim :build :make}]
+  :opts {}}
  ; Eventually this should be automatically enumerated
  (require :plugins.lspconfig)
  (require :plugins.treesitter)
- (require :plugins.telescope)
  (require :plugins.mini)
  (require :plugins.conform)]

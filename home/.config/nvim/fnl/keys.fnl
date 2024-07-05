@@ -18,22 +18,37 @@
 
 (imap :jk :<Esc>)
 
-(local telescope-cbs {:<leader>s :lsp_document_symbols
-                      :<leader>S :lsp_workspace_symbols
-                      :<leader>r :lsp_references
-                      :<leader>d :lsp_definitions
-                      :<leader>D :lsp_type_definitions
-                      :<leader><C-d> :lsp_implementations
-                      :<leader>x :diagnostics
-                      :<leader>h :help_tags})
+(local telescope-cbs {:lsp {:<leader>S :lsp_workspace_symbols
+                            :gr :lsp_references
+                            :gd :lsp_definitions
+                            :gD :lsp_type_definitions
+                            :g<C-d> :lsp_implementations}
+                      :global {:<leader><leader> :find_files
+                               :<leader>/ :live_grep
+                               :<leader>h :help_tags}})
+
+(fn map-builtins [mappings]
+  (each [keys picker (pairs mappings)]
+    (nmap keys (fn []
+                 ((. (require :telescope.builtin) picker))))))
 
 (fn lsp-attach-cb [ev]
-  (let [opts {:buffer ev.buf}
-        builtin (require :telescope.builtin)]
-    (each [keys picker (pairs telescope-cbs)]
-      (nmap keys (fn [] ((. builtin picker)))))
-    (nmap :R vim.lsp.buf.rename opts)
+  (let [opts {:buffer ev.buf}]
+    (map-builtins telescope-cbs.lsp)
+    (nmap :<leader>r (fn [] (vim.lsp.buf.rename)) opts)
+    (nmap :<leader>a (fn [] (vim.lsp.buf.code_action)) opts) ; (nmap :<leader>x (fn [] (vim.lsp.)))
     (nmap :K vim.lsp.buf.signature_help opts)))
 
 (let [group (vim.api.nvim_create_augroup :UserLspConfig {})]
   (vim.api.nvim_create_autocmd :LspAttach {: group :callback lsp-attach-cb}))
+
+(fn symbols []
+  (let [buffers (vim.lsp.get_clients {:bufnr 0})
+        builtin (require :telescope.builtin)]
+    (if (= 0 (length buffers))
+        (builtin.treesitter)
+        (builtin.lsp_document_symbols))))
+
+(nmap :<leader>s symbols)
+
+(map-builtins telescope-cbs.global)

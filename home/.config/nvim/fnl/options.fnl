@@ -9,7 +9,7 @@
                   :clipboard :unnamedplus
                   :ignorecase true
                   :smartcase true
-                  :signcolumn :auto
+                  :signcolumn :no
                   :updatetime 250
                   :timeoutlen 700
                   :inccommand :split

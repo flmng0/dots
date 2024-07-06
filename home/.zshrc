@@ -20,20 +20,36 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-
 # User configuration
 #
 export EDITOR='nvim'
 
 alias hx=helix
 
-[ -s "$HOME/.cargo/env" ] && \. "$HOME/.cargo/env"
+if [[ -s "$HOME/.cargo/env" ]]; then
+	. "$HOME/.cargo/env"
+else
+	echo "Cargo not installed!"
+fi
 
-# For development tools
-eval "$(mise activate zsh)"
+
+# Use mise for development tools
+which mise &> /dev/null
+
+if [[ $? -eq 0 ]]; then
+	eval "$(mise activate zsh)"
+else
+	echo "Mise not installed! Goto https://mise.jdx.dev"
+end
 
 # Used for the prompt
-eval "$(starship init zsh)"
+which starship &> /dev/null
+
+if [[ $? -eq 0 ]]; then
+	eval "$(starship init zsh)"
+else
+	echo "Starship not installed! Goto https://starship.rs"
+end
 
 # opam configuration
 [[ ! -r $HOME/.opam/opam-init/init.zsh ]] || source $HOME/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null

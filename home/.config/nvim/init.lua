@@ -1,3 +1,6 @@
+vim.env.PATH = vim.env.HOME .. "/.local/share/mise/shims:" .. vim.env.PATH
+
+
 local function bootstrap(name, url, branch, ex_args)
 	ex_args = ex_args or {}
 	local path = vim.fn.stdpath("data") .. "/lazy/" .. name

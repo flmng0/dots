@@ -40,7 +40,7 @@ if [[ $? -eq 0 ]]; then
 	eval "$(mise activate zsh)"
 else
 	echo "Mise not installed! Goto https://mise.jdx.dev"
-end
+fi
 
 # Used for the prompt
 which starship &> /dev/null
@@ -49,7 +49,7 @@ if [[ $? -eq 0 ]]; then
 	eval "$(starship init zsh)"
 else
 	echo "Starship not installed! Goto https://starship.rs"
-end
+fi
 
 # opam configuration
 [[ ! -r $HOME/.opam/opam-init/init.zsh ]] || source $HOME/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null

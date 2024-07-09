@@ -1,0 +1,6 @@
+[tools]
+node = "latest"
+go = "latest"
+elixir = "latest"
+java = "temurin-21"
+erlang = "latest"

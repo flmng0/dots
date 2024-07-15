@@ -1,6 +1,14 @@
 ; mini.nvim is incredible and I would use it for everything if
 ; I didn't want Telescope.
+
+(local clue
+       {:triggers [{:mode :n :keys :<localleader>} {:mode :n :keys :<leader>}]
+        :clues [{:mode :n :keys :<localleader>e :desc :+Evaluate}
+                {:mode :n :keys :<localleader>l :desc :+Log}
+                {:mode :n :keys :<localleader>ec :desc :+Cursor}]})
+
 (local plugins {:starter {}
+                : clue
                 :statusline {}
                 :surround {}
                 :indentscope {}

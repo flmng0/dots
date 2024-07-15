@@ -4,8 +4,10 @@
 (local servers {:astro {}
                 :tsserver {}
                 :clangd {}
-                :elixirls {}
+                :clojure_lsp {}
+                :elixirls {:cmd [:elixir-ls]}
                 : emmet_language_server
+                :templ {}
                 :ocamllsp {}
                 :svelte {}
                 :gopls {}

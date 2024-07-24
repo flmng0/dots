@@ -6,6 +6,7 @@
                 :clangd {}
                 :clojure_lsp {}
                 :elixirls {:cmd [:elixir-ls]}
+                :elmls {}
                 : emmet_language_server
                 :templ {}
                 :ocamllsp {}

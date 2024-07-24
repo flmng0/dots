@@ -5,7 +5,8 @@
  ; Parenthesis handling for lisp-like languages
  :gpanders/nvim-parinfer
  ; Conjure!
- :Olical/conjure
+ {1 :Olical/conjure
+  :dependencies [:clojure-vim/vim-jack-in :radenling/vim-dispatch-neovim]}
  ; ColorScheme
  {1 :rebelot/kanagawa.nvim
   :lazy false

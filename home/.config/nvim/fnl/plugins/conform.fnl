@@ -7,13 +7,8 @@
                                    :javascript [:prettierd :prettier]
                                    :typescript [:prettierd :prettier]
                                    :svelte [:prettierd :prettier]
-                                   :clojure [:cljfmt]
                                    :ocaml [:ocamlformat]
-                                   :fennel [:fnlfmt]}
-                 formatters {:cljfmt {:command :cljfmt
-                                      :args [:fix]
-                                      :stdin false}}]
+                                   :fennel [:fnlfmt]}]
              (conform.setup {: formatters_by_ft
-                             : formatters
                              :format_on_save {:timeout_ms 500
                                               :lsp_fallback true}})))}

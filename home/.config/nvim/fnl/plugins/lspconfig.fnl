@@ -14,6 +14,8 @@
                 :gopls {}
                 :lua_ls {}})
 
+(local system-servers [:ocamllsp])
+
 (fn make-default-handler [capabilities]
   (let [default-opts {: capabilities}
         lspconfig (require :lspconfig)]
@@ -30,7 +32,11 @@
            (let [capabilities (vim.lsp.protocol.make_client_capabilities)
                  default-handler (make-default-handler capabilities)
                  handlers {1 default-handler}
-                 ensure-installed (vim.tbl_keys servers)]
+                 ensure-installed (->> servers
+                                       (vim.tbl_keys)
+                                       (vim.tbl_filter (fn [name]
+                                                         (not (vim.list_contains system-servers
+                                                                                 name)))))]
              ((. (require :mason) :setup))
              ((. (require :mason-lspconfig) :setup) {: handlers
                                                      :ensure_installed ensure-installed})))}

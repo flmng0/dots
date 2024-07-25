@@ -1,11 +1,15 @@
-(local emmet_language_server
-       {:filetypes [:astro :html :javascript :javascriptreact :typescriptreact]})
+(local emmet_language_server {:filetypes [:astro
+                                          :html
+                                          :javascript
+                                          :javascriptreact
+                                          :typescriptreact
+                                          :heex]})
 
 (local servers {:astro {}
                 :tsserver {}
                 :clangd {}
                 :clojure_lsp {}
-                :elixirls {:cmd [:elixir-ls]}
+                :elixirls {}
                 :elmls {}
                 : emmet_language_server
                 :templ {}
@@ -27,9 +31,14 @@
 {1 :neovim/nvim-lspconfig
  :dependencies [:williamboman/mason.nvim
                 :williamboman/mason-lspconfig.nvim
+                :hrsh7th/cmp-nvim-lsp
                 {1 :folke/neodev.nvim :opts {}}]
  :config (fn []
-           (let [capabilities (vim.lsp.protocol.make_client_capabilities)
+           (let [cmp-capabilities ((. (require :cmp_nvim_lsp)
+                                      :default_capabilities))
+                 capabilities (vim.tbl_deep_extend :force
+                                                   (vim.lsp.protocol.make_client_capabilities)
+                                                   cmp-capabilities)
                  default-handler (make-default-handler capabilities)
                  handlers {1 default-handler}
                  ensure-installed (->> servers

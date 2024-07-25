@@ -20,6 +20,7 @@
                  {1 :nvim-telescope/telescope-fzf-native.nvim :build :make}]
   :opts {}}
  ; Eventually this should be automatically enumerated
+ (require :plugins.nvim-cmp)
  (require :plugins.lspconfig)
  (require :plugins.treesitter)
  (require :plugins.mini)

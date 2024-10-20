@@ -1,34 +1,39 @@
-vim.env.PATH = vim.env.HOME .. "/.local/share/mise/shims:" .. vim.env.PATH
+local function bootstrap(plugin, branch)
+	local author, repo = string.match(plugin, "(.+)/(.+)")
+	local clone_path = vim.fn.stdpath("data") .. "/lazy/" .. repo
 
+	if not (vim.uv or vim.loop).fs_stat(clone_path) then
+		vim.notify("Bootstrapping " .. plugin .. " " .. branch)
 
-local function bootstrap(name, url, branch, ex_args)
-	ex_args = ex_args or {}
-	local path = vim.fn.stdpath("data") .. "/lazy/" .. name
-
-	if not vim.loop.fs_stat(path) then
-		local args = vim.iter({
+		local repo_url = "https://github.com/" .. plugin .. ".git"
+		local output = vim.fn.system({
 			"git",
 			"clone",
 			"--filter=blob:none",
-			"--branch=" .. branch,
-			ex_args,
-			url,
-			path,
+			"--branch="..branch,
+			repo_url,
+			clone_path
 		})
-		args:flatten()
 
-		vim.fn.system(args)
+		if vim.v.shell_error ~= 0 then
+			vim.api.nvim_echo({
+				{ "Failed to bootstrap" .. plugin .. ":\n", "ErrorMsg" },
+				{ output, "WarningMsg" },
+				{ "\nPress any key to exit..." },
+			}, true, {})
+			vim.fn.getchar()
+
+			os.exit(vim.v.shell_error)
+		end
 	end
 
-	vim.opt.rtp:prepend(path)
+	return clone_path
 end
 
-bootstrap("lazy.nvim", "https://github.com/folke/lazy.nvim.git", "stable")
-bootstrap("hotpot.nvim", "https://github.com/rktjmp/hotpot.nvim.git", "v0.11.1")
+local lazy_path = bootstrap("folke/lazy.nvim", "stable")
 
-require("hotpot").setup({
-	provide_require_fennel = true,
-	enable_hotpot_diagnostics = false,
-})
+vim.opt.runtimepath:prepend(lazy_path)
+
+vim.loader.enable()
 
 require("tmthy")

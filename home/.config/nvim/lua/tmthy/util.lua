@@ -18,5 +18,14 @@ function M.named_unpack(t)
     return named, table.unpack(unnamed)
 end
 
+-- wrapper for keybindings that need to be lazily required
+function M.lazy_wrapper(module)
+    return function(callback, ...)
+        local params = { ... }
+        return function()
+            require(module)[callback](table.unpack(params))
+        end
+    end
+end
 
 return M

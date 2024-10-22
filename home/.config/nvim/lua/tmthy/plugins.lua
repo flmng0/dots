@@ -62,10 +62,18 @@ return {
     {
         'neovim/nvim-lspconfig',
         dependencies = {
-            { 'williamboman/mason.nvim', config = true },
+            { -- for automatic installation of LSPs
+                'williamboman/mason.nvim',
+                config = true
+            },
+            -- bridge between lspconfig and mason
             'williamboman/mason-lspconfig.nvim',
 
-            { 'j-hui/fidget.nvim',       config = true },
+            { -- for pretty lsp status
+                'j-hui/fidget.nvim',
+                config = true
+            },
+
         },
         config = function()
             local default_capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -94,6 +102,18 @@ return {
                 }
             })
         end
+    },
+
+    { -- for flutter
+        'nvim-flutter/flutter-tools.nvim',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        ft = 'dart',
+        config = true
+    },
+
+    {
+        'stevearc/dressing.nvim',
+        opts = {}
     },
 
     -- conform for file formatting

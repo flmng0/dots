@@ -41,24 +41,15 @@ function KeyGroup:lazy_config()
 	end
 end
 
--- wrapper for keybindings that need to be lazily required
-local function lazy_wrapper(module)
-	return function(callback, ...)
-		local params = { ... }
-		return function()
-			require(module)[callback](table.unpack(params))
-		end
-	end
-end
-
-
 local M = {}
+
+M.KeyGroup = KeyGroup
 
 local augroup = vim.api.nvim_create_augroup('tmthy.keys', { clear = true })
 
 -- Telescope section
 
-local builtin = lazy_wrapper('telescope.builtin')
+local builtin = util.lazy_wrapper('telescope.builtin')
 
 M.telescope = KeyGroup:new({
 	{ 'n', '<leader><space>', builtin('find_files'), desc = 'Fuzzy find files' },
@@ -69,7 +60,7 @@ M.telescope:map()
 
 -- Oil section
 
-local oil = lazy_wrapper('oil')
+local oil = util.lazy_wrapper('oil')
 
 M.oil = KeyGroup:new({
 	{ 'n', '<leader>e', oil('open'), desc = 'Open Oil.nvim in current directory' },
@@ -78,7 +69,7 @@ M.oil:map()
 
 -- Conform section
 
-local conform = lazy_wrapper('conform')
+local conform = util.lazy_wrapper('conform')
 
 M.conform = KeyGroup:new({
 	{ 'n', '<leader>af', conform('format'), desc = 'Format current file' },

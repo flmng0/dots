@@ -1,5 +1,5 @@
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ','
 
 vim.opt.breakindent = true
 
@@ -19,12 +19,12 @@ vim.opt_global.shiftwidth = 4
 
 vim.opt.signcolumn = 'number'
 
-local augroup = vim.api.nvim_create_augroup("tmthy_options", { clear = true })
+local augroup = vim.api.nvim_create_augroup('tmthy_options', { clear = true })
 
-vim.api.nvim_create_autocmd("ModeChanged", {
-    pattern = { "i:*", "*:i" },
-    callback = function(ev)
-        vim.opt.cursorline = vim.startswith(ev.match, "i")
-    end,
-    group = augroup
+vim.api.nvim_create_autocmd('ModeChanged', {
+	pattern = { 'i:*', '*:i' },
+	callback = function(ev)
+		vim.opt.cursorline = vim.startswith(ev.match, 'i')
+	end,
+	group = augroup,
 })

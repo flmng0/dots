@@ -1,6 +1,6 @@
-require("tmthy.options")
-require("tmthy.keys")
+require('tmthy.options')
+require('tmthy.keys')
 
-local plugins = require("tmthy.plugins")
+local plugins = require('tmthy.plugins')
 
-require("lazy").setup(plugins)
+require('lazy').setup(plugins)

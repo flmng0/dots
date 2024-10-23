@@ -311,13 +311,11 @@ return {
 		'echasnovski/mini.nvim',
 		version = false,
 		config = function()
-			-- shorthand
-			local function mini_setup(module_name, opts)
-				require(module_name).setup(opts or {})
-			end
+			require('mini.surround').setup({
+				respect_selection_type = true,
+			})
 
-			mini_setup('mini.surround')
-			mini_setup('mini.move')
+			require('mini.move').setup({})
 		end,
 	},
 }

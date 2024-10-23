@@ -233,10 +233,7 @@ return {
 		'nvim-treesitter/nvim-treesitter',
 		build = ':TSUpdate',
 		dependencies = {
-			{
-				'nvim-treesitter/nvim-treesitter-textobjects',
-				'windwp/nvim-ts-autotag',
-			},
+			'nvim-treesitter/nvim-treesitter-textobjects',
 		},
 		config = function()
 			local configs = require('nvim-treesitter.configs')
@@ -289,15 +286,21 @@ return {
 					},
 				},
 			})
-
-			require('nvim-ts-autotag').setup({
-				opts = {
-					enable_close = true,
-					enable_rename = true,
-					enable_close_on_slash = true,
-				},
-			})
 		end,
+	},
+
+	{
+		'windwp/nvim-ts-autotag',
+		dependencies = {
+			'nvim-treesitter/nvim-treesitter',
+		},
+		opts = {
+			opts = {
+				enable_close = true,
+				enable_rename = true,
+				enable_close_on_slash = true,
+			},
+		},
 	},
 
 	-- using windwp's autopairs instead of mini.pairs for HTML tag indentation on <CR>

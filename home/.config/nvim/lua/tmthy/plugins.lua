@@ -82,6 +82,7 @@ return {
 				gopls = {},
 				lua_ls = {},
 				ts_ls = {},
+				emmet_language_server = {},
 			}
 
 			local tools = {
@@ -120,6 +121,34 @@ return {
 				end
 			end)
 		end,
+	},
+
+	{
+		'folke/which-key.nvim',
+		---@module 'which-key'
+		---@type wk.Opts
+		opts = {
+			preset = 'helix',
+
+			triggers = {
+				{ '<leader>', mode = { 'n', 'v' } },
+				{ '<localleader>', mode = 'n' },
+			},
+
+			---@param mapping wk.Mapping
+			filter = function(mapping)
+				return mapping.desc and mapping.desc ~= ''
+			end,
+
+			---@param node wk.Node
+			expand = function(node)
+				return not node.desc
+			end,
+
+			icons = {
+				rules = false,
+			},
+		},
 	},
 
 	-- conform for file formatting

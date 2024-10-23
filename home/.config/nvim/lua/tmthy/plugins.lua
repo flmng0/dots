@@ -1,3 +1,5 @@
+---@module "lazy"
+---@type { [number]: LazySpec }
 return {
 	-- color scheme
 	{
@@ -130,14 +132,37 @@ return {
 		opts = {
 			preset = 'helix',
 
+			plugins = {
+				marks = true,
+				registers = true,
+
+				spelling = {
+					enabled = true,
+					suggestions = 20,
+				},
+
+				presets = {
+					operators = false,
+					motions = false,
+					text_objects = true,
+					windows = true,
+					nav = true,
+					z = true,
+					g = true,
+				},
+			},
+
 			triggers = {
-				{ '<leader>', mode = { 'n', 'v' } },
+				{ '<auto>', mode = 'nxso' },
+				{ '<leader>', mode = 'nv' },
 				{ '<localleader>', mode = 'n' },
 			},
 
 			---@param mapping wk.Mapping
 			filter = function(mapping)
-				return mapping.desc and mapping.desc ~= ''
+				return mapping.preset
+					or (mapping.plugin and mapping.plugin ~= '')
+					or (mapping.desc and mapping.desc ~= '')
 			end,
 
 			---@param node wk.Node
@@ -146,8 +171,15 @@ return {
 			end,
 
 			icons = {
-				rules = false,
+				mappings = false,
 			},
+
+			win = {
+				border = 'none',
+				padding = { 1, 3 },
+			},
+
+			show_help = false,
 		},
 	},
 
@@ -184,7 +216,16 @@ return {
 	-- just some prettification of UI elements
 	{
 		'stevearc/dressing.nvim',
-		opts = {},
+		opts = {
+			input = {
+				border = 'single',
+			},
+			select = {
+				builtin = {
+					border = 'none',
+				},
+			},
+		},
 	},
 
 	-- treesitter for highlighting and text-objects
@@ -194,6 +235,7 @@ return {
 		dependencies = {
 			{
 				'nvim-treesitter/nvim-treesitter-textobjects',
+				'windwp/nvim-ts-autotag',
 			},
 		},
 		config = function()
@@ -247,7 +289,21 @@ return {
 					},
 				},
 			})
+
+			require('nvim-ts-autotag').setup({
+				opts = {
+					enable_close = true,
+					enable_rename = true,
+					enable_close_on_slash = true,
+				},
+			})
 		end,
+	},
+
+	-- using windwp's autopairs instead of mini.pairs for HTML tag indentation on <CR>
+	{
+		'windwp/nvim-autopairs',
+		opts = { map_cr = true },
 	},
 
 	-- mini.nvim plugins... various utilities really
@@ -260,7 +316,6 @@ return {
 				require(module_name).setup(opts or {})
 			end
 
-			mini_setup('mini.pairs')
 			mini_setup('mini.surround')
 			mini_setup('mini.move')
 		end,

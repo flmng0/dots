@@ -1,6 +1,7 @@
 local M = {}
 
 -- mapping utilities
+-- these are currently unused, thanks to which-key.nvim
 
 function M.map(mapping)
 	local opts, mode, lhs, rhs = M.named_unpack(mapping)

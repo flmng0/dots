@@ -7,9 +7,11 @@ local augroup = vim.api.nvim_create_augroup('tmthy.keys', { clear = true })
 
 -- Standard mappings
 wk.add({
+	hidden = true,
 	{ '<Esc>', '<Cmd>nohl<CR>', desc = 'Clear highlight' },
 	{ ']b', '<Cmd>bnext<CR>', desc = 'Swap to next buffer' },
 	{ '[b', '<Cmd>bprevious<CR>', desc = 'Swap to previous buffer' },
+	{ 'U', '<C-r>', desc = 'Redo' },
 })
 
 -- register groups
@@ -48,7 +50,7 @@ wk.add({
 ---@type { [number]: wk.Spec }
 local lsp_mappings = {
 	-- [A]ctions
-	{ '<leader>aa', vim.lsp.buf.code_action, desc = '[LSP] Code Action', mode = { 'n', 'v' } },
+	{ '<leader>al', vim.lsp.buf.code_action, desc = '[LSP] List code actions', mode = { 'n', 'v' } },
 	{ '<leader>ar', vim.lsp.buf.rename, desc = '[LSP] Rename symbol' },
 	-- [F]inders
 	{ '<leader>fs', builtin('lsp_document_symbols'), desc = '[LSP] Find symbols' },

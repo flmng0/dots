@@ -12,18 +12,6 @@ wk.add({
 	{ ']b', '<Cmd>bnext<CR>', desc = 'Swap to next buffer' },
 	{ '[b', '<Cmd>bprevious<CR>', desc = 'Swap to previous buffer' },
 	{ 'U', '<C-r>', desc = 'Redo' },
-	{
-		'<C-t>',
-		function()
-			local node = vim.treesitter.get_node()
-			if not node then
-				return
-			end
-			local sr, sc, er, ec = node:range()
-
-			vim.highlight.range(0, 1, 'IncSearch', { sr, sc }, { er, ec })
-		end,
-	},
 })
 
 -- register groups

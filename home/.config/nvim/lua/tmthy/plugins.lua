@@ -244,6 +244,17 @@ return {
 				highlight = { enable = true },
 				indent = { enable = true },
 
+				incremental_selection = {
+					enable = true,
+					keymaps = {
+						-- Mnemonic: "arround", "scope" and "inside"
+						init_selection = '<A-a>',
+						node_incremental = '<A-a>',
+						scope_incremental = '<A-s>',
+						node_decremental = '<A-i>',
+					},
+				},
+
 				textobjects = {
 					select = {
 						enable = true,

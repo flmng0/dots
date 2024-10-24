@@ -7,6 +7,17 @@ return {
 		lazy = false,
 		priority = 1000,
 		config = function()
+			require('kanagawa').setup({
+				overrides = function(colors)
+					return {
+						WinBarMain = { bg = colors.palette.sakuraPink, fg = colors.palette.sumiInk0 },
+						WinBarEnd = { fg = colors.palette.sakuraPink },
+
+						WinBarMainNC = { bg = colors.palette.sumiInk4, fg = colors.palette.springViolet1 },
+						WinBarEndNC = { fg = colors.palette.sumiInk4 },
+					}
+				end,
+			})
 			vim.cmd([[ colorscheme kanagawa ]])
 		end,
 	},

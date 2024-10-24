@@ -12,6 +12,7 @@ wk.add({
 	{ ']b', '<Cmd>bnext<CR>', desc = 'Swap to next buffer' },
 	{ '[b', '<Cmd>bprevious<CR>', desc = 'Swap to previous buffer' },
 	{ 'U', '<C-r>', desc = 'Redo' },
+	{ '<C-s>', '<Cmd>source %<CR>', desc = 'Source current file' },
 })
 
 -- register groups

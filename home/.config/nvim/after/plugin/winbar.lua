@@ -17,7 +17,7 @@ function _G.TmthyWinbar()
 	local prefix = ''
 	local suffix = ''
 
-	local component_width = #filename + modified_len + 4
+	local component_width = #filename + modified_len + 2
 
 	local width = vim.api.nvim_win_get_width(0)
 
@@ -37,9 +37,7 @@ function _G.TmthyWinbar()
 		highlight_group('WinBarEnd', current),
 		prefix,
 		highlight_group('WinBarMain', current),
-		' ',
 		filename .. modified_icon,
-		' ',
 		highlight_group('WinBarEnd', current),
 		suffix,
 		highlight_group('WinBar', current),

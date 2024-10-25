@@ -17,6 +17,8 @@ vim.opt.showmode = false
 vim.opt.scrolloff = 10
 vim.opt.cursorline = true
 
+vim.opt.wrap = false
+
 vim.opt_global.tabstop = 4
 vim.opt_global.shiftwidth = 4
 

@@ -9,13 +9,30 @@ return {
 		config = function()
 			require('kanagawa').setup({
 				overrides = function(colors)
-					return {
+					local winbar = {
 						WinBarMain = { bg = colors.palette.sakuraPink, fg = colors.palette.sumiInk0 },
 						WinBarEnd = { fg = colors.palette.sakuraPink },
 
 						WinBarMainNC = { bg = colors.palette.sumiInk4, fg = colors.palette.springViolet1 },
 						WinBarEndNC = { fg = colors.palette.sumiInk4 },
 					}
+
+					local info_bg = colors.palette.sumiInk4
+
+					local statusline = {
+						StatusLineGitBranch = { bg = info_bg, fg = colors.palette.oldWhite },
+						StatusLineGitAdd = { bg = info_bg, fg = colors.palette.autumnGreen },
+						StatusLineGitChange = { bg = info_bg, fg = colors.palette.autumnYellow },
+						StatusLineGitDelete = { bg = info_bg, fg = colors.palette.autumnRed },
+						StatusLineGitUnstaged = { bg = info_bg, fg = colors.palette.crystalBlue },
+					}
+
+					-- Setup mode highlights (steal from MiniStatusLine highlights)
+					for _, mode in ipairs({ 'Normal', 'Visual', 'Select', 'Insert', 'Replace', 'Command', 'Other' }) do
+						statusline['StatusLineMode' .. mode] = { link = 'MiniStatusLineMode' .. mode }
+					end
+
+					return vim.tbl_extend('error', {}, winbar, statusline)
 				end,
 			})
 			vim.cmd([[ colorscheme kanagawa ]])
@@ -341,6 +358,9 @@ return {
 			})
 
 			require('mini.move').setup({})
+
+			require('mini.git').setup({})
+			require('mini.diff').setup({})
 		end,
 	},
 }

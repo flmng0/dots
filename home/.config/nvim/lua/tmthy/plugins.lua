@@ -25,6 +25,9 @@ return {
 						StatusLineGitChange = { bg = info_bg, fg = colors.palette.autumnYellow },
 						StatusLineGitDelete = { bg = info_bg, fg = colors.palette.autumnRed },
 						StatusLineGitUnstaged = { bg = info_bg, fg = colors.palette.crystalBlue },
+
+						StatusLineLspIcon = { bg = info_bg, fg = colors.palette.crystalBlue },
+						StatusLineLspNames = { bg = info_bg, fg = colors.palette.oldWhite, italic = true },
 					}
 
 					-- Setup mode highlights (steal from MiniStatusLine highlights)
@@ -108,11 +111,24 @@ return {
 			local default_capabilities = vim.lsp.protocol.make_client_capabilities()
 
 			-- server-name => configuration
+			---@type { [string]: lspconfig.Config }
 			local servers = {
 				gopls = {},
 				lua_ls = {},
 				ts_ls = {},
-				emmet_language_server = {},
+				-- emmet_language_server = {
+				-- 	filetypes = {
+				-- 		'css',
+				-- 		'html',
+				-- 		'javascriptreact',
+				-- 		'typescriptreact',
+				-- 		'scss',
+				-- 		'astro',
+				-- 		'svelte',
+				-- 	},
+				-- },
+				svelte = {},
+				astro = {},
 			}
 
 			local tools = {

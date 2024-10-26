@@ -59,7 +59,7 @@ function _G.TmthyStatusLine()
 
 		local status = vim.b.minigit_summary.status
 		if status == '??' then
-			return component('', 'StatusLineGitAdd', 1)
+			return component('', 'StatusLineGitUnstaged', 1)
 		end
 
 		if not (summary.add or summary.change or summary.delete) then
@@ -81,9 +81,39 @@ function _G.TmthyStatusLine()
 			end
 		end
 
+		if #data == 0 then
+			return ''
+		end
+
 		local text = table.concat(data, ' ')
 
 		return component(text, 'StatusLineGitBranch', 1)
+	end
+
+	local function lsp_status()
+		local bufnr = vim.api.nvim_get_current_buf()
+
+		local clients = vim.lsp.get_clients({ bufnr = bufnr })
+
+		if clients == nil or #clients == 0 then
+			return ''
+		end
+
+		local names = vim.iter(clients)
+			:map(function(client)
+				return client.name
+			end)
+			:totable()
+
+		local icon = '󰈸'
+		local names_text = table.concat(names, ', ')
+
+		local text = table.concat({
+			component(icon, 'StatusLineLspIcon'),
+			component(names_text, 'StatusLineLspNames'),
+		}, ' ')
+
+		return component(text, 'StatusLineLspNames', 1)
 	end
 
 	local function concat_components(components)
@@ -110,11 +140,12 @@ function _G.TmthyStatusLine()
 		mode(),
 		'%<',
 		branch(),
-		'%f',
-		'%=',
-		component('%l:%c', 'StatusLine'),
+		component('%f', 'StatusLine'),
 		diff(),
+		'%=',
+		lsp_status(),
+		component('%l:%c', 'StatusLine'),
 	})
 end
 
-vim.o.statusline = '%{%v:lua.TmthyStatusLine()%}'
+vim.o.statusline = ' %{%v:lua.TmthyStatusLine()%} '

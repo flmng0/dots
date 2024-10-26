@@ -54,8 +54,9 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
 		local is_normal_buf = vim.bo[args.buf].buftype == ''
 		local has_file_name = vim.api.nvim_buf_get_name(args.buf) ~= ''
 		local is_diff = vim.wo[0].diff
+		local is_oil = vim.bo[args.buf].filetype == 'oil'
 
-		local enabled = not is_floating and is_normal_buf and has_file_name and not is_diff
+		local enabled = not is_floating and is_normal_buf and has_file_name and not is_diff and not is_oil
 
 		if enabled then
 			vim.wo[0].winbar = '%{%v:lua.TmthyWinbar()%}'

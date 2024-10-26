@@ -18,7 +18,7 @@ wk.add({
 -- register groups
 wk.add({
 	{ '<leader>f', group = 'Finders' },
-	{ '<leader>a', group = 'Actions' },
+	{ '<leader>c', group = 'Code Actions' },
 })
 
 -- Telescope non-LSP mappings
@@ -41,7 +41,7 @@ wk.add({
 local conform = util.lazy_wrapper('conform')
 
 wk.add({
-	{ '<leader>af', conform('format'), desc = 'Format current file' },
+	{ '<leader>cf', conform('format'), desc = 'Format current file' },
 })
 
 -- LSP-only mappings
@@ -51,8 +51,8 @@ wk.add({
 ---@type { [number]: wk.Spec }
 local lsp_mappings = {
 	-- [A]ctions
-	{ '<leader>al', vim.lsp.buf.code_action, desc = '[LSP] List code actions', mode = { 'n', 'v' } },
-	{ '<leader>ar', vim.lsp.buf.rename, desc = '[LSP] Rename symbol' },
+	{ '<leader>ca', vim.lsp.buf.code_action, desc = '[LSP] List code actions', mode = { 'n', 'v' } },
+	{ '<leader>cr', vim.lsp.buf.rename, desc = '[LSP] Rename symbol' },
 	-- [F]inders
 	{ '<leader>fs', builtin('lsp_document_symbols'), desc = '[LSP] Find symbols' },
 	{ '<leader>fS', builtin('lsp_workspace_symbols'), desc = '[LSP] Find workspace symbols' },

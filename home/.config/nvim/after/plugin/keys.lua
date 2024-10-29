@@ -53,13 +53,14 @@ local lsp_mappings = {
 	-- [A]ctions
 	{ '<leader>ca', vim.lsp.buf.code_action, desc = '[LSP] List code actions', mode = { 'n', 'v' } },
 	{ '<leader>cr', vim.lsp.buf.rename, desc = '[LSP] Rename symbol' },
+	-- [G]oto
+	{ 'gr', builtin('lsp_references'), desc = "[LSP] Goto or find symbol's references" },
+	{ 'gt', builtin('lsp_type_definitions'), desc = "[LSP] Goto or find symbol's type definition(s)" },
+	{ 'gd', builtin('lsp_definitions'), desc = "[LSP] Goto or find symbol's definition(s)" },
+	{ 'gD', vim.lsp.buf.declaration, desc = '[LSP] Goto symbol declaration' },
 	-- [F]inders
 	{ '<leader>fs', builtin('lsp_document_symbols'), desc = '[LSP] Find symbols' },
 	{ '<leader>fS', builtin('lsp_workspace_symbols'), desc = '[LSP] Find workspace symbols' },
-	{ '<leader>fr', builtin('lsp_references'), desc = '[LSP] Find symbol references' },
-	{ '<leader>ft', builtin('lsp_type_definitions'), desc = "[LSP] Goto or find symbol's type definition(s)" },
-	{ '<leader>fd', builtin('lsp_definitions'), desc = '[LSP] Goto or find symbol definition(s)' },
-	{ '<leader>fD', vim.lsp.buf.declaration, desc = '[LSP] Goto symbol declaration' },
 }
 
 -- register fallback mapping

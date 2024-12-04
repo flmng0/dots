@@ -106,25 +106,33 @@ return {
 			},
 		},
 		config = function()
-			local default_capabilities = vim.lsp.protocol.make_client_capabilities()
-
+			local deno_root = function(filename)
+				return vim.fs.root(filename, { 'deno.json', 'deno.jsonc' })
+			end
 			-- server-name => configuration
 			---@type { [string]: lspconfig.Config }
 			local servers = {
-				gopls = {},
 				lua_ls = {},
-				ts_ls = {},
-				-- emmet_language_server = {
-				-- 	filetypes = {
-				-- 		'css',
-				-- 		'html',
-				-- 		'javascriptreact',
-				-- 		'typescriptreact',
-				-- 		'scss',
-				-- 		'astro',
-				-- 		'svelte',
-				-- 	},
-				-- },
+				elixirls = {},
+				gopls = {},
+				denols = {
+					root_dir = deno_root,
+					single_file_support = true,
+				},
+				ts_ls = {
+					root_dir = function(filename)
+						local deno = deno_root(filename)
+						local default = require('lspconfig.configs.ts_ls').default_config.root_dir(filename)
+						-- For Phoenix projects
+						local mix = vim.fs.root(filename, { 'mix.exs' })
+
+						if deno == nil then
+							---@diagnostic disable-next-line: redundant-return-value
+							return default or mix
+						end
+					end,
+					single_file_support = false,
+				},
 				svelte = {},
 				astro = {},
 			}
@@ -140,7 +148,7 @@ return {
 			-- plugin as well, like flutter-tools
 			local function setup_server(name)
 				local config = servers[name] or {}
-				config.capabilities = vim.tbl_deep_extend('force', {}, default_capabilities, config.capabilities or {})
+				config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities, true)
 				require('lspconfig')[name].setup(config)
 			end
 
@@ -229,7 +237,7 @@ return {
 	{
 		'stevearc/conform.nvim',
 		config = function()
-			local js_like = { 'prettierd', 'prettier', stop_after_first = true }
+			local js_like = { 'deno_fmt', 'prettierd', 'prettier', stop_after_first = true }
 
 			require('conform').setup({
 				formatters_by_ft = {
@@ -239,6 +247,8 @@ return {
 					typescript = js_like,
 					javascriptreact = js_like,
 					typescriptreact = js_like,
+					svelte = js_like,
+					css = js_like,
 				},
 				format_on_save = {
 					timeout = 500,
@@ -347,13 +357,27 @@ return {
 		dependencies = {
 			'nvim-treesitter/nvim-treesitter',
 		},
-		opts = {
-			opts = {
-				enable_close = true,
-				enable_rename = true,
-				enable_close_on_slash = true,
-			},
-		},
+		config = function()
+			require('nvim-ts-autotag').setup({
+				opts = {
+					enable_close = true,
+					enable_rename = true,
+					enable_close_on_slash = true,
+				},
+			})
+
+			local TagConfigs = require('nvim-ts-autotag.config.init')
+
+			local heexConfig = TagConfigs:get('html'):extend('heex', {
+				start_tag_pattern = { 'start_component' },
+				start_name_tag_pattern = { 'component_name' },
+				end_tag_pattern = { 'end_component' },
+				end_name_tag_pattern = { 'component_name' },
+				skip_tag_pattern = { 'end_component' },
+			})
+			TagConfigs:add(heexConfig)
+			TagConfigs:add_alias('elixir', 'heex')
+		end,
 	},
 
 	-- using windwp's autopairs instead of mini.pairs for HTML tag indentation on <CR>

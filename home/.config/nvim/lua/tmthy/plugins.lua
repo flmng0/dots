@@ -45,6 +45,20 @@ return {
 	-- auto detect indentation
 	'tpope/vim-sleuth',
 
+	-- "conversational editing"
+	{
+		'Olical/conjure',
+		lazy = true,
+		ft = { 'clojure' },
+	},
+
+	-- Handling of Lisp-like languages
+	{
+		'dundalek/parpar.nvim',
+		dependencies = { 'gpanders/nvim-parinfer', 'julienvincent/nvim-paredit' },
+		opts = {},
+	},
+
 	-- completion
 	{
 		'saghen/blink.cmp',

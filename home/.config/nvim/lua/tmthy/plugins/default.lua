@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 ---@module "lazy"
 ---@type { [number]: LazySpec }
 return {
@@ -45,20 +46,6 @@ return {
 	-- auto detect indentation
 	'tpope/vim-sleuth',
 
-	-- "conversational editing"
-	{
-		'Olical/conjure',
-		lazy = true,
-		ft = { 'clojure' },
-	},
-
-	-- Handling of Lisp-like languages
-	{
-		'dundalek/parpar.nvim',
-		dependencies = { 'gpanders/nvim-parinfer', 'julienvincent/nvim-paredit' },
-		opts = {},
-	},
-
 	-- completion
 	{
 		'saghen/blink.cmp',
@@ -67,11 +54,17 @@ return {
 		---@module 'blink.cmp'
 		---@type blink.cmp.Config
 		opts = {
-			highlight = {
+			appearance = {
 				use_nvim_cmp_as_default = true,
+				nerd_font_variant = 'normal',
 			},
-			nerd_font_variant = 'normal',
-			keymap = { preset = 'default' },
+
+			keymap = {
+				preset = 'default',
+
+				['<Up>'] = { 'select_prev', 'fallback' },
+				['<Down>'] = { 'select_next', 'fallback' },
+			},
 		},
 	},
 
@@ -80,8 +73,14 @@ return {
 		'nvim-telescope/telescope.nvim',
 		tag = '0.1.8',
 		command = 'Telescope',
-		dependencies = { 'nvim-lua/plenary.nvim' },
+		dependencies = {
+			'nvim-lua/plenary.nvim',
+			'nvim-telescope/telescope-fzy-native.nvim',
+		},
 		lazy = true,
+		config = function()
+			require('telescope').load_extension('fzy_native')
+		end,
 	},
 
 	-- oil.nvim for directory editing
@@ -120,36 +119,13 @@ return {
 			},
 		},
 		config = function()
-			local deno_root = function(filename)
-				return vim.fs.root(filename, { 'deno.json', 'deno.jsonc' })
-			end
-			-- server-name => configuration
-			---@type { [string]: lspconfig.Config }
-			local servers = {
+			local default_servers = {
 				lua_ls = {},
-				elixirls = {},
-				gopls = {},
-				denols = {
-					root_dir = deno_root,
-					single_file_support = true,
-				},
-				ts_ls = {
-					root_dir = function(filename)
-						local deno = deno_root(filename)
-						local default = require('lspconfig.configs.ts_ls').default_config.root_dir(filename)
-						-- For Phoenix projects
-						local mix = vim.fs.root(filename, { 'mix.exs' })
-
-						if deno == nil then
-							---@diagnostic disable-next-line: redundant-return-value
-							return default or mix
-						end
-					end,
-					single_file_support = false,
-				},
-				svelte = {},
-				astro = {},
 			}
+
+			local profile_servers = require('tmthy.servers.' .. _G.Profile)
+
+			local servers = vim.tbl_deep_extend('error', default_servers, profile_servers)
 
 			local tools = {
 				'prettierd',
@@ -167,6 +143,7 @@ return {
 			end
 
 			require('mason-lspconfig').setup({
+				automatic_installation = false,
 				ensure_installed = vim.tbl_keys(servers),
 				handlers = {
 					setup_server,
@@ -272,13 +249,6 @@ return {
 		end,
 	},
 
-	{ -- for flutter
-		'nvim-flutter/flutter-tools.nvim',
-		dependencies = { 'nvim-lua/plenary.nvim' },
-		ft = 'dart',
-		config = true,
-	},
-
 	-- just some prettification of UI elements
 	{
 		'stevearc/dressing.nvim',
@@ -304,7 +274,6 @@ return {
 		config = function()
 			local configs = require('nvim-treesitter.configs')
 
-			---@diagnostic disable-next-line: missing-fields
 			configs.setup({
 				auto_install = true,
 				highlight = { enable = true },
@@ -413,6 +382,26 @@ return {
 
 			require('mini.git').setup({})
 			require('mini.diff').setup({})
+
+			require('mini.sessions').setup({})
+
+			local starter = require('mini.starter')
+			starter.setup({
+				items = {
+					starter.sections.sessions(5),
+
+					{
+						name = 'Configure Neovim',
+						action = function()
+							local config_dir = vim.fn.stdpath('config') --[[@as string]]
+							vim.api.nvim_set_current_dir(config_dir)
+							require('oil').open(config_dir)
+						end,
+						section = 'Builtin actions',
+					},
+					starter.sections.builtin_actions(),
+				},
+			})
 		end,
 	},
 }

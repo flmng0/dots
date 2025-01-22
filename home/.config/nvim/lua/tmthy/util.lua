@@ -1,5 +1,7 @@
 local M = {}
 
+local unpack = table.unpack or unpack
+
 -- mapping utilities
 -- these are currently unused, thanks to which-key.nvim
 
@@ -30,7 +32,7 @@ function M.named_unpack(t)
 		end
 	end
 
-	return named, table.unpack(unnamed)
+	return named, unpack(unnamed)
 end
 
 -- wrapper for keybindings that need to be lazily required
@@ -38,7 +40,7 @@ function M.lazy_wrapper(module)
 	return function(callback, ...)
 		local params = { ... }
 		return function()
-			require(module)[callback](table.unpack(params))
+			require(module)[callback](unpack(params))
 		end
 	end
 end

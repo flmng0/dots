@@ -34,7 +34,7 @@ wk.add({
 local oil = util.lazy_wrapper('oil')
 
 wk.add({
-	{ '<leader>e', oil('open'), desc = 'Open Oil.nvim in current directory' },
+	{ '-', oil('open'), desc = 'Open Oil.nvim in current directory' },
 })
 
 -- Conform mappings

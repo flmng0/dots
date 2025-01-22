@@ -25,6 +25,12 @@ vim.opt_global.shiftwidth = 4
 vim.opt.signcolumn = 'number'
 vim.opt.laststatus = 3
 
+if vim.g.neovide then
+	vim.opt.guifont = 'FiraMono Nerd Font:h12'
+
+	vim.g.neovide_position_animation_length = 0
+end
+
 local augroup = vim.api.nvim_create_augroup('tmthy_options', { clear = true })
 
 vim.api.nvim_create_autocmd('ModeChanged', {

@@ -12,6 +12,7 @@
   "mini.icons": { "branch": "main", "commit": "910db5df9724d65371182948f921fce23c2c881e" },
   "mini.nvim": { "branch": "main", "commit": "fcf982a66df4c9e7ebb31a6a01c604caee2cd488" },
   "nvim-autopairs": { "branch": "master", "commit": "3d02855468f94bf435db41b661b58ec4f48a06b7" },
+  "nvim-dap": { "branch": "master", "commit": "99807078c5089ed30e0547aa4b52c5867933f426" },
   "nvim-lspconfig": { "branch": "master", "commit": "9ee2e7dac2e1c74538a0e0d79b9e2d59a8517bd6" },
   "nvim-treesitter": { "branch": "master", "commit": "7edaaf98874c9a556c648815e21b53a662de68de" },
   "nvim-treesitter-textobjects": { "branch": "master", "commit": "ad8f0a472148c3e0ae9851e26a722ee4e29b1595" },

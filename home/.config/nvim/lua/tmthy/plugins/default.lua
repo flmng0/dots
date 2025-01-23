@@ -150,19 +150,30 @@ return {
 				},
 			})
 
-			-- Simple ensure_installed for tools based on:
-			-- https://github.com/williamboman/mason.nvim/issues/1309#issuecomment-1555018732
-			local registry = require('mason-registry')
+			require('tmthy.util').mason_ensure_installed(tools)
+		end,
+	},
 
-			registry.refresh(function()
-				for _, tool in ipairs(tools) do
-					if not registry.is_installed(tool) then
-						vim.notify('[mason.nvim] installing ' .. tool .. '...')
-						local pkg = registry.get_package(tool)
-						pkg:install()
-					end
-				end
-			end)
+	{
+		'mfussenegger/nvim-dap',
+		dependencies = {
+			'williamboman/mason.nvim',
+		},
+
+		config = function()
+			local default_config = require('tmthy.adapters.default')
+			local profile_config = require('tmthy.adapters.' .. _G.Profile)
+
+			local config = vim.tbl_deep_extend('force', default_config, profile_config)
+
+			local dap = require('dap')
+
+			if config.adapters then
+				dap.adapters = config.adapters
+			end
+			if config.configurations then
+				dap.configurations = config.configurations
+			end
 		end,
 	},
 

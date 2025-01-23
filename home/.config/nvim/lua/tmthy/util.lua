@@ -45,4 +45,18 @@ function M.lazy_wrapper(module)
 	end
 end
 
+-- Simple ensure_installed for tools based on:
+-- https://github.com/williamboman/mason.nvim/issues/1309#issuecomment-1555018732
+function M.mason_ensure_installed(list)
+	local registry = require('mason-registry')
+
+	for _, name in ipairs(list) do
+		if not registry.is_installed(name) then
+			vim.notify('[mason.nvim] installing ' .. name .. '...')
+			local pkg = registry.get_package(name)
+			pkg:install()
+		end
+	end
+end
+
 return M

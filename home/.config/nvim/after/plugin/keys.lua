@@ -1,4 +1,3 @@
----@module 'which-key'
 local wk = require('which-key')
 local util = require('tmthy.util')
 
@@ -19,6 +18,7 @@ wk.add({
 wk.add({
 	{ '<leader>f', group = 'Finders' },
 	{ '<leader>c', group = 'Code Actions' },
+	{ '<leader>d', group = 'Debugging' },
 })
 
 -- Telescope non-LSP mappings
@@ -45,11 +45,22 @@ wk.add({
 	{ '<leader>cf', conform('format'), desc = 'Format current file' },
 })
 
+-- DAP mappings
+local dap = util.lazy_wrapper('dap')
+
+wk.add({
+	{ '<leader>dc', dap('continue'), desc = '[DAP] Continue' },
+	{ '<leader>dn', dap('step_over'), desc = '[DAP] Step over (next)' },
+	{ '<leader>di', dap('step_into'), desc = '[DAP] Step into' },
+	{ '<leader>do', dap('step_out'), desc = '[DAP] Step out' },
+	{ '<leader>db', dap('toggle_breakpoint'), desc = '[DAP] Toggle breakpoint' },
+	{ '<leader>dB', dap('set_breakpoint'), desc = '[DAP] Set breakpoint' },
+	{ '<leader>dR', dap('clear_breakpoints'), desc = '[DAP] Clear breakpoints' },
+})
+
 -- LSP-only mappings
 --
 -- Also registers a fallback function by default for when there is no LSP
-
----@type { [number]: wk.Spec }
 local lsp_mappings = {
 	-- [A]ctions
 	{ '<leader>ca', vim.lsp.buf.code_action, desc = '[LSP] List code actions', mode = { 'n', 'v' } },

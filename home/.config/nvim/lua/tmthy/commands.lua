@@ -1,9 +1,6 @@
-vim.notify('Creating user commands!')
-vim.api.nvim_create_user_command('NewSession', function()
-	vim.ui.input({ prompt = 'Session name' }, function(name)
-		if name == nil then
-			return
-		end
-		require('mini.sessions').write(name)
-	end)
-end, { bang = true })
+vim.api.nvim_create_user_command('NewSession', function(opts)
+	local session_name = opts.args
+	local force = opts.bang
+
+	require('mini.sessions').write(session_name, { force = force })
+end, { bang = true, nargs = 1 })

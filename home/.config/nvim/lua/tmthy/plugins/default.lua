@@ -50,7 +50,7 @@ return {
 	{
 		'saghen/blink.cmp',
 		lazy = false,
-		version = 'v0.*',
+		version = '*',
 		---@module 'blink.cmp'
 		---@type blink.cmp.Config
 		opts = {
@@ -394,16 +394,39 @@ return {
 			require('mini.sessions').setup({})
 
 			local starter = require('mini.starter')
+
+			-- Logic below is for saving a session for configuring Neovim
+			-- which is manually inserted as an entry in the startup screen.
+			local config_session_name = '_nvim-config'
+
+			local sessions = function()
+				local entries = starter.sections.sessions(5)()
+				local filtered = vim.tbl_filter(function(s)
+					return s.name ~= config_session_name
+				end, entries)
+
+				return filtered
+			end
+
 			starter.setup({
 				items = {
-					starter.sections.sessions(5),
+					sessions,
 
 					{
 						name = 'Configure Neovim',
 						action = function()
-							local config_dir = vim.fn.stdpath('config') --[[@as string]]
-							vim.api.nvim_set_current_dir(config_dir)
-							require('oil').open(config_dir)
+							local has_config_session = vim.tbl_contains(MiniSessions.detected, function(s)
+								return s.name == config_session_name
+							end, { predicate = true })
+
+							if has_config_session then
+								MiniSessions.read(config_session_name)
+							else
+								local config_dir = vim.fn.stdpath('config') --[[@as string]]
+								vim.api.nvim_set_current_dir(config_dir)
+								require('oil').open(config_dir)
+								MiniSessions.write(config_session_name)
+							end
 						end,
 						section = 'Builtin actions',
 					},

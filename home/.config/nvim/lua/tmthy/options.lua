@@ -26,7 +26,7 @@ vim.opt.signcolumn = 'number'
 vim.opt.laststatus = 3
 
 if vim.g.neovide then
-	vim.opt.guifont = 'FiraMono Nerd Font:h12'
+	vim.opt.guifont = 'JetBrainsMono NF:h12'
 
 	vim.g.neovide_position_animation_length = 0
 end

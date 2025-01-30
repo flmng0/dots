@@ -5,6 +5,48 @@ local function hl(name)
 	return '%#' .. name .. '#'
 end
 
+local dap = require('dap')
+
+local function has_dap_config(bufnr)
+	local all_configs = {}
+	local providers = dap.providers
+	local provider_keys = vim.tbl_keys(providers.configs)
+	table.sort(provider_keys)
+
+	for _, provider in ipairs(provider_keys) do
+		local config_provider = providers.configs[provider]
+		local configs = config_provider(bufnr)
+
+		vim.list_extend(all_configs, configs)
+	end
+
+	return #all_configs > 0
+end
+
+for _, event in ipairs({
+	'initialized',
+	'terminated',
+	'stopped',
+}) do
+	dap.listeners.after['event_' .. event]['tmthy.statusline'] = function(_session, _body)
+		vim.cmd([[:redrawstatus]])
+	end
+end
+
+local lazy_dap = require('tmthy.util').lazy_wrapper('dap')
+_G.TmthyDapNew = function()
+	vim.cmd([[:DapNew]])
+end
+-- _G.TmthyDapNew = lazy_dap('continue', { new = true })
+_G.TmthyDapContinue = lazy_dap('continue')
+_G.TmthyDapPause = lazy_dap('pause')
+_G.TmthyDapStop = lazy_dap('terminate')
+
+_G.TmthyDapStepInto = lazy_dap('step_into')
+_G.TmthyDapStepOver = lazy_dap('step_over')
+_G.TmthyDapStepOut = lazy_dap('step_out')
+_G.TmthyDapRestart = lazy_dap('restart')
+
 function _G.TmthyStatusLine()
 	---@param padding? number
 	local function component(inner, hlname, padding)
@@ -47,7 +89,9 @@ function _G.TmthyStatusLine()
 			return ''
 		end
 
-		local text = ' ' .. data.head_name
+		local head_name = data.head_name:gsub('^feature/(%a+%-%d+).*', 'f/%1')
+
+		local text = ' ' .. head_name
 		return component(text, 'StatusLineGitBranch', 2)
 	end
 
@@ -88,6 +132,42 @@ function _G.TmthyStatusLine()
 		local text = table.concat(data, ' ')
 
 		return component(text, 'StatusLineGitBranch', 1)
+	end
+
+	local function dap_controls()
+		local session = dap.session()
+
+		if session == nil then
+			local bufnr = vim.api.nvim_get_current_buf()
+			if has_dap_config(bufnr) then
+				return component('%@v:lua.TmthyDapNew@󰐊 Start%X', 'StatusLineGitBranch', 1)
+			else
+				return ''
+			end
+		end
+
+		local running = session.stopped_thread_id == nil
+
+		local pause = { symbol = '󰏤', callback = 'TmthyDapPause' }
+		local play = { symbol = '󰐊', callback = 'TmthyDapContinue' }
+
+		-- TODO: Add highlight and callback to table
+		local dap_map = {
+			running and pause or play,
+
+			{ symbol = '󰓛', callback = 'TmthyDapStop' },
+			{ symbol = '󰜉', callback = 'TmthyDapRestart' },
+
+			{ symbol = '󰆹', callback = 'TmthyDapStepInto' },
+			{ symbol = '󰆸', callback = 'TmthyDapStepOut' },
+			{ symbol = '󰆷', callback = 'TmthyDapStepOver' },
+		}
+
+		local text = vim.tbl_map(function(opts)
+			return '%@v:lua.' .. opts.callback .. '@' .. opts.symbol .. '%X'
+		end, dap_map)
+
+		return component(table.concat(text, ' '), 'StatusLineGitBranch', 1)
 	end
 
 	local function lsp_status()
@@ -143,6 +223,7 @@ function _G.TmthyStatusLine()
 		component('%f', 'StatusLine'),
 		diff(),
 		'%=',
+		dap_controls(),
 		lsp_status(),
 		component('%l:%c', 'StatusLine'),
 	})

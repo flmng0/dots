@@ -28,6 +28,7 @@ wk.add({
 	{ '<leader><space>', builtin('find_files'), desc = 'Fuzzy find files' },
 	{ '<leader>fh', builtin('help_tags'), desc = 'Search help' },
 	{ '<leader>fk', builtin('keymaps'), desc = 'Search for keymaps' },
+	{ '<leader>fb', builtin('buffers'), desc = 'Search open buffers' },
 	{ '<leader>/', builtin('live_grep'), desc = 'Live grep' },
 })
 

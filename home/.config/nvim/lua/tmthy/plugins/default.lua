@@ -391,7 +391,15 @@ return {
 			require('mini.git').setup({})
 			require('mini.diff').setup({})
 
-			require('mini.sessions').setup({})
+			local sessions_base = 'session'
+			if _G.Profile ~= 'home' then
+				sessions_base = sessions_base .. '-' .. _G.Profile
+			end
+			local sessions_dir = vim.fn.stdpath('data') .. '/' .. sessions_base
+
+			require('mini.sessions').setup({
+				directory = sessions_dir,
+			})
 
 			local starter = require('mini.starter')
 
@@ -409,6 +417,7 @@ return {
 			end
 
 			starter.setup({
+				footer = "Using '" .. _G.Profile .. "' profile.",
 				items = {
 					sessions,
 

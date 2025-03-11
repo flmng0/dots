@@ -248,6 +248,7 @@ return {
 					typescriptreact = js_like,
 					svelte = js_like,
 					css = js_like,
+					vue = js_like,
 				},
 				format_on_save = {
 					timeout = 500,

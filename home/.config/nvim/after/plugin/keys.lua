@@ -11,7 +11,18 @@ wk.add({
 	{ ']b', '<Cmd>bnext<CR>', desc = 'Swap to next buffer' },
 	{ '[b', '<Cmd>bprevious<CR>', desc = 'Swap to previous buffer' },
 	{ 'U', '<C-r>', desc = 'Redo' },
-	{ '<C-s>', '<Cmd>source %<CR>', desc = 'Source current file' },
+	{
+		'<C-s>',
+		function()
+			local buf = vim.api.nvim_get_current_buf()
+			if vim.bo[buf].filetype == 'lua' then
+				vim.cmd('<Cmd>source %<CR>')
+			else
+				vim.notify('Tried to source file, but filetype is not lua', vim.log.levels.WARN)
+			end
+		end,
+		desc = 'Source current file',
+	},
 })
 
 -- register groups

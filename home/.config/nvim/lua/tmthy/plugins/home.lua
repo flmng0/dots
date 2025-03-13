@@ -6,6 +6,9 @@ return {
 		'Olical/conjure',
 		lazy = true,
 		ft = { 'clojure' },
+		init = function()
+			vim.g['conjure#mapping#doc_word'] = false
+		end,
 	},
 
 	-- Handling of Lisp-like languages
@@ -14,7 +17,7 @@ return {
 		dependencies = { 'gpanders/nvim-parinfer', 'julienvincent/nvim-paredit' },
 		opts = {},
 	},
-	
+
 	{ -- for flutter
 		'nvim-flutter/flutter-tools.nvim',
 		dependencies = { 'nvim-lua/plenary.nvim' },

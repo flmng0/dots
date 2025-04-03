@@ -7,10 +7,7 @@
          {1 :<leader>c :group "Code Actions"}
          {1 :<leader>d :group "Debugging"}])
 
-(map (:<Esc> :<Cmd>nohl<CR> :desc "Clear highlight")
-     ("]b" :<Cmd>bnext<CR> :desc "Swap to next buffer")
-     ("[b" :<Cmd>bprev<CR> :desc "Swap to previous buffer")
-     (:U :<C-r> :desc "Redo"))
+(map (:<Esc> :<Cmd>nohl<CR> :desc "Clear highlight") (:U :<C-r> :desc "Redo"))
 
 ; Finders
 
@@ -20,7 +17,7 @@
     (:fh (lazy :fzf-lua :helptags) :desc "Search help pages")
     (:fk (lazy :fzf-lua :keymaps) :desc "Search key mappings")
     (:fr (lazy :fzf-lua :oldfiles) :desc "Search recently opened files")
-    (:/ (lazy :fzf-lua :grep) :desc "Live grep"))
+    (:/ (lazy :fzf-lua :live_grep) :desc "Live grep"))
 
 ; Various plugin method calls
 (map (:- (lazy :oil :open) :desc "Open Oil.nvim in current directory")

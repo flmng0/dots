@@ -36,11 +36,15 @@
                 (tset acc key val)
                 (tail! (collect-opts acc (unpack rest))))))
 
-        (collect-opts [lhs rhs] :mode mode :buffer buffer (unpack opts))))
+        (doto {: mode : buffer}
+          (collect-opts (unpack opts))
+          (table.insert lhs)
+          (table.insert rhs))))
 
     (let [mappings (icollect [_ binding (ipairs bindings)]
                      (->mapping binding))]
       (when hidden (tset mappings :hidden true))
-      `(let [wk# (require :which-key)] (wk#.add ,mappings)))))
+      `(let [wk# (require :which-key)]
+         (wk#.add ,mappings)))))
 
 {: plugin-setup : lazy : map}

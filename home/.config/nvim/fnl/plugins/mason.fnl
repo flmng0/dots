@@ -2,12 +2,17 @@
  :lazy false
  :dependencies [{1 :j-hui/fidget.nvim :config true}]
  :config (fn []
+           ;; TODO: What the heck was I thinking?
+           (fn digest-lsp-files [files]
+             (icollect [_ c (ipairs files)]
+               (let [leaf-name (vim.fn.fnamemodify c ":t:r")
+                     matcher (string.gmatch leaf-name "(%w*)#*(%w*)")
+                     (name profile) (matcher)]
+                 {: name : profile})))
+
            (let [mason (require :mason)
                  mason-registry (require :mason-registry)
-                 lsp-names (icollect [_ c (ipairs (vim.api.nvim_get_runtime_file "lsp/*.lua"
-                                                                                 true))]
-                             (vim.fn.fnamemodify c ":t:r"))]
-             (print "LSP names:" (.. (unpack lsp-names)))
+                 lsp-configs (digest-lsp-files (vim.api.nvim_get_runtime_file "lsp/*.lua" true))]
 
              (fn ensure-installed [name]
                (when (mason-registry.has_package name)
@@ -17,6 +22,13 @@
 
              (mason.setup)
              (mason-registry.refresh (fn []
-                                       (each [_ name (ipairs lsp-names)]
-                                         (ensure-installed name))
-                                       (vim.lsp.enable lsp-names)))))}
+                                       (let [names (icollect [_ {: name : profile} (ipairs lsp-configs)]
+                                                     (do
+                                                       (print name " " profile)
+                                                      (when (or (= "" profile)
+                                                                (= (require :tmthy.profile) profile))
+                                                           (ensure-installed name)
+                                                           name)))]
+                                        (vim.lsp.enable names))))))}
+
+

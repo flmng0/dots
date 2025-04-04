@@ -7,6 +7,8 @@ local function bootstrap(plugin, branch)
 	local _user, repo = string.match(plugin, '(.+)/(.+)')
 	local repo_path = vim.fn.stdpath('data') .. '/lazy/' .. repo
 
+	local did_bootstrap = false
+
 	if vim.fn.isdirectory(repo_path) == 0 then
 		vim.notify('Installing ' .. plugin .. ' ' .. branch)
 
@@ -29,13 +31,15 @@ local function bootstrap(plugin, branch)
 			vim.fn.getchar()
 			os.exit(1)
 		end
+
+		did_bootstrap = true
 	end
 
-	return repo_path
+	return repo_path, did_bootstrap
 end
 
 local lazy_path = bootstrap('folke/lazy.nvim', 'stable')
-local hotpot_path = bootstrap('rktjmp/hotpot.nvim', 'v0.14.8')
+local hotpot_path, did_bootstrap = bootstrap('rktjmp/hotpot.nvim', 'v0.14.8')
 
 -- As per Lazy's install instructions, but also include hotpot
 vim.opt.runtimepath:prepend({ hotpot_path, lazy_path })
@@ -44,12 +48,18 @@ vim.opt.runtimepath:prepend({ hotpot_path, lazy_path })
 -- passing {performance = {cache = false}} to Lazy.
 vim.loader.enable()
 
+local config_path = vim.fn.stdpath("config")
+
+if did_bootstrap then
+	require('hotpot.api.make').auto.build(config_path)
+end
+
 require('hotpot')
 
 require('lazy').setup({
 	performance = {
 		rtp = {
-			paths = { vim.fn.stdpath('config').."/.compiled" }
+			paths = { config_path.."/.compiled" }
 		}
 	},
 	spec = {

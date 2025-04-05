@@ -1,4 +1,4 @@
-(let [profile (require :tmthy.profile)
+(let [{: profile} (require :tmthy.profile)
       (success config) (pcall require (.. :plugins.profile. profile))]
   (if success
       config

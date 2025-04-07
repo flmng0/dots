@@ -4,9 +4,14 @@
  :config (fn []
            (let [mason (require :mason)
                  mason-registry (require :mason-registry)]
+             (fn ensure-installed [name]
+               (when (mason-registry.has_package name)
+                 (let [pkg (mason-registry.get_package name)]
+                   (when (not (pkg:is_installed))
+                     (pkg:install)))))
+
              (fn enable-required []
-               (let [{: ensure-installed} (require :tmthy.mason)
-                     {: servers} (require :tmthy.profile)]
+               (let [{: servers} (require :tmthy.profile)]
                  (each [_ name (ipairs servers)]
                    (ensure-installed name))
                  (vim.lsp.enable servers)))

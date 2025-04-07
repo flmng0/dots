@@ -9,7 +9,6 @@
 (command :BufOnly {:nargs 0} []
   (vim.cmd "%bd|e#"))
 
-
 (fn session-complete []
   (let [{: detected} (require :mini.sessions)
         names (tkeys detected)]

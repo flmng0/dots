@@ -5,6 +5,12 @@
   `(fn []
      ((. (require ,module) ,method))))
 
+(fn tkeys [tbl]
+  `(icollect [k# _# (pairs ,tbl)] k#))
+
+(fn tvals [tbl]
+  `(icollect [_# v# (pairs ,tbl)] v#))
+
 ;; Macro that simplifies binding
 ;; Could be used as the following:
 ;;   (bind {:prefix :<leader> :modes :ni}
@@ -47,4 +53,4 @@
       `(let [wk# (require :which-key)]
          (wk#.add ,mappings)))))
 
-{: plugin-setup : lazy : map}
+{: plugin-setup : lazy : map : tkeys : tvals}

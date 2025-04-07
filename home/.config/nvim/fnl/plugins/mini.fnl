@@ -10,6 +10,7 @@
            (plugin-setup :mini.sessions {})
            (let [config-session-name :_nvim-config
                  starter (require :mini.starter)
+                 footer (.. "Using '" (. (require :tmthy.profile) :profile) "' profile.")
                  sessions (fn []
                             (icollect [_ s (ipairs ((starter.sections.sessions 5)))]
                               (when (not= s.name config-session-name) s)))
@@ -27,4 +28,5 @@
                               :section "Builtin actions"}]
              (starter.setup {:items [sessions
                                      config-item
-                                     (starter.sections.builtin_actions)]})))}
+                                     (starter.sections.builtin_actions)]
+                             : footer})))}

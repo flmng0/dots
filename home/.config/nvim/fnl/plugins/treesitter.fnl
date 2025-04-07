@@ -17,8 +17,8 @@
                                                     :keymaps {:aa "@parameter.outer"
                                                               :ia "@parameter.inner"
 
-                                                              :af "@function.outer"
-                                                              :if "@function.inner"}}
+                                                              :am "@function.outer"
+                                                              :im "@function.inner"}}
                                            :move {:enable true
                                                   :set_jumps true
                                                   

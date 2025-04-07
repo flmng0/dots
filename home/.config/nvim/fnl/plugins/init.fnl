@@ -16,6 +16,8 @@
  {1 :windwp/nvim-autopairs :opts {:map_cr true}}
  ;; Changes some default UI elements such as select and rename
  {1 :stevearc/dressing.nvim
-  :opts {:input {:border "single"} :select {:builtin {:border "none"}}}}]
+  :opts {:input {:border "single"} :select {:builtin {:border "none"}}}}
+ ;; Add's structural editing commands
+ {1 :julienvincent/nvim-paredit :opts {:indent {:enabled true}}}]
 
 ;; TODO: Nvim-dap and work + home plugins

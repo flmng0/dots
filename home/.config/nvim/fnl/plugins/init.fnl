@@ -18,6 +18,12 @@
  {1 :stevearc/dressing.nvim
   :opts {:input {:border "single"} :select {:builtin {:border "none"}}}}
  ;; Add's structural editing commands
- {1 :julienvincent/nvim-paredit :opts {:indent {:enabled true}}}]
+ {1 :dundalek/parpar.nvim
+  :dependencies [:gpanders/nvim-parinfer :julienvincent/nvim-paredit]
+  :init (fn [] 
+          (tset vim.g :parinfer_mode :indent)
+          (tset vim.g :parinfer_force_balance true))
+  :config true}]
+ 
 
-;; TODO: Nvim-dap and work + home plugins
+;; TODO: Nvim-dap 

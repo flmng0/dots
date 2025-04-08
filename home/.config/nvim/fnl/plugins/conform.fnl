@@ -2,9 +2,10 @@
 {1 :stevearc/conform.nvim
  :opts (let [js-like (doto [:biome :deno_fmt :prettierd :prettier]
                        (tset :stop_after_first true))
-             non-auto-format [:fennel]]
+             non-auto-format [:fennel :html]]
          {:formatters_by_ft {:lua [:stylua]
                              :fennel [:fnlfmt]
+                             :html js-like
                              :javascript js-like
                              :typescript js-like
                              :javascriptreact js-like

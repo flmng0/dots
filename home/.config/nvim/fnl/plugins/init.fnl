@@ -20,10 +20,6 @@
  ;; Add's structural editing commands
  {1 :dundalek/parpar.nvim
   :dependencies [:gpanders/nvim-parinfer :julienvincent/nvim-paredit]
-  :init (fn [] 
-          (tset vim.g :parinfer_mode :indent)
-          (tset vim.g :parinfer_force_balance true))
   :config true}]
- 
 
 ;; TODO: Nvim-dap 

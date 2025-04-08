@@ -7,7 +7,9 @@
          {1 :<leader>c :group "Code Actions"}
          {1 :<leader>d :group "Debugging"}])
 
-(map (:<Esc> :<Cmd>nohl<CR> :desc "Clear highlight") (:U :<C-r> :desc "Redo"))
+(map (:<Esc> :<Cmd>nohl<CR> :desc "Clear highlight") 
+     (:U :<C-r> :desc "Redo")
+     (:<Esc> :<C-\><C-n> :desc "Exit terminal mode" :mode [:t]))
 
 ; Finders
 

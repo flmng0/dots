@@ -5,4 +5,4 @@
         {: live_grep} (require :fzf-lua)]
     (live_grep {:cwd (get_current_dir)})))
 
-(map (:<localleader>/ relative-fzf :desc "Open FZF live_grep in the current oil directory"))
+(map (:<localleader>/ relative-fzf :desc "Open FZF live_grep in the current oil directory" :buffer true))

@@ -1,1 +1,1 @@
-{:filetypes [:odin] :cmd [:ols]}
+{:filetypes ["odin"] :cmd ["ols"]}

@@ -1,8 +1,8 @@
-{:filetypes [:javascript 
-             :javascriptreact 
-             :typescript 
-             :typescriptreact 
-             :vue 
-             :svelte]
- :cmd [:typescript-language-server :--stdio]}
+{:filetypes ["javascript" 
+             "javascriptreact" 
+             "typescript" 
+             "typescriptreact" 
+             "vue" 
+             "svelte"]
+ :cmd ["typescript-language-server" "--stdio"]}
 

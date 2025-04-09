@@ -33,6 +33,7 @@
        (:gr (lazy :fzf-lua :lsp_references) :desc "[LSP] Goto or find symbol's references")
        (:gt (lazy :fzf-lua :lsp_type_definitions) :desc "[LSP] Goto or find symbol's type definition")
        (:gd (lazy :fzf-lua :lsp_definitions) :desc "[LSP] Goto or find symbol's definition")
+       (:gi (lazy :fzf-lua :lsp_implementations) :desc "[LSP] Goto or find symbol's implementation")
        (:gD vim.lsp.buf.declaration :desc "[LSP] Goto symbol declaration")
        (:<leader>fs (lazy :fzf-lua :lsp_document_symbols) :desc "[LSP] Find symbols in current document")
        (:<leader>fw (lazy :fzf-lua :lsp_workspace_symbols) :desc "[LSP] Find symbols in workspace")))

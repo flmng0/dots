@@ -1,8 +1,11 @@
-(import-macros {: map} :macros)
+(import-macros {: map : lazy} :macros)
 
-(fn relative-fzf []
+(fn relative-fzf [picker-name]
   (let [{: get_current_dir} (require :oil)
-        {: live_grep} (require :fzf-lua)]
-    (live_grep {:cwd (get_current_dir)})))
+        picker (lazy :fzf-lua picker-name)]
+    (fn [] (picker {:cwd (get_current_dir)}))))
 
-(map (:<localleader>/ relative-fzf :desc "Open FZF live_grep in the current oil directory" :buffer true))
+;; fnlfmt: skip
+(map {:prefix :<localleader>}
+  (:/  (relative-fzf :live_grep) :desc "Open FZF live_grep in the current oil directory" :buffer true)
+  (:<space> (relative-fzf :files) :desc "Open FZF :files in the current oil directory" :buffer true))

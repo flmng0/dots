@@ -2,8 +2,8 @@
   `((. (require ,name) :setup) ,options))
 
 (fn lazy [module method]
-  `(fn []
-     ((. (require ,module) ,method))))
+  `(fn [& args#]
+     ((. (require ,module) ,method) (unpack args#))))
 
 (fn tkeys [tbl]
   `(icollect [k# _# (pairs ,tbl)] k#))

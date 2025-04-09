@@ -1,5 +1,5 @@
 {1 :nvim-treesitter/nvim-treesitter
- :build :TSUpdate
+ :build ":TSUpdate"
  :dependencies [:nvim-treesitter/nvim-treesitter-textobjects]
  :config (fn []
            (let [configs (require :nvim-treesitter.configs)]

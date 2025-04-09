@@ -5,7 +5,7 @@
 ;; fnlfmt: skip
 (local servers 
        {:* [:typescript-language-server] 
-        :home [:ols :gopls]})
+        :home [:ols :gopls :elixir-ls]})
 
 (fn get-servers [profile]
   (vim.list_extend servers.* (or (. servers profile) [])))

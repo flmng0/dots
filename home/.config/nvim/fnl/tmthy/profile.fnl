@@ -5,7 +5,7 @@
 ;; fnlfmt: skip
 (local servers 
        {:* ["typescript-language-server"] 
-        :home ["ols" "gopls" "elixir-ls"]
+        :home ["ols" "gopls" "elixir-ls" "svelte"]
         :work ["omnisharp"]})
 
 (fn get-servers [profile]

@@ -14,5 +14,8 @@
                              :css js-like
                              :vue js-like}
           :format_on_save (fn [bufnr]
-                            (when (not (vim.list_contains non-auto-format (. vim.bo bufnr :filetype)))
-                              {:timeout 500 :lsp_format :fallback}))})}
+                            (let [buf-disabled (. vim.b bufnr :disable_autoformatting)
+                                  ft-disabled (vim.list_contains non-auto-format (. vim.bo bufnr :filetype))
+                                  disabled (or ft-disabled buf-disabled)]
+                              (when (not disabled)
+                                {:timeout 500 :lsp_format :fallback})))})}

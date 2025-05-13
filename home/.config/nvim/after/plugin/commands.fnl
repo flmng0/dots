@@ -46,3 +46,7 @@
   (let [{:args session-name :bang force} opts
         {: read} (require :mini.sessions)]
     (read session-name {: force})))
+
+
+(defcommand :BufDisableFormatting {} []
+  (tset vim.b :disable_autoformatting true))

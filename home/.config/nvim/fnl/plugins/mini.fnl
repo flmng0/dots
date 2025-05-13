@@ -1,5 +1,13 @@
 (import-macros {: plugin-setup} :macros)
 
+(local config-session-name :_nvim-config)
+
+(fn set-title [session]
+  (let [{: name} session
+        name (if (= name config-session-name) "Configuring nvim" name)]
+   (tset vim.opt :title true)
+   (tset vim.opt :titlestring (.. name " - Neovide"))))
+
 {1 :echasnovski/mini.nvim
  :version false
  :config (fn []
@@ -7,9 +15,11 @@
            (plugin-setup :mini.move {})
            (plugin-setup :mini.git {})
            (plugin-setup :mini.diff {})
-           (plugin-setup :mini.sessions {})
-           (let [config-session-name :_nvim-config
-                 starter (require :mini.starter)
+           (plugin-setup :mini.sessions {:hooks {:pre {:read set-title}}})
+                                                 
+                         
+
+           (let [starter (require :mini.starter)
                  footer (.. "Using '" (. (require :tmthy.profile) :profile) "' profile.")
                  sessions (fn []
                             (icollect [_ s (ipairs ((starter.sections.sessions 5)))]

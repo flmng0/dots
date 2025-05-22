@@ -20,6 +20,10 @@
  ;; Add's structural editing commands
  {1 :dundalek/parpar.nvim
   :dependencies [:gpanders/nvim-parinfer :julienvincent/nvim-paredit]
-  :config true}]
+  :config true}
+ ;; Adds the "Do" command, which is a quick way to give myself to-dos.
+ ;; Recommendation: add .tasks to global gitignore
+ {1 :Hashino/doing.nvim
+  :cmd "Do"}]
 
 ;; TODO: Nvim-dap 

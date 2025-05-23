@@ -1,9 +1,12 @@
-(let [registry (require :mason-registry)
-      vls_path (-> (registry.get_package :vue-language-server)
-                   (: :get_install_path)
-                   (.. "/node_modules/@vue/language-server"))]
+(fn get-vls-path []
+  (let [registry (require :mason-registry)
+        is-installed (registry.is_installed :vue-language-server)]
+    (when is-installed
+      (vim.fn.expand "$MASON/packages/vue-language-server/node_modules/@vue/language-server"))))
+
+(let [vls-path (get-vls-path)]
    {:init_options {:plugins [{:name "@vue/typescript-plugin"
-                              :location vls_path
+                              :location vls-path
                               :languages ["vue"]}]}
     :filetypes [:javascript
                 :javascriptreact

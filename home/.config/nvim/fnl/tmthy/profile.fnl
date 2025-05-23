@@ -6,7 +6,7 @@
 (local servers 
        {:* ["ts_ls"] 
         :home ["ols" "gopls" "elixir-ls" "svelte"]
-        :work ["omnisharp" "volar"]})
+        :work ["omnisharp" "vue_ls"]})
 
 (fn get-servers [profile]
   (vim.list_extend servers.* (or (. servers profile) [])))

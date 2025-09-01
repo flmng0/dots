@@ -24,6 +24,14 @@
  ;; Adds the "Do" command, which is a quick way to give myself to-dos.
  ;; Recommendation: add .tasks to global gitignore
  {1 :Hashino/doing.nvim
-  :cmd "Do"}]
+  :cmd "Do"}
+
+ {1 :sindrets/diffview.nvim
+  :opts {:view {:merge_tool {:layout "diff3_vertical"}}}}
+
+ {1 :nvim-orgmode/orgmode
+  :event :VeryLazy
+  :opts {:org_agenda_files "~/orgfiles/**/*"
+         :org_default_notes_file "~/orgfiles/refile.org"}}]
 
 ;; TODO: Nvim-dap 

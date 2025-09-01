@@ -12,8 +12,10 @@
   (let [config-path (vim.fn.stdpath :config)]
     ((. (require :hotpot.api.make) :auto :build) config-path)))
 
-(defcommand :BufOnly {:nargs 0} []
-  (vim.cmd "%bd|e#"))
+(defcommand :BufOnly {:bang true :nargs 0} [{:bang force}]
+  (if force
+      (vim.cmd "%bd!|e#")
+      (vim.cmd "%bd|e#")))
 
 (fn session-complete []
   (let [{: detected} (require :mini.sessions)

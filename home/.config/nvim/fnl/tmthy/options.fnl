@@ -24,6 +24,8 @@
 
 (tset vim.opt :sessionoptions [:curdir :folds :help :tabpages :winsize])
 
+(tset vim.opt :foldmethod :manual)
+
 ;; Neovide configurations
 (when vim.g.neovide
   (tset vim.opt :guifont "JetBrainsMono NF:h11")

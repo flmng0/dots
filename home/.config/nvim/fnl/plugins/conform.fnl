@@ -1,6 +1,6 @@
 ; Conform for file formatting
 {1 :stevearc/conform.nvim
- :opts (let [js-like (doto [:biome :deno_fmt :prettierd :prettier]
+ :opts (let [js-like (doto [:biome :prettierd :prettier]
                        (tset :stop_after_first true))
              non-auto-format [:fennel :html]]
          {:formatters_by_ft {:lua [:stylua]

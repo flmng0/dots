@@ -4,9 +4,10 @@
 
 (fn set-title [session]
   (let [{: name} session
-        name (if (= name config-session-name) "Configuring nvim" name)]
+        name (if (= name config-session-name) "Configuring nvim" name)
+        suffix (if vim.g.neovide "Neovide" "NeoVim")]
    (tset vim.opt :title true)
-   (tset vim.opt :titlestring (.. name " - Neovide"))))
+   (tset vim.opt :titlestring (.. name " - " suffix))))
 
 {1 :echasnovski/mini.nvim
  :version false

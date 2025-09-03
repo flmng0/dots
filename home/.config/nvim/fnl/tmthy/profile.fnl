@@ -5,7 +5,7 @@
 ;; fnlfmt: skip
 (local servers 
        {:* ["ts_ls"] 
-        :home ["ols" "gopls" "elixir-ls" "svelte"]
+        :home ["ols" "gopls" "expert" "svelte"]
         :work ["omnisharp" "vue_ls"]})
 
 (fn get-servers [profile]

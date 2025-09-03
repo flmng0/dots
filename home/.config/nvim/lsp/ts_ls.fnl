@@ -4,14 +4,15 @@
     (when is-installed
       (vim.fn.expand "$MASON/packages/vue-language-server/node_modules/@vue/language-server"))))
 
-(let [vls-path (get-vls-path)]
-   {:init_options {:plugins [{:name "@vue/typescript-plugin"
-                              :location vls-path
-                              :languages ["vue"]}]}
+(let [vls-path (get-vls-path)
+      plugins [(when vls-path {:name "@vue/typescript-plugin"
+                               :location vls-path
+                               :languages ["vue"]})]]
+   {:init_options {: plugins}
     :filetypes [:javascript
                 :javascriptreact
                 :javascript.jsx
                 :typescript
                 :typescriptreact
                 :typescript.tsx
-                :vue]})
+                (when vls-path :vue)]})

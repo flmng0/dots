@@ -21,7 +21,8 @@
                          
 
            (let [starter (require :mini.starter)
-                 footer (.. "Using '" (. (require :tmthy.profile) :profile) "' profile.")
+                 footer nil
+                 ; footer (.. "Using '" (. (require :tmthy.profile) :profile) "' profile.")
                  sessions (fn []
                             (icollect [_ s (ipairs ((starter.sections.sessions 5)))]
                               (when (not= s.name config-session-name) s)))

@@ -8,7 +8,7 @@
       plugins [(when vls-path {:name "@vue/typescript-plugin"
                                :location vls-path
                                :languages ["vue"]})]]
-   {:init_options {: plugins}
+   {:init_options {:plugins plugins}
     :filetypes [:javascript
                 :javascriptreact
                 :javascript.jsx

@@ -29,9 +29,7 @@
  {1 :sindrets/diffview.nvim
   :opts {:view {:merge_tool {:layout "diff3_vertical"}}}}
 
- {1 :nvim-orgmode/orgmode
-  :event :VeryLazy
-  :opts {:org_agenda_files "~/orgfiles/**/*"
-         :org_default_notes_file "~/orgfiles/refile.org"}}]
+ {1 :ggandor/leap.nvim
+  :dependencies [:tpope/vim-repeat]}]
 
 ;; TODO: Nvim-dap 

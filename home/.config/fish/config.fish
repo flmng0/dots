@@ -1,6 +1,8 @@
 fish_add_path /opt/nvim-linux-x86_64/bin
 fish_add_path $HOME/.local/bin
 
+set -x GOPATH $HOME/.local/share/go
+
 if test -f $HOME/.cargo/env.fish
     source $HOME/.cargo/env.fish
 end

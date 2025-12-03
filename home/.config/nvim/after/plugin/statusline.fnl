@@ -90,6 +90,7 @@
     (mode) 
     "%<" 
     (branch) 
+    (if vim.bo.modified "󰧞" "")
     (component "%f" "StatusLine") 
     (diff)
     "%="

@@ -1,14 +1,18 @@
-if status is-interactive
-    # Commands to run in interactive sessions can go here
+fish_add_path /opt/nvim-linux-x86_64/bin
+fish_add_path $HOME/.local/bin
+
+if test -f $HOME/.cargo/env.fish
+    source $HOME/.cargo/env.fish
 end
 
-fish_add_path /opt/nvim-linux-x86_64/bin
-fish_add_path $HOME/.bun/bin
-fish_add_path $HOME/.local/bin
-source $HOME/.cargo/env.fish
+if which nvim 2&>1 > /dev/null
+    set -x EDITOR nvim
+end
 
-set -x FLYCTL_INSTALL "/home/tmthy/.fly"
-fish_add_path "$FLYCTL_INSTALL/bin"
+set BITWARDEN_SSH_SOCK  "/home/tmthy/.bitwarden-ssh-agent.sock"
+if test -f $BITWARDEN_SSH_SOCK
+    set -x SSH_AUTH_SOCK $BITWARDEN_SSH_SOCK
+end
 
 mise activate fish | source
 starship init fish | source

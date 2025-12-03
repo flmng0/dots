@@ -21,13 +21,6 @@
  {1 :dundalek/parpar.nvim
   :dependencies [:gpanders/nvim-parinfer :julienvincent/nvim-paredit]
   :config true}
- ;; Adds the "Do" command, which is a quick way to give myself to-dos.
- ;; Recommendation: add .tasks to global gitignore
- {1 :Hashino/doing.nvim
-  :cmd "Do"}
-
- {1 :sindrets/diffview.nvim
-  :opts {:view {:merge_tool {:layout "diff3_vertical"}}}}
 
  {1 :ggandor/leap.nvim
   :dependencies [:tpope/vim-repeat]}]

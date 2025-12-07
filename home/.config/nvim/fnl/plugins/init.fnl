@@ -17,12 +17,9 @@
  ;; Changes some default UI elements such as select and rename
  {1 :stevearc/dressing.nvim
   :opts {:input {:border "single"} :select {:builtin {:border "none"}}}}
- ;; Add's structural editing commands
- {1 :dundalek/parpar.nvim
-  :dependencies [:gpanders/nvim-parinfer :julienvincent/nvim-paredit]
-  :config true}
 
- {1 :ggandor/leap.nvim
-  :dependencies [:tpope/vim-repeat]}]
+ {1 :ggandor/leap.nvim :dependencies [:tpope/vim-repeat]}
+
+ {1 :ibhagwan/fzf-lua :dependencies [:echasnovski/mini.icons] :opts {}}]
 
 ;; TODO: Nvim-dap 

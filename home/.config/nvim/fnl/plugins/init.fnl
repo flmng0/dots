@@ -20,6 +20,8 @@
 
  {1 :ggandor/leap.nvim :dependencies [:tpope/vim-repeat]}
 
- {1 :ibhagwan/fzf-lua :dependencies [:echasnovski/mini.icons] :opts {}}]
+ {1 :ibhagwan/fzf-lua :dependencies [:echasnovski/mini.icons] :opts {}}
+
+ :b0o/schemastore.nvim]
 
 ;; TODO: Nvim-dap 

@@ -1,13 +1,22 @@
 fish_add_path /opt/nvim-linux-x86_64/bin
 fish_add_path $HOME/.local/bin
 
+function installed 
+    which $argv[1] 2&>1 > /dev/null
+end
+
+if installed guile || installed guile3.0 
+    set -x GUILE_LOAD_PATH /usr/local/share/guile/site/3.0
+    set -x GUILE_LOAD_COMPILED_PATH /usr/local/lib/guile/3.0/site-ccache
+end
+
 set -x GOPATH $HOME/.local/share/go
 
 if test -f $HOME/.cargo/env.fish
     source $HOME/.cargo/env.fish
 end
 
-if which nvim 2&>1 > /dev/null
+if installed nvim
     set -x EDITOR nvim
 end
 

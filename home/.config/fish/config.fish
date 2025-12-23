@@ -21,7 +21,7 @@ if installed nvim
 end
 
 set BITWARDEN_SSH_SOCK  "/home/tmthy/.bitwarden-ssh-agent.sock"
-if test -f $BITWARDEN_SSH_SOCK
+if test -e $BITWARDEN_SSH_SOCK
     set -x SSH_AUTH_SOCK $BITWARDEN_SSH_SOCK
 end
 

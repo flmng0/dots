@@ -2,7 +2,7 @@ fish_add_path /opt/nvim-linux-x86_64/bin
 fish_add_path $HOME/.local/bin
 
 function installed 
-    which $argv[1] 2&>1 > /dev/null
+    which $argv[1] &> /dev/null
 end
 
 if installed guile || installed guile3.0 
@@ -25,5 +25,7 @@ if test -e $BITWARDEN_SSH_SOCK
     set -x SSH_AUTH_SOCK $BITWARDEN_SSH_SOCK
 end
 
-mise activate fish | source
+# mise activate fish | source
 starship init fish | source
+
+alias zypp="sudo ZYPP_PCK_PRELOAD=1 ZYPP_CURL2=1 zypper"

@@ -8,5 +8,5 @@
                  mason-lspconfig (require :mason-lspconfig)
                  servers ["ts_ls" "ols" "gopls" "expert" "svelte"]]
              (mason.setup)
-             (mason-lspconfig.setup {:ensure_installed servers})
+             (mason-lspconfig.setup {})
              (vim.lsp.enable servers)))}

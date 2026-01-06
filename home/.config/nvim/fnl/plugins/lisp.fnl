@@ -1,4 +1,4 @@
-[{1 :julienvincent/nvim-paredit}
+[{1 :gpanders/nvim-parinfer}
  ; "Conversational" editing for lisp-likes.
  {1 :Olical/conjure
   :lazy true

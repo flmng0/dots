@@ -6,7 +6,7 @@
  :config (fn []
            (let [mason (require :mason)
                  mason-lspconfig (require :mason-lspconfig)
-                 servers ["ts_ls" "ols" "gopls" "expert" "svelte"]]
+                 servers ["ts_ls" "ols" "gopls" "expert" "svelte" "gdscript"]]
              (mason.setup)
              (mason-lspconfig.setup {})
              (vim.lsp.enable servers)))}

@@ -6,6 +6,7 @@
              non-auto-format [:fennel :html]]
          {:formatters_by_ft {:lua [:stylua]
                              :fennel [:fnlfmt]
+                             :ocaml {1 :ocamlformat :lsp_format "prefer"}
                              :htmldjango js-like
                              :html js-like
                              :javascript js-like

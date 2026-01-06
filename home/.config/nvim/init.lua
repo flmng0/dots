@@ -54,7 +54,11 @@ if did_bootstrap then
 	require('hotpot.api.make').auto.build(config_path)
 end
 
-require('hotpot')
+local diagnostics = vim.fn.getcwd():find(".config/nvim", 1, true) ~= nil
+
+require('hotpot').setup({
+	enable_hotpot_diagnostics = diagnostics
+})
 
 require('lazy').setup({
 	performance = {

@@ -3,4 +3,9 @@
 (vim.api.nvim_create_autocmd 
   :FileType
   {:pattern "*"
-   :callback (fn [] (vim.treesitter.start))})
+   :callback
+   (let [parsers (require "nvim-treesitter.parsers")
+         available (parsers.available_parsers)]
+     (fn []
+       (when (vim.list_contains available vim.bo.filetype)
+         (vim.treesitter.start))))})

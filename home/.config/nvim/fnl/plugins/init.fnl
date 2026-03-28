@@ -18,8 +18,6 @@
  {1 :stevearc/dressing.nvim
   :opts {:input {:border "single"} :select {:builtin {:border "none"}}}}
 
- {1 :ggandor/leap.nvim :dependencies [:tpope/vim-repeat]}
-
  {1 :ibhagwan/fzf-lua :dependencies [:echasnovski/mini.icons] :opts {}}
 
  :b0o/schemastore.nvim]

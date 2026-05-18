@@ -8,6 +8,7 @@
                              :ocaml {1 :ocamlformat :lsp_format "prefer"}
                              :htmldjango js-like
                              :html js-like
+                             :astro js-like
                              :javascript js-like
                              :typescript js-like
                              :javascriptreact js-like

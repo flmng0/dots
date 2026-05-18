@@ -16,8 +16,9 @@
 
 (set vim.opt.wrap false)
 
+(set vim.opt.expandtab false)
 (set vim.opt.tabstop 2)
-(set vim.opt.shiftwidth 4)
+(set vim.opt.shiftwidth 2)
 
 (set vim.opt.signcolumn "number")
 (set vim.opt.laststatus 3)

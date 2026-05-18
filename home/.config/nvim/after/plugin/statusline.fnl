@@ -94,9 +94,9 @@
     (component "%f" "StatusLine") 
     (diff)
     "%="
-    (lsp-status)
-    (component "%l:%c" "StatusLine")))
+    (component "%l:%c" "StatusLine")
+    (lsp-status)))
 
-(tset _G :TmthyStatusLine status-line)
+(set _G.TmthyStatusLine status-line)
 
-(tset vim.o :statusline " %{%v:lua.TmthyStatusLine()%} ")
+(set vim.o.statusline " %{%v:lua.TmthyStatusLine()%} ")

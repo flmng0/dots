@@ -8,6 +8,8 @@
          {1 :<leader>d :group "Debugging"}])
 
 (map (:<Esc> :<Cmd>nohl<CR> :desc "Clear highlight") 
+     ("]t" :<Cmd>tabnext<CR> :desc "Next tab")
+     ("[t" :<Cmd>tabprevious<CR> :desc "Previous tab")
      (:U :<C-r> :desc "Redo")
      (:<Esc> :<C-\><C-n> :desc "Exit terminal mode" :mode [:t]))
 
@@ -26,13 +28,13 @@
      (:<leader>cf (lazy :conform :format) :desc "Format current file"))
 
 ; Leap.nvim
-(map (:? "<Plug>(leap)" :desc "2-key search (buffer)")
-     (:<leader>? "<Plug>(leap-from-window)" :desc "2-key search (window)"))
+(map (:? "<Plug>(leap)" :desc "2-key search (buffer)" :mode [:n :x :o])
+     (:! "<Plug>(leap-from-window)" :desc "2-key search (window)"))
 
 ;; fnlfmt: skip
 (fn lsp-attach [{: buf}]
   (map {:buffer buf}
-       (:<leader>ca vim.lsp.buf.code_action :desc "[LSP] List code actions" :mode :nv)
+       (:<leader>ca (lazy :fzf-lua :lsp_code_actions) :desc "[LSP] List code actions" :mode :nv)
        (:<leader>cr vim.lsp.buf.rename :desc "[LSP] Rename symbol")
        (:gr (lazy :fzf-lua :lsp_references) :desc "[LSP] Goto or find symbol's references")
        (:gt (lazy :fzf-lua :lsp_type_definitions) :desc "[LSP] Goto or find symbol's type definition")

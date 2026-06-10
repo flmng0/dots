@@ -1,6 +1,10 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
 
+-- Mac used at work
+_G.iswork = vim.loop.os_uname().sysname == "Darwin"
+
+
 -- Generic bootstrap for GitHub repos, from hotpot.nvim documentation.
 local function bootstrap(plugin, branch)
 	---@diagnostic disable-next-line: unused-local
@@ -39,7 +43,7 @@ local function bootstrap(plugin, branch)
 end
 
 local lazy_path = bootstrap('folke/lazy.nvim', 'stable')
-local hotpot_path, did_bootstrap = bootstrap('rktjmp/hotpot.nvim', 'v0.14.8')
+local hotpot_path, did_bootstrap = bootstrap('rktjmp/hotpot.nvim', 'v2.1.1')
 
 -- As per Lazy's install instructions, but also include hotpot
 vim.opt.runtimepath:prepend({ hotpot_path, lazy_path })
@@ -54,20 +58,21 @@ if did_bootstrap then
 	require('hotpot.api.make').auto.build(config_path)
 end
 
-local diagnostics = vim.fn.getcwd():find(".config/nvim", 1, true) ~= nil
+require('hotpot')
 
-require('hotpot').setup({
-	enable_hotpot_diagnostics = diagnostics
-})
+local api = require('hotpot.api')
+local context = api.context(config_path)
+
+local hotpot_destination = context.locate("destination")
 
 require('lazy').setup({
 	performance = {
 		rtp = {
-			paths = { config_path.."/.compiled" }
+			paths = { hotpot_destination, hotpot_destination.."/after" }
 		}
 	},
 	spec = {
-		'rktjmp/hotpot.nvim',
+		{'rktjmp/hotpot.nvim', lazy = false },
 		{ import = 'plugins' },
 	},
 	change_detection = {

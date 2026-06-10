@@ -9,6 +9,7 @@
 (set vim.opt.timeoutlen 300)
 
 (set vim.opt.number true)
+(set vim.opt.relativenumber true)
 (set vim.opt.showmode false)
 
 (set vim.opt.scrolloff 10)

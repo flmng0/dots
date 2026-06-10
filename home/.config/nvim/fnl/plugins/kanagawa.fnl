@@ -26,7 +26,9 @@
                                                                          :Command 
                                                                          :Other])
                                                            &into status-line]
-                                                 (values (.. :StatusLineMode mode) {:link (.. :MiniStatusLineMode mode)}))]
-                               (vim.tbl_extend :error {} winbar status-line)))]
+                                                 (values (.. :StatusLineMode mode) {:link (.. :MiniStatusLineMode mode)}))
+                                   llama {:llama_hl_fim_hint {:fg p.springViolet1}
+                                          :llama_hl_fim_info {:fg p.fujiGray}}]
+                               (vim.tbl_extend :error {} winbar status-line llama)))]
              (kanagawa.setup {: overrides})
              (vim.cmd "colorscheme kanagawa")))}

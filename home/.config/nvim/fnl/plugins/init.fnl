@@ -2,8 +2,6 @@
  :tpope/vim-sleuth
  ;; Icon support for multiple plugins
  {1 :echasnovski/mini.icons :config true}
- ;; File browser / editor
- {1 :stevearc/oil.nvim :dependencies [:echasnovski/mini.icons] :config true}
  ;; Fuzzy finder plugin. Similar to Telescope
  {1 :ibhagwan/fzf-lua :dependencies [:echasnovski/mini.icons] :config true}
  ;; Tree-sitter based auto-tags
@@ -18,8 +16,13 @@
  {1 :stevearc/dressing.nvim
   :opts {:input {:border "single"} :select {:builtin {:border "none"}}}}
 
+ {1 "https://codeberg.org/andyg/leap.nvim.git"}
+
  {1 :ibhagwan/fzf-lua :dependencies [:echasnovski/mini.icons] :opts {}}
 
- :b0o/schemastore.nvim]
+ :b0o/schemastore.nvim
+
+ {1 :FabijanZulj/blame.nvim :opts {}}]
+
 
 ;; TODO: Nvim-dap 

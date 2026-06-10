@@ -13,7 +13,16 @@
  :version false
  :config (fn []
            (plugin-setup :mini.surround {:respect_selection_type true})
-           (plugin-setup :mini.move {})
+           (plugin-setup :mini.move {:mappings
+                                     {:left "<S-left>"
+                                      :right "<S-right>"
+                                      :down "<S-down>"
+                                      :up "<S-up>"
+
+                                      :line_left "<S-left>"
+                                      :line_right "<S-right>"
+                                      :line_down "<S-down>"
+                                      :line_up "<S-up>"}})
            (plugin-setup :mini.git {})
            (plugin-setup :mini.diff {})
            (plugin-setup :mini.sessions {:hooks {:pre {:read set-title}}})
@@ -30,7 +39,7 @@
            (let [starter (require :mini.starter)
                  footer nil
                  sessions (fn []
-                            (icollect [_ s (ipairs ((starter.sections.sessions 5)))]
+                            (icollect [_ s (ipairs ((starter.sections.sessions 10)))]
                               (when (not= s.name config-session-name) s)))
                  config-item {:name "Configure Neovim"
                               :action config-action

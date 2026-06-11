@@ -50,6 +50,7 @@ elif models=$(curl -s http://localhost:2276/v1/models); then
 fi
 
 REAL_NPM=$(command -v npm)
+alias npmr=$REAL_NPM
 
 function npm() {
 	if [ -f ".env.local" ]; then

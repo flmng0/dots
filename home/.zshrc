@@ -1,5 +1,3 @@
-eval "$(starship init zsh)"
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -8,6 +6,11 @@ export FLUTTER_HOME="$HOME/Developer/flutter"
 export PATH="$PATH:$HOME/.local/bin:$FLUTTER_HOME/bin"
 
 export EDITOR=nvim
+export MISE_PYTHON_UV_VENV_AUTO="source"
+
+export LLAMA_SERVER_URL="http://localhost:2276"
+export LLAMA_FIM_MODEL="ggml-org/Qwen2.5-Coder-1.5B-Q8_0-GGUF"
+export LLAMA_INST_MODEL="ggml-org/gemma-4-E4B-it-GGUF:Q4_K_M"
 
 . "$HOME/.cargo/env"
 
@@ -16,12 +19,23 @@ export EDITOR=nvim
 
 [[ -o interactive ]] || return
 
+eval "$(starship init zsh)"
+eval "$(mise activate zsh)"
 
 cd "$HOME/Developer"
 set -o emacs
 
 alias cdd="cd $HOME/Developer"
 alias g="gitui"
+
+
+function export_env_files() {
+	export UV_ENV_FILE=""
+	[[ -f ".env" ]] && export UV_ENV_FILE="$UV_ENV_FILE .env"
+	[[ -f ".env.local" ]] && export UV_ENV_FILE="$UV_ENV_FILE .env.local"
+}
+
+add-zsh-hook precmd export_env_files
 
 # Takes filename and returns the amount of seconds since it has
 # been modified
@@ -34,20 +48,6 @@ function elapsed() {
 
 	echo $elapsed
 }
-
-LLAMABARN_CACHE=/tmp/llamabarn-model
-
-
-# Get the most recently insalled model from LlamaBarn and export it
-# to be used from NeoVim
-if [[ -f $LLAMABARN_CACHE && $(elapsed $LLAMABARN_CACHE) -lt 3600 ]]; then
-	export LLAMACPP_MODEL=$(cat $LLAMABARN_CACHE)
-elif models=$(curl -s http://localhost:2276/v1/models); then
-	model=$(jq -r ".data | max_by(.created).id" <<< "$models")
-	
-	export LLAMACPP_MODEL=$model
-	echo $model > $LLAMABARN_CACHE
-fi
 
 REAL_NPM=$(command -v npm)
 alias npmr=$REAL_NPM

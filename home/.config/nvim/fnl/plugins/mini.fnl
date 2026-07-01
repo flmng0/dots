@@ -2,12 +2,52 @@
 
 (local config-session-name :_nvim-config)
 
+(fn capitalize [word]
+  (.. 
+    (string.upper (string.sub word 1 1))
+    (string.sub word 2)))
+  
+
+(fn tear-and-capitalize [text]
+  (accumulate [result ""
+               part (string.gmatch text "[%a%.]+")]
+    (.. result (capitalize part))))
+        
+(set _G.tearAndCap tear-and-capitalize)
+
+(local snippet-defs
+       {:DTO_MODEL_FROM_FILENAME 
+        (fn [] 
+          (-> (vim.api.nvim_buf_get_name 0)
+              (string.gsub ".+backend/src/module" "")
+              (string.gsub "/dto" "")
+              (vim.fs.dirname)
+              (tear-and-capitalize)))
+        :DTO_TYPE_FROM_FILENAME 
+        (fn []
+          (-> (vim.api.nvim_buf_get_name 0)
+              (string.gsub (vim.fn.getcwd) "")
+              (string.gsub "/dto" "")
+              (vim.fs.basename)
+              (string.match "[%a%-]+")
+              (tear-and-capitalize)))})
+
 (fn set-title [session]
   (let [{: name} session
         name (if (= name config-session-name) "Configuring nvim" name)
         suffix (if vim.g.neovide "Neovide" "NeoVim")]
    (tset vim.opt :title true)
    (tset vim.opt :titlestring (.. name " - " suffix))))
+
+(fn make-snippets []
+  (let [gen-loader (. (require :mini.snippets) :gen_loader)]
+    [(gen-loader.from_lang)]))
+
+(fn inserter [snippet]
+  (let [lookup (collect [k v (pairs snippet-defs)]
+                 (values k (v)))]
+    (_G.MiniSnippets.default_insert snippet {: lookup})))
+  
 
 {1 :echasnovski/mini.nvim
  :version false
@@ -26,6 +66,14 @@
            (plugin-setup :mini.git {})
            (plugin-setup :mini.diff {})
            (plugin-setup :mini.sessions {:hooks {:pre {:read set-title}}})
+
+
+           (plugin-setup :mini.snippets {:snippets (make-snippets)
+                                         :expand {:insert inserter}
+                                         :mappings {:expand ""
+                                                    :jump_next ""
+                                                    :jump_prev ""
+                                                    :stop ""}})
 
            (fn config-action []
              (if (= nil (?. _G.MiniSessions.detected config-session-name))

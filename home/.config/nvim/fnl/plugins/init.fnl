@@ -22,7 +22,12 @@
 
  :b0o/schemastore.nvim
 
- {1 :FabijanZulj/blame.nvim :opts {}}]
+ {1 :FabijanZulj/blame.nvim :opts {}}
+
+ {1 :tpope/vim-dadbod
+  :dependencies [:kristijanhusak/vim-dadbod-ui
+                 :kristijanhusak/vim-dadbod-completion]}]
+ 
 
 
 ;; TODO: Nvim-dap 

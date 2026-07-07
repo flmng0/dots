@@ -2,9 +2,9 @@
  :init (fn []
          (set vim.g.llama_config 
               {:auto_fim false
-               :endpoint_fim (.. vim.env.LLAMA_SERVER_URL "/infill")
+               :endpoint_fim nil;(.. vim.env.LLAMA_SERVER_URL "/infill")
                :endpoint_inst (.. vim.env.LLAMA_SERVER_URL "/v1/chat/completions")
-               :model_fim vim.env.LLAMA_FIM_MODEL
+               :model_fim nil ;vim.env.LLAMA_FIM_MODEL
                :model_inst vim.env.LLAMA_INST_MODEL
                ; Configured in keys.fnl
                :keymap_fim_trigger ""

@@ -1,3 +1,5 @@
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/Users/timothydavis/.zsh/completions:"* ]]; then export FPATH="/Users/timothydavis/.zsh/completions:$FPATH"; fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -9,8 +11,8 @@ export EDITOR=nvim
 export MISE_PYTHON_UV_VENV_AUTO="source"
 
 export LLAMA_SERVER_URL="http://localhost:2276"
-export LLAMA_FIM_MODEL="ggml-org/Qwen2.5-Coder-1.5B-Q8_0-GGUF"
-export LLAMA_INST_MODEL="ggml-org/gemma-4-E4B-it-GGUF:Q4_K_M"
+export LLAMA_FIM_MODEL="qwen2.5-coder-1.5b-q8_0:Q8_0"
+export LLAMA_INST_MODEL="gemma-4-e4b-it:Q4_K_M"
 
 . "$HOME/.cargo/env"
 
@@ -75,3 +77,4 @@ function nestgen() {
 		_nestgen1 $name
 	done
 }
+. "/Users/timothydavis/.deno/env"

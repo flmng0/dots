@@ -5,6 +5,15 @@
                                      (fn ,binding
                                        ,(unpack body))
                                      ,opts))
+(defcommand :GetExtmarks 
+  {:nargs 0}
+  []
+  (let [pos (vim.api.nvim_win_get_cursor 0)]
+    (case (. (vim.api.nvim_get_namespaces) "vt_inst")
+      ns (let [marks (vim.api.nvim_buf_get_extmarks 0 ns pos pos {:overlap true})]
+           (vim.notify (vim.inspect marks))))))
+     
+            
 
 (defcommand :RecompileConfig
   {:nargs 0}

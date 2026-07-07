@@ -18,17 +18,17 @@
 (fn llama-call [name]
   (fn []
     ((. vim.fn (.. "llama#" name)))))
-   
 
 ; Llama stuff
 (map {:prefix :<leader>}
-     (:ll "<Cmd>LlamaInstruct<CR>" :desc "Instruct" :mode [:n])
      (:ll "<Esc><Cmd>'<,'>LlamaInstruct<CR>" :desc "Instruct (selection)" :mode [:v])
-     (:la (llama-call "inst_accept" :desc "Accept"))
+     (:la (llama-call "inst_accept") :desc "Accept")
      (:lq (llama-call "inst_cancel") :desc "Cancel")
      (:lr (llama-call "inst_rerun") :desc "Re-Run")
      (:lc (llama-call "inst_continue") :desc "Continue"))
          
+; I can't see myself using this.
+; (:ll "<Cmd>LlamaInstruct<CR>" :desc "Instruct" :mode [:n])
      
 
 ; Finders
@@ -61,6 +61,7 @@
        (:gD vim.lsp.buf.declaration :desc "[LSP] Goto symbol declaration")
        (:<leader>fs (lazy :fzf-lua :lsp_document_symbols) :desc "[LSP] Find symbols in current document")
        (:<leader>fw (lazy :fzf-lua :lsp_workspace_symbols) :desc "[LSP] Find symbols in workspace")))
+
 
 (let [group (vim.api.nvim_create_augroup :tmthy.keys.lsp {:clear true})]
   (vim.api.nvim_create_autocmd :LspAttach {: group :callback lsp-attach}))

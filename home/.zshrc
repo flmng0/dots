@@ -12,7 +12,7 @@ export MISE_PYTHON_UV_VENV_AUTO="source"
 
 export LLAMA_SERVER_URL="http://localhost:2276"
 export LLAMA_FIM_MODEL="qwen2.5-coder-1.5b-q8_0:Q8_0"
-export LLAMA_INST_MODEL="gemma-4-e4b-it:Q4_K_M"
+export LLAMA_INST_MODEL="bartowski/google_gemma-4-E4B-it-GGUF:Q4_K_M"
 
 . "$HOME/.cargo/env"
 
@@ -27,7 +27,11 @@ eval "$(mise activate zsh)"
 cd "$HOME/Developer"
 set -o emacs
 
-alias cdd="cd $HOME/Developer"
+function cdd() {
+	cd "$HOME/Developer/$1"
+}
+compdef '_path_files -/ -W ~/Developer' cdd
+
 alias g="gitui"
 
 

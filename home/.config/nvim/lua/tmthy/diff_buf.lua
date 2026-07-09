@@ -4,6 +4,16 @@ function clamp(x, min, max)
 	return math.max(min, math.min(x, max))
 end
 
+
+local even_line = ""
+local odd_line = ""
+
+for i = 1, vim.o.columns do
+	local even = i % 2 == 0
+	even_line = even_line .. (even and "╱" or " ")
+	odd_line = odd_line .. (even and " " or "╱")
+end
+
 function diff_buffers(a_bufid, b_bufid)
 	local ns = api.nvim_create_namespace("tmthy.diff")
 	api.nvim_buf_clear_namespace(a_bufid, ns, 0, -1)

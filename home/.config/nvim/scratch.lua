@@ -3,34 +3,71 @@ local api = vim.api
 api.nvim_create_autocmd("BufWritePost", {
 	group = api.nvim_create_augroup("tmthy.scratch", {}),
 	callback = function(ev)
-		vim.keymap.set('n', '<C-s>', function()
-			do_thing()
-		end, { buf = ev.buf })
+		vim.keymap.set('v', '<C-s>', "<Esc>:'<,'>DoThing<CR>", { buf = ev.buf })
 
 		local path = vim.fn.stdpath("config") .. "/scratch.lua"
 		vim.cmd ("luafile " .. path)
 	end
 })
 
--- local bufid = api.nvim_create_buf(false, true)
--- api.nvim_buf_set_name(bufid, "Testing buf 2")
--- vim.print(bufid)
--- api.nvim_buf_set_lines(bufid, 0, 0, false, {"a", "b", "c"})
+api.nvim_create_user_command("DoThing", function(opts) do_thing(opts) end, { range = true, nargs = '?' })
 
-local even_line = ""
-local odd_line = ""
+function call_llama(instruction, opts)
+	
+	local lines = {
+		[[You are a coding assistant. You may ONLY reply with the result of applying INSTRUCTION to SNIPPET. Do not add extra code. Respond with the code modifications only. Consider the local context before (PREFIX) and after (SUFFIX) the SNIPPET.]],
+		"<INSTRUCTION>", instruction, "</INSTRUCTION>",
+		"<PREFIX>", opts.prefix_lines, "</PREFIX>",
+		"<SNIPPET>", opts.snippet_lines, "</SNIPPET>",
+		"<SUFFIX>", opts.suffix_lines, "</SUFFIX>",
+	}
 
-for i = 1, vim.o.columns do
-	local even = i % 2 == 0
-	even_line = even_line .. (even and "╱" or " ")
-	odd_line = odd_line .. (even and " " or "╱")
+	local prompt = vim.iter(lines):flatten():join('\n')
+	vim.print(prompt)
 end
 
-function do_thing()
-	local bufid = 376
-	local buf2id = 154
+function do_thing(opts)
+	local range_start = opts.line1 - 1
+	local range_end = opts.line2 - 1
 
-	require('tmthy.diff_buf')(bufid, buf2id)
+	local range = range_end - range_start
+
+	local prefix_len = 16
+	local suffix_len = 16
+
+	local full_start = range_start - prefix_len
+	local full_end = range_end + suffix_len + 1
+
+	local all_lines = api.nvim_buf_get_lines(0, full_start, full_end, false)
+
+	local prefix_end = prefix_len
+	local prefix_lines = vim.list_slice(all_lines, 1, prefix_end)
+
+	local snippet_start, snippet_end = prefix_end + 1, prefix_end + 1 + range
+	local snippet_lines = vim.list_slice(all_lines, snippet_start, snippet_end)
+
+	local suffix_start = snippet_end + 1
+	local suffix_lines = vim.list_slice(all_lines, suffix_start)
+
+	local llama_opts = {
+		prefix_lines = prefix_lines,
+		snippet_lines = snippet_lines,
+		suffix_lines = suffix_lines,
+	}
+
+	if opts.args[0] then
+		call_llama(opts.args[0], llama_opts)
+	else
+		vim.ui.input({ prompt = "Instruction: ", scope = "cursor" }, function (instruction)
+			call_llama(instruction, llama_opts)
+		end)
+	end
+
+
+	-- local prefix = vim.iter(prefix_lines):join('\n')
+	-- local snippet = vim.iter(snippet_lines):join('\n')
+	-- local suffix = vim.iter(suffix_lines):join('\n')
+
 end
 
 

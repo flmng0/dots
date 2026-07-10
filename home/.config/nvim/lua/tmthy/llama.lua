@@ -1,20 +1,6 @@
-local api = vim.api
-
-api.nvim_create_autocmd("BufWritePost", {
-	group = api.nvim_create_augroup("tmthy.scratch", {}),
-	callback = function(ev)
-		vim.keymap.set('v', '<C-s>', "<Esc>:'<,'>DoThing Comment this code<CR>", { buf = ev.buf })
-
-		local path = vim.fn.stdpath("config") .. "/scratch.lua"
-		vim.cmd ("luafile " .. path)
-	end
-})
-
-api.nvim_create_user_command("DoThing", function(opts) do_thing(opts) end, { range = true, nargs = '?' })
-
 local preview_height = 5
 
-function call_llama(instruction, opts, bufid)
+function call_llama(instruction, opts)
 	local system_lines = {
 		[[You are a coding assistant. You may ONLY reply with the result of applying INSTRUCTION to SNIPPET. Do not add extra code. Respond with the code modifications only, with no formatting text. Consider the local context before (PREFIX) and after (SUFFIX) the SNIPPET.]],
 		"<PREFIX>", opts.prefix_lines, "</PREFIX>",
@@ -53,6 +39,7 @@ function call_llama(instruction, opts, bufid)
 	}
 
 	local set_lines_scheduled = vim.schedule_wrap(api.nvim_buf_set_lines)
+	local set_text_scheduled = vim.schedule_wrap(api.nvim_buf_set_text)
 
 	api.nvim_buf_set_lines(bufid, 0, -1, false, {})
 
@@ -87,20 +74,13 @@ function call_llama(instruction, opts, bufid)
 		return content
 	end
 
+	local linenum = 0
 	local so_far = ''
-	local all_lines = { so_far }
 
 	local callbacks = opts.callbacks or {}
-
-	vim.list_extend(callbacks, {
-		function(lines, done) 
-			api.nvim_buf_set_lines(bufid, 0, -1, false, lines)
-		end,
-	})
-
-	local call_callbacks = vim.schedule_wrap(function (lines, done)
-		for _, callback in ipairs(callbacks) do
-			callback(lines, done)
+	local call_callbacks = vim.schedule_wrap(function (event)
+		for _, callback in callbacks do
+			callback(bufid, event)
 		end
 	end)
 
@@ -139,23 +119,15 @@ function call_llama(instruction, opts, bufid)
 				newline = string.find(so_far, '\n', newline + 1)
 			end
 
-			so_far = string.sub(so_far, last)
-
 			if #lines > 0 then
-				local n = #all_lines
-				for i, line in ipairs(lines) do
-					all_lines[n + i - 1] = line
-				end
-				table.insert(all_lines, so_far)
+				set_lines_scheduled(bufid, linenum, linenum, false, lines)
+				linenum = linenum + #lines
 			end
 
-			all_lines[#all_lines] = so_far
-
-			call_callbacks(all_lines, false)
+			so_far = string.sub(so_far, last)
+			set_lines_scheduled(bufid, linenum, linenum + 1, false, { so_far })
 		end
-	}, function() 
-		call_callbacks(all_lines, true)
-	end)
+	})
 end
 
 function make_preview(bufline)
@@ -179,34 +151,25 @@ function make_preview(bufline)
 	local bufid = api.nvim_create_buf(false, true)
 	local winid = api.nvim_open_win(bufid, false, window_config)
 
-	local function onupdate(lines, done)
-		local preview_lines = {}
+	local ns = api.nvim_create_namespace('tmthy.scratch')
+	api.nvim_buf_clear_namespace(curr_bufid, ns, 0, -1)
 
-		for i = math.min(#lines, 5), 0, -1 do
-			preview_lines[#preview_lines + 1] = lines[#lines - i + 1]
-		end
-
+	local virt_lines = {}
+	for i = 1, preview_height + 2 do
+		table.insert(virt_lines, {})
 	end
 
-	-- local ns = api.nvim_create_namespace('tmthy.scratch')
-	-- api.nvim_buf_clear_namespace(curr_bufid, ns, 0, -1)
-	--
-	-- local virt_lines = {}
-	-- for i = 1, preview_height + 2 do
-	-- 	table.insert(virt_lines, {})
-	-- end
-	--
-	-- vim.print(#virt_lines)
-	--
-	-- local shift_mark = api.nvim_buf_set_extmark(curr_bufid, ns, bufline, 0, {
-	-- 	virt_lines = virt_lines
-	-- })
-	--
-	-- api.nvim_create_autocmd('BufDelete', {
-	-- 	callback = function()
-	-- 		api.nvim_buf_del_extmark(curr_bufid, ns, shift_mark)
-	-- 	end
-	-- })
+	vim.print(#virt_lines)
+
+	local shift_mark = api.nvim_buf_set_extmark(curr_bufid, ns, bufline, 0, {
+		virt_lines = virt_lines
+	})
+
+	api.nvim_create_autocmd('BufDelete', {
+		callback = function()
+			api.nvim_buf_del_extmark(curr_bufid, ns, shift_mark)
+		end
+	})
 
 	vim.keymap.set('n', 'q', function()
 		api.nvim_buf_delete(bufid, { force = true })
@@ -265,33 +228,3 @@ function do_thing(opts)
 	-- local suffix = vim.iter(suffix_lines):join('\n')
 
 end
-
-
-function make_split_tab()
-	local bufid = api.nvim_create_buf(false, true)
-	api.nvim_buf_set_name(bufid, "Review Changes from AI")
-
-	local curr_text = api.nvim_buf_get_lines(0, 0, -1, true)
-	api.nvim_buf_set_lines(bufid, 0, 0, false, curr_text)
-
-	vim.bo[bufid].filetype = vim.bo.filetype
-
-	local tabid = api.nvim_open_tabpage(bufid, true, {})
-
-	local winid = api.nvim_tabpage_get_win(tabid)
-	local win2id = api.nvim_open_win(bufid, false, {
-		split = 'right',
-		style = 'minimal'
-	})
-
-	vim.wo[winid].scrollbind = true
-	vim.wo[win2id].scrollbind = true
-
-	vim.keymap.set('n', 'q', function()
-		api.nvim_win_close(winid, true)
-		api.nvim_win_close(win2id, true)
-
-		api.nvim_buf_delete(bufid, { force = true })
-	end, { buf = bufid })
-end
-

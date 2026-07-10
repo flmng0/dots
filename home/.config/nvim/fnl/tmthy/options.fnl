@@ -32,5 +32,10 @@
   (vim.api.nvim_create_autocmd :ModeChanged
                  {:pattern ["i:*" "*:i"]
                   :callback (fn [ev] (set vim.opt.cursorline (vim.startswith ev.match "i")))
+                  :group augroup})
+  (vim.api.nvim_create_autocmd :TextYankPost
+                 {:pattern "*"
+                  :callback (fn [ev] (vim.hl.on_yank { :higroup "IncSearch"}))
                   :group augroup}))
+
 

@@ -14,7 +14,7 @@ api.nvim_create_user_command("DoThing", function(opts) do_thing(opts) end, { ran
 
 local preview_height = 5
 
-function call_llama(instruction, opts, bufid)
+function call_llama(instruction, opts)
 	local system_lines = {
 		[[You are a coding assistant. You may ONLY reply with the result of applying INSTRUCTION to SNIPPET. Do not add extra code. Respond with the code modifications only, with no formatting text. Consider the local context before (PREFIX) and after (SUFFIX) the SNIPPET.]],
 		"<PREFIX>", opts.prefix_lines, "</PREFIX>",
@@ -53,8 +53,6 @@ function call_llama(instruction, opts, bufid)
 	}
 
 	local set_lines_scheduled = vim.schedule_wrap(api.nvim_buf_set_lines)
-
-	api.nvim_buf_set_lines(bufid, 0, -1, false, {})
 
 	local function parse_event(line)
 		if not vim.startswith(line, 'data: ') then
@@ -176,8 +174,10 @@ function make_preview(bufline)
 		border = { '▔', '▔', '▔', ' ', '▁', '▁', '▁', ' ' }
 	}
 
-	local bufid = api.nvim_create_buf(false, true)
-	local winid = api.nvim_open_win(bufid, false, window_config)
+	local ns = api.nvim_create_namespace('tmthy.scratch')
+	api.nvim_buf_clear_namespace(curr_bufid, ns, 0, -1)
+
+	local shift_mark = api.nvim_buf_set_extmark(curr_bufid, ns, bufline, 0, {})
 
 	local function onupdate(lines, done)
 		local preview_lines = {}
@@ -186,11 +186,15 @@ function make_preview(bufline)
 			preview_lines[#preview_lines + 1] = lines[#lines - i + 1]
 		end
 
+		api.nvim_buf_set_extmark(curr_bufid, ns, bufline, 0, {
+			id = shift_mark,
+			virt_lines = vim.iter(preview_lines):map(function (line) 
+				return { { line } }
+			end):totable()
+		})
 	end
 
-	-- local ns = api.nvim_create_namespace('tmthy.scratch')
-	-- api.nvim_buf_clear_namespace(curr_bufid, ns, 0, -1)
-	--
+
 	-- local virt_lines = {}
 	-- for i = 1, preview_height + 2 do
 	-- 	table.insert(virt_lines, {})
@@ -198,9 +202,6 @@ function make_preview(bufline)
 	--
 	-- vim.print(#virt_lines)
 	--
-	-- local shift_mark = api.nvim_buf_set_extmark(curr_bufid, ns, bufline, 0, {
-	-- 	virt_lines = virt_lines
-	-- })
 	--
 	-- api.nvim_create_autocmd('BufDelete', {
 	-- 	callback = function()
@@ -212,7 +213,7 @@ function make_preview(bufline)
 		api.nvim_buf_delete(bufid, { force = true })
 	end, { buf = bufid })
 
-	return { bufid = bufid, winid = winid }
+	return { bufid = bufid, winid = winid, onupdate = onupdate }
 end
 
 function do_thing(opts)
@@ -247,6 +248,7 @@ function do_thing(opts)
 		prefix_lines = prefix_lines,
 		snippet_lines = snippet_lines,
 		suffix_lines = suffix_lines,
+		callbacks = { preview.onupdate }
 	}
 
 	if #opts.args > 0 then

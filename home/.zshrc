@@ -13,6 +13,7 @@ export MISE_PYTHON_UV_VENV_AUTO="source"
 export LLAMA_SERVER_URL="http://localhost:2276"
 export LLAMA_FIM_MODEL="qwen2.5-coder-1.5b-q8_0:Q8_0"
 export LLAMA_INST_MODEL="bartowski/google_gemma-4-E4B-it-GGUF:Q4_K_M"
+# export LLAMA_INST_MODEL="bartowski/Qwen_Qwen3.5-9B-GGUF:Q4_K_M"
 
 . "$HOME/.cargo/env"
 

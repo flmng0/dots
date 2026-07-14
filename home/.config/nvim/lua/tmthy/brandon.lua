@@ -8,9 +8,10 @@ local config = {
 		snippet_hl = "DiffText"
 	},
 	keymap = {
+		cancel = '<C-c>',
 		view_changes = '<C-g>',
 		accept_changes = '<localleader>a',
-		abort_changes = '<localleader>q',
+		deny_changes = '<localleader>q',
 		continue = '<localleader>c',
 	}
 }
@@ -60,6 +61,13 @@ function SessionState:init()
 	}
 	setmetatable(res, { __index = self })
 	return res
+end
+
+function SessionState:reset()
+	self.done = false
+	self.stage = 'pending'
+	self.text = ''
+	self.reasoning = ''
 end
 
 function SessionState:lines()
@@ -129,18 +137,6 @@ function SessionState:finish()
 	self.done = true
 	self.stage = "finished"
 end
-
----@class Session
----@field id integer
----@field system vim.SystemObj | nil vim.system object
----@field scratch SessionScratches | nil Scratch buffer IDs
----@field source SessionSource Source code information (range)
----@field state SessionState State of generation
----@field callbacks UpdateCallback[] Callbacks to invoke on update
----@field namespace integer Namespace ID
----@field augroup integer Autocommand group
----@field messages SessionMessage[] Messages so far
-local Session = {}
 
 ---@param role SessionMessageRole
 ---@param content string
@@ -218,8 +214,6 @@ local function init_preview(session)
 	local sep_top = sep("▔")
 	local sep_bot = sep("▁")
 
-	local preview_id = nil
-
 	---@param lines string[]
 	local function update_virtual_lines(lines)
 		local virt_lines = vim.iter(lines):map(function(line)
@@ -231,8 +225,8 @@ local function init_preview(session)
 		table.insert(virt_lines, 1, sep_top)
 		table.insert(virt_lines, sep_bot)
 
-		preview_id = api.nvim_buf_set_extmark(source.bufid, ns, source.start_line, 0, {
-			id = preview_id,
+		session.extmark = api.nvim_buf_set_extmark(source.bufid, ns, source.start_line, 0, {
+			id = session.extmark,
 			invalidate = true,
 			undo_restore = false,
 			hl_group = config.preview.snippet_hl,
@@ -272,6 +266,7 @@ local function init_finalizer(session)
 
 	local has_setup = false
 
+	---@type integer | nil
 	local tabid = nil
 
 	local function sync_win(winid)
@@ -281,16 +276,45 @@ local function init_finalizer(session)
 		vim.wo[winid].cursorline = true
 	end
 
-	local function setup_buffer(bufid)
+	local function change_range()
+		local mark = api.nvim_buf_get_extmark_by_id(source.bufid, ns, session.extmark, {
+			details = true,
+			hl_name = false,
+		})
+
+		local start_line = mark[1]
+		local end_line = mark[3].end_row
+
+		return start_line, end_line
+	end
+
+	---@param bufid buffer
+	---@param lines {string} list of lines to set in the buffer
+	local function setup_buffer(bufid, lines)
+		vim.bo[bufid].modifiable = true
 		vim.bo[bufid].filetype = vim.bo[source.bufid].filetype
 
-		vim.keymap.set('n', config.keymap.abort_changes, function()
+		api.nvim_buf_set_lines(bufid, 0, -1, false, lines)
+
+		vim.keymap.set('n', config.keymap.deny_changes, function()
 			session:cleanup()
 		end, { buf = bufid })
 
 		vim.keymap.set('n', config.keymap.accept_changes, function()
-			api.nvim_buf_set_lines(source.bufid, source.start_line, source.end_line + 1, true, session.state:lines())
+			local start_line, end_line = change_range()
+			api.nvim_buf_set_lines(source.bufid, start_line, end_line, true, session.state:lines())
 			session:cleanup()
+		end, { buf = bufid })
+
+		vim.keymap.set('n', config.keymap.continue, function()
+			local instruction = vim.fn.input("Next Instruction: ")
+
+			if instruction == nil or #instruction == 0 then
+				return
+			end
+
+			api.nvim_win_close(0, true)
+			session:prompt(instruction)
 		end, { buf = bufid })
 	end
 
@@ -299,21 +323,25 @@ local function init_finalizer(session)
 			return
 		end
 
-		---@type SessionScratches
-		local scratch = {
-			source = api.nvim_create_buf(false, true),
-			changed = api.nvim_create_buf(false, true)
-		}
-		session.scratch = scratch
+		if session.scratch == nil then
+			session.scratch = {
+				source = api.nvim_create_buf(false, true),
+				changed = api.nvim_create_buf(false, true)
+			}
+		end
 
-		setup_buffer(scratch.source)
-		setup_buffer(scratch.changed)
+		---@type SessionScratches
+		local scratch = session.scratch
 
 		local source_lines = api.nvim_buf_get_lines(source.bufid, 0, -1, true)
-		api.nvim_buf_set_lines(scratch.source, 0, 0, false, source_lines)
-		api.nvim_buf_set_lines(scratch.changed, 0, 0, false, source_lines)
+		setup_buffer(scratch.source, source_lines)
+		setup_buffer(scratch.changed, source_lines)
 
-		api.nvim_buf_set_lines(scratch.changed, source.start_line, source.end_line + 1, true, session.state:lines())
+		local start_line, end_line = change_range()
+		api.nvim_buf_set_lines(scratch.changed, start_line, end_line, true, session.state:lines())
+
+		vim.bo[scratch.source].modifiable = false
+		vim.bo[scratch.changed].modifiable = false
 
 		tabid = api.nvim_open_tabpage(scratch.source, true, {})
 
@@ -325,20 +353,32 @@ local function init_finalizer(session)
 		})
 
 		vim.wo[source_winid].number = true
-		vim.wo[source_winid].relativenumber = true
+		vim.wo[source_winid].relativenumber = false
 
 		sync_win(source_winid)
 		sync_win(changed_winid)
 
 		api.nvim_win_set_cursor(source_winid, { source.start_line, 0 })
 
-		api.nvim_create_autocmd('BufDelete', {
+		api.nvim_create_autocmd('WinClosed', {
+			pattern = { tostring(source_winid), tostring(changed_winid) },
 			group = session.augroup,
 			callback = function()
 				api.nvim_win_close(source_winid, true)
 				api.nvim_win_close(changed_winid, true)
+				tabid = nil
 			end
 		})
+	end
+
+	local function inside_range()
+		local start_line, end_line = change_range()
+
+		local range = vim.range.extmark(0, start_line, 0, end_line, 0)
+		local cursor = api.nvim_win_get_cursor(0)
+		local pos = vim.pos.cursor(0, cursor)
+
+		return vim.range.has(range, pos)
 	end
 
 	session:on_update(function(state)
@@ -346,22 +386,46 @@ local function init_finalizer(session)
 			return
 		end
 
-		local function inside_mark()
-			local pos = api.nvim_win_get_cursor(0)
-			local marks = api.nvim_buf_get_extmarks(source.bufid, ns, pos, pos, { overlap = true })
+		vim.keymap.set('n', config.keymap.cancel, function()
+			if not inside_range() then
+				vim.print("Not in a changed block")
+				return
+			end
 
-			return #marks > 0
-		end
+			session:cleanup()
+		end)
 
 		vim.keymap.set('n', config.keymap.view_changes, function()
-			if inside_mark() then
-				open_changes()
+			if not inside_range() then
+				vim.print("Not in a changed block")
+				return
 			end
-		end)
+
+			if not state.done then
+				vim.print("Be patient! Generation is not finished yet.")
+				return
+			end
+
+			open_changes()
+		end, { buf = source.bufid })
 
 		has_setup = true
 	end)
 end
+
+---@class Session
+---@field id integer
+---@field system vim.SystemObj | nil vim.system object
+---@field scratch SessionScratches | nil Scratch buffer IDs
+---@field source SessionSource Source code information (range)
+---@field state SessionState State of generation
+---@field callbacks UpdateCallback[] Callbacks to invoke on update
+---@field namespace integer Namespace ID
+---@field extmark integer | nil Extmark ID
+---@field augroup integer Autocommand group
+---@field messages SessionMessage[] Messages so far
+local Session = {}
+
 
 ---Start a new session, given
 ---@param source SessionSource Range of source code to affect
@@ -371,16 +435,35 @@ function Session:start(source, instruction)
 	local this_id = session_id
 	session_id = session_id + 1
 
-	local messages = {
-		system_message(source),
-		user_message(instruction),
+	---@type Session
+	local session = {
+		id = this_id,
+		state = SessionState:init(),
+		messages = {
+			system_message(source),
+		},
+		system = nil,
+		namespace = api.nvim_create_namespace(''),
+		augroup = api.nvim_create_augroup('brandon.session.' .. this_id, { clear = true }),
+		source = source,
+		scratch = nil,
+		extmark = nil,
+		callbacks = {},
 	}
+	table.insert(sessions, this_id, session)
+	setmetatable(session, { __index = self })
 
-	local nsid = api.nvim_create_namespace('')
-	local augroup = api.nvim_create_augroup('brandon.session.' .. this_id, { clear = true })
+	init_preview(session)
+	init_finalizer(session)
 
-	---@type SessionState
-	local state = SessionState:init()
+	session:prompt(instruction)
+
+	return session
+end
+
+function Session:prompt(instruction)
+	self.state:reset()
+	table.insert(self.messages, user_message(instruction))
 
 	local curl_cmd = {
 		'curl',
@@ -392,26 +475,8 @@ function Session:start(source, instruction)
 		'--data', '@-'
 	}
 
-	---@type Session
-	local session = {
-		id = this_id,
-		state = state,
-		messages = messages,
-		system = nil,
-		namespace = nsid,
-		augroup = augroup,
-		source = source,
-		scratch = nil,
-		callbacks = {},
-	}
-	table.insert(sessions, this_id, session)
-	setmetatable(session, { __index = self })
-
-	init_preview(session)
-	init_finalizer(session)
-
-	session.system = vim.system(curl_cmd, {
-		stdin = vim.json.encode(request(messages)),
+	self.system = vim.system(curl_cmd, {
+		stdin = vim.json.encode(request(self.messages)),
 		text = true,
 		---@diagnostic disable-next-line: unused-local
 		stdout = function(_err, text)
@@ -419,17 +484,16 @@ function Session:start(source, instruction)
 				return
 			end
 
-			if state:handle_data(text) then
-				session:dispatch_update()
+			if self.state:handle_data(text) then
+				self:dispatch_update()
 			end
 		end
 	}, function()
-		state:finish()
-		session:dispatch_update()
+		self.state:finish()
+		self:dispatch_update()
+
+		table.insert(self.messages, message('assistant', self.state.text))
 	end)
-
-
-	return session
 end
 
 ---@param cb UpdateCallback
@@ -480,13 +544,28 @@ function M.setup(opts)
 	config = vim.tbl_deep_extend('force', config, opts or {})
 end
 
-function M.instruct(instruction, line1, line2)
+function M.instruct_range(instruction)
+	local region = vim.fn.getregionpos(vim.fn.getpos('v'), vim.fn.getpos('.'), {
+		type = 'v',
+		exclusive = false,
+		eol = false,
+	})
+	local line1 = region[1][1][2]
+	local line2 = region[#region][1][2]
+
 	local bufid = api.nvim_get_current_buf()
-	return Session:start({
+
+	instruction = instruction or vim.fn.input("Instruction: ")
+
+	local session = Session:start({
 		bufid = bufid,
-		start_line = line1,
-		end_line = line2
+		start_line = line1 - 1,
+		end_line = line2 - 1
 	}, instruction)
+
+	api.nvim_input('<Esc>')
+
+	return session
 end
 
 function M.clean_buf(bufid)
@@ -494,20 +573,24 @@ function M.clean_buf(bufid)
 		bufid = api.nvim_get_current_buf()
 	end
 
-	vim.print("trying to clean")
 	local to_clean = vim.iter(sessions):filter(function(s)
 		vim.print(s.source.bufid)
 		return s.source.bufid == bufid
 	end)
 
 	for session in to_clean do
-		vim.print("Cleaning!")
 		session:cleanup()
 	end
 end
 
 function M.get_session_by_id(id)
 	return sessions[id]
+end
+
+function M.clean_all()
+	for session in vim.iter(sessions) do
+		session:cleanup()
+	end
 end
 
 return M

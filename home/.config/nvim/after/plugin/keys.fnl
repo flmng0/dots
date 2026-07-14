@@ -5,8 +5,7 @@
 ; Register groups for Which Key display
 (wk.add [{1 :<leader>f :group "Finders"}
          {1 :<leader>c :group "Code Actions"}
-         {1 :<leader>d :group "Debugging"}
-         {1 :<leader>l :group "Llama AI"}])
+         {1 :<leader>d :group "Debugging"}])
 
 (map (:<Esc> :<Cmd>nohl<CR> :desc "Clear highlight") 
      ("]t" :<Cmd>tabnext<CR> :desc "Next tab")
@@ -15,21 +14,18 @@
      (:<Esc> :<C-\><C-n> :desc "Exit terminal mode" :mode [:t]))
 
 
-(fn llama-call [name]
-  (fn []
-    ((. vim.fn (.. "llama#" name)))))
-
-; Llama stuff
-(map {:prefix :<leader>}
-     (:ll "<Esc><Cmd>'<,'>LlamaInstruct<CR>" :desc "Instruct (selection)" :mode [:v])
-     (:la (llama-call "inst_accept") :desc "Accept")
-     (:lq (llama-call "inst_cancel") :desc "Cancel")
-     (:lr (llama-call "inst_rerun") :desc "Re-Run")
-     (:lc (llama-call "inst_continue") :desc "Continue"))
+; (fn llama-call [name]
+;   (fn []
+;     ((. vim.fn (.. "llama#" name)))))
+;
+; ; Llama stuff
+; (map {:prefix :<leader>}
+;      (:ll "<Esc><Cmd>'<,'>LlamaInstruct<CR>" :desc "Instruct (selection)" :mode [:v])
+;      (:la (llama-call "inst_accept") :desc "Accept")
+;      (:lq (llama-call "inst_cancel") :desc "Cancel")
+;      (:lr (llama-call "inst_rerun") :desc "Re-Run")
+;      (:lc (llama-call "inst_continue") :desc "Continue"))
          
-; I can't see myself using this.
-; (:ll "<Cmd>LlamaInstruct<CR>" :desc "Instruct" :mode [:n])
-     
 
 ; Finders
 
@@ -43,7 +39,8 @@
 
 ; Various plugin method calls
 (map (:- (lazy :oil :open) :desc "Open Oil.nvim in current directory")
-     (:<leader>cf (lazy :conform :format) :desc "Format current file"))
+     (:<leader>cf (lazy :conform :format) :desc "Format current file")
+     (:<leader>a (lazy :tmthy.brandon :instruct_range) :desc "Instruct (selection)" :mode [:v]))
 
 ; Leap.nvim
 (map (:? "<Plug>(leap)" :desc "2-key search (buffer)" :mode [:n :x :o])

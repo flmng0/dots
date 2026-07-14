@@ -545,6 +545,12 @@ function M.setup(opts)
 end
 
 function M.instruct_range(instruction)
+	instruction = instruction or vim.fn.input("Instruction: ")
+
+	if #instruction == 0 then
+		return
+	end
+
 	local region = vim.fn.getregionpos(vim.fn.getpos('v'), vim.fn.getpos('.'), {
 		type = 'v',
 		exclusive = false,
@@ -554,8 +560,6 @@ function M.instruct_range(instruction)
 	local line2 = region[#region][1][2]
 
 	local bufid = api.nvim_get_current_buf()
-
-	instruction = instruction or vim.fn.input("Instruction: ")
 
 	local session = Session:start({
 		bufid = bufid,

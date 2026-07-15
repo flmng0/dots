@@ -225,13 +225,15 @@ local function init_preview(session)
 		table.insert(virt_lines, 1, sep_top)
 		table.insert(virt_lines, sep_bot)
 
-		session.extmark = api.nvim_buf_set_extmark(source.bufid, ns, source.start_line, 0, {
+		local start_line, end_line = session:change_range()
+
+		session.extmark = api.nvim_buf_set_extmark(source.bufid, ns, start_line, 0, {
 			id = session.extmark,
 			invalidate = true,
 			undo_restore = false,
 			hl_group = config.preview.snippet_hl,
 			hl_eol = config.preview.snippet_hl ~= nil,
-			end_row = source.end_line + 1,
+			end_row = end_line,
 			virt_lines = virt_lines,
 			virt_lines_above = true,
 		})
@@ -261,7 +263,6 @@ end
 
 ---@param session Session
 local function init_finalizer(session)
-	local ns = session.namespace
 	local source = session.source
 
 	local has_setup = false
@@ -276,20 +277,6 @@ local function init_finalizer(session)
 		vim.wo[winid].cursorline = true
 	end
 
-	local function change_range()
-		local mark = api.nvim_buf_get_extmark_by_id(source.bufid, ns, session.extmark, {
-			details = true,
-			hl_name = false,
-		})
-
-		local start_line = mark[1]
-		local end_line = mark[3].end_row
-
-		return start_line, end_line
-	end
-
-	---@param bufid buffer
-	---@param lines {string} list of lines to set in the buffer
 	local function setup_buffer(bufid, lines)
 		vim.bo[bufid].modifiable = true
 		vim.bo[bufid].filetype = vim.bo[source.bufid].filetype
@@ -301,7 +288,7 @@ local function init_finalizer(session)
 		end, { buf = bufid })
 
 		vim.keymap.set('n', config.keymap.accept_changes, function()
-			local start_line, end_line = change_range()
+			local start_line, end_line = session:change_range()
 			api.nvim_buf_set_lines(source.bufid, start_line, end_line, true, session.state:lines())
 			session:cleanup()
 		end, { buf = bufid })
@@ -337,7 +324,7 @@ local function init_finalizer(session)
 		setup_buffer(scratch.source, source_lines)
 		setup_buffer(scratch.changed, source_lines)
 
-		local start_line, end_line = change_range()
+		local start_line, end_line = session:change_range()
 		api.nvim_buf_set_lines(scratch.changed, start_line, end_line, true, session.state:lines())
 
 		vim.bo[scratch.source].modifiable = false
@@ -371,32 +358,13 @@ local function init_finalizer(session)
 		})
 	end
 
-	local function inside_range()
-		local start_line, end_line = change_range()
-
-		local range = vim.range.extmark(0, start_line, 0, end_line, 0)
-		local cursor = api.nvim_win_get_cursor(0)
-		local pos = vim.pos.cursor(0, cursor)
-
-		return vim.range.has(range, pos)
-	end
-
 	session:on_update(function(state)
 		if not state.done or has_setup then
 			return
 		end
 
-		vim.keymap.set('n', config.keymap.cancel, function()
-			if not inside_range() then
-				vim.print("Not in a changed block")
-				return
-			end
-
-			session:cleanup()
-		end)
-
 		vim.keymap.set('n', config.keymap.view_changes, function()
-			if not inside_range() then
+			if not session:cursor_inside() then
 				vim.print("Not in a changed block")
 				return
 			end
@@ -416,6 +384,7 @@ end
 ---@class Session
 ---@field id integer
 ---@field system vim.SystemObj | nil vim.system object
+---@field cancelled boolean Whether the prompt has been cancelled
 ---@field scratch SessionScratches | nil Scratch buffer IDs
 ---@field source SessionSource Source code information (range)
 ---@field state SessionState State of generation
@@ -439,6 +408,7 @@ function Session:start(source, instruction)
 	local session = {
 		id = this_id,
 		state = SessionState:init(),
+		cancelled = false,
 		messages = {
 			system_message(source),
 		},
@@ -456,9 +426,44 @@ function Session:start(source, instruction)
 	init_preview(session)
 	init_finalizer(session)
 
+	vim.keymap.set('n', config.keymap.cancel, function()
+		if not session:cursor_inside() then
+			vim.print("Not in a changed block")
+			return
+		end
+
+		session:cleanup()
+	end)
+
 	session:prompt(instruction)
 
 	return session
+end
+
+function Session:change_range()
+	if self.extmark == nil then
+		return self.source.start_line, self.source.end_line + 1
+	end
+
+	local mark = api.nvim_buf_get_extmark_by_id(self.source.bufid, self.namespace, self.extmark, {
+		details = true,
+		hl_name = false,
+	})
+
+	local start_line = mark[1]
+	local end_line = mark[3].end_row
+
+	return start_line, end_line
+end
+
+function Session:cursor_inside()
+	local start_line, end_line = self:change_range()
+
+	local range = vim.range.extmark(0, start_line, 0, end_line, 0)
+	local cursor = api.nvim_win_get_cursor(0)
+	local pos = vim.pos.cursor(0, cursor)
+
+	return vim.range.has(range, pos)
 end
 
 function Session:prompt(instruction)
@@ -504,7 +509,7 @@ end
 function Session:dispatch_update()
 	local callbacks = self.callbacks
 
-	if #callbacks == 0 then
+	if #callbacks == 0 or self.cancelled then
 		return
 	end
 
@@ -522,7 +527,12 @@ function Session:get_state()
 end
 
 function Session:cleanup()
-	table.remove(sessions, self.id)
+	self.cancelled = true
+
+	if not self.system:is_closing() then
+		self.system:kill('sigint')
+		self.system:wait(500)
+	end
 
 	api.nvim_del_augroup_by_id(self.augroup)
 	api.nvim_buf_clear_namespace(self.source.bufid, self.namespace, 0, -1)
@@ -531,11 +541,8 @@ function Session:cleanup()
 		api.nvim_buf_delete(self.scratch.changed, { force = true })
 		api.nvim_buf_delete(self.scratch.source, { force = true })
 	end
-end
 
-function Session:cancel()
-	self.system:kill('sigint')
-	self:cleanup()
+	table.remove(sessions, self.id)
 end
 
 local M = {}

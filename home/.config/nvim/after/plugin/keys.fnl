@@ -40,7 +40,8 @@
 ; Various plugin method calls
 (map (:- (lazy :oil :open) :desc "Open Oil.nvim in current directory")
      (:<leader>cf (lazy :conform :format) :desc "Format current file")
-     (:<leader>a (lazy :tmthy.brandon :instruct_range) :desc "Instruct (selection)" :mode [:v]))
+     (:<leader>a (lazy :brandon :instruct_insert) :desc "Instruct" :mode [:n])
+     (:<leader>a (lazy :brandon :instruct_range) :desc "Instruct (selection)" :mode [:v]))
 
 ; Leap.nvim
 (map (:? "<Plug>(leap)" :desc "2-key search (buffer)" :mode [:n :x :o])

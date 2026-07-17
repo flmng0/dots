@@ -1,30 +1,13 @@
-local config       = require('brandon.config')
+local input = require('brandon.input')
+local config = require('brandon.config')
 local SessionState = require('brandon.session_state')
-local util         = require('brandon.util')
-local api          = vim.api
+local util = require('brandon.util')
+local api = vim.api
 
 
 ---@type { integer: brandon.Session }
 local sessions   = {}
 local session_id = 0
-
----@class brandon.SessionSource
----@field bufid integer
----@field start_line integer
----@field end_line integer | nil
-
----@class brandon.SessionScratches
----@field source integer
----@field changed integer
----
----@alias brandon.UpdateCallback fun(state: brandon.SessionState)
-
----@alias brandon.SessionStage
----| 'pending' Not yet started
----| 'thinking' Still in reasoning phase
----| 'generating' Actively generating code
----| 'finished' Finished
-
 
 ---@param session brandon.Session
 local function init_preview(session)
@@ -117,14 +100,14 @@ local function init_finalizer(session)
 		end, { buf = bufid })
 
 		vim.keymap.set('n', config.keymap.continue, function()
-			local instruction = vim.fn.input("Next Instruction: ")
+			input('Next Instruction:', function(instruction)
+				if instruction == nil or #instruction == 0 then
+					return
+				end
 
-			if instruction == nil or #instruction == 0 then
-				return
-			end
-
-			api.nvim_win_close(0, true)
-			session:prompt(instruction)
+				api.nvim_win_close(0, true)
+				session:prompt(instruction)
+			end)
 		end, { buf = bufid })
 	end
 
@@ -205,17 +188,6 @@ local function init_finalizer(session)
 end
 
 ---@class brandon.Session
----@field id integer
----@field system vim.SystemObj | nil vim.system object
----@field cancelled boolean Whether the prompt has been cancelled
----@field scratch brandon.SessionScratches | nil Scratch buffer IDs
----@field source brandon.SessionSource Source code information (range)
----@field state brandon.SessionState State of generation
----@field callbacks brandon.UpdateCallback[] Callbacks to invoke on update
----@field namespace integer Namespace ID
----@field extmark integer | nil Extmark ID
----@field augroup integer Autocommand group
----@field messages brandon.SessionMessage[] Messages so far
 local Session = {}
 
 function Session.get_by_id(id)
@@ -229,8 +201,9 @@ end
 ---Start a new session, given
 ---@param source brandon.SessionSource Range of source code to affect
 ---@param instruction string Initial instruction
+---@param context brandon.Context[] Additional context for the prompt
 ---@return brandon.Session
-function Session:start(source, instruction)
+function Session:start(source, instruction, context)
 	local this_id = session_id
 	session_id = session_id + 1
 

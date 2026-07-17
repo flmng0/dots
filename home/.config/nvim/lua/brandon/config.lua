@@ -18,14 +18,14 @@ local config = {
 
 local M = {}
 
-setmetatable(M, { __index = config })
-
-function M.get()
-	return config
-end
+setmetatable(M, {
+	__index = function(_, key)
+		return config[key]
+	end
+})
 
 function M.update(new_config)
-	config = vim.tbl_deep_extend('force', config, new_config)
+	config = vim.tbl_deep_extend('force', config, new_config or {})
 end
 
 return M

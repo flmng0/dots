@@ -13,6 +13,14 @@
       ns (let [marks (vim.api.nvim_buf_get_extmarks 0 ns pos pos {:overlap true})]
            (vim.notify (vim.inspect marks))))))
      
+(defcommand :BrdnImpl
+  {:nargs 0 :range true}
+  [{: line1 : line2}]
+  (let [brandon (require :brandon) 
+        prompt "Implement this"]
+      (if (and line1 line2)
+          (brandon.instruct_range prompt)
+          (brandon.instruct_insert prompt))))
             
 
 (defcommand :RecompileConfig

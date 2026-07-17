@@ -1,8 +1,4 @@
 ---@class brandon.SessionState
----@field done boolean Generation complete?
----@field stage SessionStage Stage of generation
----@field reasoning string Reasoning generated so far
----@field text string Text generated so far
 local SessionState = {}
 
 function SessionState:init()

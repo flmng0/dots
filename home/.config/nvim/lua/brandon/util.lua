@@ -35,7 +35,7 @@ local range_prompt = normalize([[
 
 local insert_prompt = normalize([[
 	You are a coding assistant. Generate new code which satisfies INSTRUCTION.
-	Do not add extra code.
+	Do not add extra code, **only respond with code to be placed inside CURSOR**.
 	Respond with code modifications as raw text, NOT IN A CODE BLOCK.
 	Consider the local context provided in the PREFIX and SUFFIX.
 ]])
@@ -71,8 +71,8 @@ function M.system_message(source)
 	local system_lines = {
 		is_insert and insert_prompt or range_prompt,
 		"<PREFIX>", prefix_lines, "</PREFIX>",
+		is_insert and { "<CURSOR>", "</CURSOR>" } or { "<SNIPPET>", snippet_lines, "</SNIPPET>" },
 		"<SUFFIX>", suffix_lines, "</SUFFIX>",
-		is_insert and {} or { "<SNIPPET>", snippet_lines, "</SNIPPET>" },
 	}
 
 	local prompt = vim.iter(system_lines):flatten(2):join('\n')
@@ -100,76 +100,6 @@ function M.request(messages)
 	}
 end
 
----@param prompt string
----@param cb fun(input: string | nil)
-function M.input(prompt, cb)
-	local bufid = api.nvim_create_buf(false, true)
-
-	local augroup = api.nvim_create_augroup('brandon.util.input', { clear = true })
-
-	api.nvim_create_autocmd('BufWinEnter', {
-		group = augroup,
-		command = 'startinsert',
-		buf = bufid
-	})
-
-	local ed_width = vim.o.columns
-	local ed_height = vim.o.lines
-
-	local want_width = 80
-	local want_height = 10
-
-	local pad = 2
-	local width = math.min(ed_width, want_width) - pad
-	local height = math.min(ed_height, want_height) - pad
-
-	local x = math.floor((ed_width - width) / 2)
-	local y = math.floor((ed_height - height) / 2)
-
-	api.nvim_open_win(bufid, true, {
-		style = 'minimal',
-		border = 'single',
-		relative = 'editor',
-		title = prompt,
-		footer = '<C-d> - accept',
-		footer_pos = 'right',
-		width = width,
-		height = height,
-		col = x,
-		row = y,
-	})
-
-
-	local function cleanup()
-		api.nvim_del_augroup_by_name('brandon.util.input')
-		api.nvim_buf_delete(bufid, { force = true })
-
-		if api.nvim_get_mode().mode == 'i' then
-			api.nvim_input('<Esc>')
-		end
-	end
-
-	local function cancel()
-		cleanup()
-		cb(nil)
-	end
-
-	api.nvim_create_autocmd('WinClosed', {
-		buf = bufid,
-		group = augroup,
-		callback = cancel,
-	})
-	vim.keymap.set({ 'n', 'i' }, '<C-c>', cancel, { buf = bufid })
-	vim.keymap.set({ 'n' }, '<Esc>', cancel, { buf = bufid })
-
-	vim.keymap.set({ 'n', 'i' }, '<C-d>', function()
-		local lines = api.nvim_buf_get_lines(bufid, 0, -1, false)
-		local text = vim.iter(lines):join('\n')
-		cleanup()
-		cb(text)
-	end, { buf = bufid })
-end
-
 ---@param buf integer Buffer ID
 ---@param ns_id integer Namespace ID
 ---@param id integer Extmark ID
@@ -189,6 +119,13 @@ function M.update_extmark(buf, ns_id, id, opts)
 	local new_details = vim.tbl_deep_extend('force', {}, details, opts, { id = id })
 	api.nvim_buf_set_extmark(buf, ns_id, row, col, new_details)
 	return true
+end
+
+---Calculate the n-th number of the Fibonacci sequence
+---@param n integer Which number of the Fibonacci sequence to return
+---@return integer x The n-th value of the Fibonacci sequence
+function M.fibonacci(n)
+
 end
 
 return M

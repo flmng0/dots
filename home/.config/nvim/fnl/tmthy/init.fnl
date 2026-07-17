@@ -1,5 +1,8 @@
 (require :tmthy.options)
 
+(let [brandon (require :brandon)]
+  (brandon.setup))
+
 (vim.api.nvim_create_autocmd
   :FileType
   {:pattern "*"

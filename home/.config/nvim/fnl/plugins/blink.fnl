@@ -9,8 +9,10 @@
         :snippets {:preset "mini_snippets"}
         :sources {:default ["lsp" "path" "snippets" "buffer"]
                   :per_filetype
-                  {:sql ["snippets" "dadbod" "buffer"]}
+                  {:sql ["snippets" "dadbod" "buffer"]
+                   :brandon ["brandon"]}
                   :providers
-                  {:dadbod {:name "Dadbod" :module "vim_dadbod_completion.blink"}}}
+                  {:dadbod {:name "Dadbod" :module "vim_dadbod_completion.blink"}
+                   :brandon {:name "Brandon" :module "brandon.blink"}}}
         :completion {:menu {:auto_show true}
                      :ghost_text {:enabled true}}}}

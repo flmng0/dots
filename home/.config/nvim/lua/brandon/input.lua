@@ -1,9 +1,21 @@
 local api = vim.api
 
+local source_bufs = {}
+
+local M = {}
+
+function M.get_source_buf(input_bufid)
+	return source_bufs[input_bufid]
+end
+
 ---@param prompt string
 ---@param cb fun(input: string | nil, context: brandon.Context[])
 local function input(prompt, cb)
+	local source_buf = api.nvim_get_current_buf()
 	local bufid = api.nvim_create_buf(false, true)
+
+	vim.bo[bufid].filetype = 'brandon'
+	table.insert(source_bufs, bufid, source_buf)
 
 	local augroup = api.nvim_create_augroup('brandon.util.input', { clear = true })
 
@@ -53,6 +65,8 @@ local function input(prompt, cb)
 		if api.nvim_get_mode().mode == 'i' then
 			api.nvim_input('<Esc>')
 		end
+
+		source_bufs[bufid] = nil
 	end
 
 	local function cancel()
@@ -77,4 +91,8 @@ local function input(prompt, cb)
 	vim.keymap.set({ 'n', 'i' }, '<C-d>', accept, { buf = bufid })
 end
 
-return input
+return setmetatable(M, {
+	__call = function(_, ...)
+		return input(...)
+	end
+})

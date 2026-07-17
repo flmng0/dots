@@ -1,13 +1,12 @@
-local input = require('brandon.input')
-local config = require('brandon.config')
+local input        = require('brandon.input')
+local config       = require('brandon.config')
 local SessionState = require('brandon.session_state')
-local util = require('brandon.util')
-local api = vim.api
-
+local util         = require('brandon.util')
+local api          = vim.api
 
 ---@type { integer: brandon.Session }
-local sessions   = {}
-local session_id = 0
+local sessions     = {}
+local session_id   = 0
 
 ---@param session brandon.Session
 local function init_preview(session)

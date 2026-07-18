@@ -18,13 +18,13 @@ function M.setup(opts)
 		end
 
 		if #args.args > 0 then
-			Session:start(source, args.args)
+			Session:start(source, args.args, {})
 		else
-			input('Instruction:', function(instruction)
+			input('Instruction:', function(instruction, context)
 				if instruction == nil or #instruction == 0 then
 					return
 				end
-				Session:start(source, instruction)
+				Session:start(source, instruction, context)
 			end)
 		end
 	end, { range = true, nargs = '?' })
@@ -43,6 +43,12 @@ function M.clean_buf(bufid)
 	for session in to_clean do
 		session:cleanup()
 	end
+end
+
+function M.list_sessions_by_bufid(bufid)
+	return Session.iter():filter(function(session)
+		return session.source.bufid == bufid
+	end):totable()
 end
 
 function M.get_session_by_id(id)

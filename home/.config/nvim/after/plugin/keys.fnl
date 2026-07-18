@@ -13,7 +13,9 @@
      (:U :<C-r> :desc "Redo")
      (:<Esc> :<C-\><C-n> :desc "Exit terminal mode" :mode [:t]))
 
-
+(map (:<leader>a ":Brandon<CR>" :desc "Instruct" :mode [:n :x])
+     ("]s" (lazy :brandon.move :to_next_session) :desc "Next Brandon session")
+     ("[s" (lazy :brandon.move :to_prev_session) :desc "Previous Brandon session"))
 ; (fn llama-call [name]
 ;   (fn []
 ;     ((. vim.fn (.. "llama#" name)))))
@@ -39,8 +41,7 @@
 
 ; Various plugin method calls
 (map (:- (lazy :oil :open) :desc "Open Oil.nvim in current directory")
-     (:<leader>cf (lazy :conform :format) :desc "Format current file")
-     (:<leader>a ":Brandon<CR>" :desc "Instruct" :mode [:n :x]))
+     (:<leader>cf (lazy :conform :format) :desc "Format current file"))
 
 ; Leap.nvim
 (map (:? "<Plug>(leap)" :desc "2-key search (buffer)" :mode [:n :x :o])

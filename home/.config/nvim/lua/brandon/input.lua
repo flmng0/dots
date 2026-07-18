@@ -1,21 +1,41 @@
 local api = vim.api
 
-local source_bufs = {}
+---@class brandon.InputState
+---@field source_buf number Buffer that this input originated from
+---@field context brandon.Context[] Current context for the input
 
-local M = {}
+---@type table<number, brandon.InputState>
+local inputs = {}
 
-function M.get_source_buf(input_bufid)
-	return source_bufs[input_bufid]
+---@class brandon.input
+---@overload fun(prompt: string, cb: brandon.input.Callback)
+local input = setmetatable({}, {
+	__call = function(t, ...)
+		t.input(...)
+	end
+})
+
+---@param bufid number ID of the input buffer
+---@return brandon.InputState | nil
+function input.get_input_by_buf(bufid)
+	return inputs[bufid]
 end
 
----@param prompt string
----@param cb fun(input: string | nil, context: brandon.Context[])
-local function input(prompt, cb)
-	local source_buf = api.nvim_get_current_buf()
-	local bufid = api.nvim_create_buf(false, true)
+---@alias brandon.input.Callback fun(input: string | nil, context: brandon.Context[])
 
+---@param prompt string
+---@param cb brandon.input.Callback
+function input.input(prompt, cb)
+	---@type brandon.InputState
+	local state = {
+		source_buf = api.nvim_get_current_buf(),
+		context = {}
+	}
+
+	local bufid = api.nvim_create_buf(false, true)
 	vim.bo[bufid].filetype = 'brandon'
-	table.insert(source_bufs, bufid, source_buf)
+
+	table.insert(inputs, bufid, state)
 
 	local augroup = api.nvim_create_augroup('brandon.util.input', { clear = true })
 
@@ -66,7 +86,7 @@ local function input(prompt, cb)
 			api.nvim_input('<Esc>')
 		end
 
-		source_bufs[bufid] = nil
+		inputs[bufid] = nil
 	end
 
 	local function cancel()
@@ -91,8 +111,4 @@ local function input(prompt, cb)
 	vim.keymap.set({ 'n', 'i' }, '<C-d>', accept, { buf = bufid })
 end
 
-return setmetatable(M, {
-	__call = function(_, ...)
-		return input(...)
-	end
-})
+return input

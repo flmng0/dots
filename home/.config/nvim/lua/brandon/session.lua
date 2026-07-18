@@ -1,12 +1,12 @@
-local input        = require('brandon.input')
-local config       = require('brandon.config')
+local input = require('brandon.input')
+local config = require('brandon.config')
 local SessionState = require('brandon.session_state')
-local util         = require('brandon.util')
-local api          = vim.api
+local util = require('brandon.util')
+local api = vim.api
 
 ---@type { integer: brandon.Session }
-local sessions     = {}
-local session_id   = 0
+local sessions = {}
+local session_id = 0
 
 ---@param session brandon.Session
 local function init_preview(session)
@@ -66,126 +66,6 @@ local function init_preview(session)
 	end)
 end
 
----@param session brandon.Session
-local function init_finalizer(session)
-	local source = session.source
-
-	local has_setup = false
-
-	---@type integer | nil
-	local tabid = nil
-
-	local function sync_win(winid)
-		vim.wo[winid].scrollbind = true
-		vim.wo[winid].diff = true
-		vim.wo[winid].cursorbind = true
-		vim.wo[winid].cursorline = true
-	end
-
-	local function setup_buffer(bufid, lines)
-		vim.bo[bufid].modifiable = true
-		vim.bo[bufid].filetype = vim.bo[source.bufid].filetype
-
-		api.nvim_buf_set_lines(bufid, 0, -1, false, lines)
-
-		vim.keymap.set('n', config.keymap.deny_changes, function()
-			session:cleanup()
-		end, { buf = bufid })
-
-		vim.keymap.set('n', config.keymap.accept_changes, function()
-			local start_line, end_line = session:change_range()
-			api.nvim_buf_set_lines(source.bufid, start_line, end_line, true, session.state:lines())
-			session:cleanup()
-		end, { buf = bufid })
-
-		vim.keymap.set('n', config.keymap.continue, function()
-			input('Next Instruction:', function(instruction)
-				if instruction == nil or #instruction == 0 then
-					return
-				end
-
-				api.nvim_win_close(0, true)
-				session:prompt(instruction)
-			end)
-		end, { buf = bufid })
-	end
-
-	local function open_changes()
-		if tabid ~= nil then
-			return
-		end
-
-		if session.scratch == nil then
-			session.scratch = {
-				source = api.nvim_create_buf(false, true),
-				changed = api.nvim_create_buf(false, true)
-			}
-		end
-
-		---@type brandon.SessionScratches
-		local scratch = session.scratch
-
-		local source_lines = api.nvim_buf_get_lines(source.bufid, 0, -1, true)
-		setup_buffer(scratch.source, source_lines)
-		setup_buffer(scratch.changed, source_lines)
-
-		local start_line, end_line = session:change_range()
-		api.nvim_buf_set_lines(scratch.changed, start_line, end_line, true, session.state:lines())
-
-		vim.bo[scratch.source].modifiable = false
-		vim.bo[scratch.changed].modifiable = false
-
-		tabid = api.nvim_open_tabpage(scratch.source, true, {})
-
-		local source_winid = api.nvim_tabpage_get_win(tabid)
-		local changed_winid = api.nvim_open_win(scratch.changed, false, {
-			win = source_winid,
-			split = 'right',
-			style = 'minimal'
-		})
-
-		vim.wo[source_winid].number = true
-		vim.wo[source_winid].relativenumber = false
-
-		sync_win(source_winid)
-		sync_win(changed_winid)
-
-		api.nvim_win_set_cursor(source_winid, { source.start_line, 0 })
-
-		api.nvim_create_autocmd('WinClosed', {
-			pattern = { tostring(source_winid), tostring(changed_winid) },
-			group = session.augroup,
-			callback = function()
-				api.nvim_win_close(source_winid, true)
-				api.nvim_win_close(changed_winid, true)
-				tabid = nil
-			end
-		})
-	end
-
-	session:on_update(function(state)
-		if not state.done or has_setup then
-			return
-		end
-
-		vim.keymap.set('n', config.keymap.view_changes, function()
-			if not session:cursor_inside() then
-				vim.print("Not in a changed block")
-				return
-			end
-
-			if not state.done then
-				vim.print("Be patient! Generation is not finished yet.")
-				return
-			end
-
-			open_changes()
-		end, { buf = source.bufid })
-
-		has_setup = true
-	end)
-end
-
 ---@class brandon.Session
 local Session = {}
 
@@ -193,8 +73,54 @@ function Session.get_by_id(id)
 	return sessions[id]
 end
 
+---@return Iter
 function Session.iter()
-	return vim.iter(vim.tbl_deep_extend('force', {}, sessions))
+	return vim.iter(vim.tbl_values(sessions))
+end
+
+local function setup_keymap(bufid)
+	local function find_cursor_session()
+		for session in Session.iter() do
+			if session:cursor_inside() then
+				return session
+			end
+		end
+	end
+	vim.keymap.set('n', config.keymap.view_changes, function()
+		local session = find_cursor_session()
+		if session == nil then
+			vim.print("Not inside a Brandon session.")
+			return
+		end
+
+		if not session.state.done then
+			vim.print("Be patient! Generation is not finished yet.")
+			return
+		end
+
+		session:open_changes()
+	end, { buf = bufid })
+
+	vim.keymap.set('n', config.keymap.cancel, function()
+		local session = find_cursor_session()
+		if session == nil then
+			vim.print("Not inside a Brandon session.")
+			return
+		end
+
+		session:cleanup()
+	end, { buf = bufid })
+end
+
+local function maybe_cleanup_keymap(bufid)
+	local reamining = Session.iter():find(function(session)
+		return session.source.bufid == bufid
+	end)
+
+	if reamining == nil then
+		vim.keymap.del('n', config.keymap.view_changes, { buf = bufid })
+		vim.keymap.del('n', config.keymap.cancel, { buf = bufid })
+	end
 end
 
 ---Start a new session, given
@@ -238,20 +164,96 @@ function Session:start(source, instruction, context)
 	setmetatable(session, { __index = self })
 
 	init_preview(session)
-	init_finalizer(session)
-
-	vim.keymap.set('n', config.keymap.cancel, function()
-		if not session:cursor_inside() then
-			vim.print("Not in a changed block")
-			return
-		end
-
-		session:cleanup()
-	end)
+	setup_keymap(source.bufid)
 
 	session:prompt(instruction)
 
 	return session
+end
+
+function Session:open_changes()
+	local source = self.source
+
+	local function sync_win(winid)
+		vim.wo[winid].scrollbind = true
+		vim.wo[winid].diff = true
+		vim.wo[winid].cursorbind = true
+		vim.wo[winid].cursorline = true
+	end
+
+	local function setup_buffer(bufid, lines)
+		vim.bo[bufid].modifiable = true
+		vim.bo[bufid].filetype = vim.bo[source.bufid].filetype
+
+		api.nvim_buf_set_lines(bufid, 0, -1, false, lines)
+
+		vim.keymap.set('n', config.keymap.deny_changes, function()
+			self:cleanup()
+		end, { buf = bufid })
+
+		vim.keymap.set('n', config.keymap.accept_changes, function()
+			local start_line, end_line = self:change_range()
+			api.nvim_buf_set_lines(source.bufid, start_line, end_line, true, self.state:lines())
+			self:cleanup()
+		end, { buf = bufid })
+
+		vim.keymap.set('n', config.keymap.continue, function()
+			input('Next Instruction:', function(instruction)
+				if instruction == nil or #instruction == 0 then
+					return
+				end
+
+				api.nvim_win_close(0, true)
+				self:prompt(instruction)
+			end)
+		end, { buf = bufid })
+	end
+
+	if self.scratch == nil then
+		self.scratch = {
+			source = api.nvim_create_buf(false, true),
+			changed = api.nvim_create_buf(false, true)
+		}
+	end
+
+	---@type brandon.SessionScratches
+	local scratch = self.scratch
+
+	local source_lines = api.nvim_buf_get_lines(source.bufid, 0, -1, true)
+	setup_buffer(scratch.source, source_lines)
+	setup_buffer(scratch.changed, source_lines)
+
+	local start_line, end_line = self:change_range()
+	api.nvim_buf_set_lines(scratch.changed, start_line, end_line, true, self.state:lines())
+
+	vim.bo[scratch.source].modifiable = false
+	vim.bo[scratch.changed].modifiable = false
+
+	local tabid = api.nvim_open_tabpage(scratch.source, true, {})
+
+	local source_winid = api.nvim_tabpage_get_win(tabid)
+	local changed_winid = api.nvim_open_win(scratch.changed, false, {
+		win = source_winid,
+		split = 'right',
+		style = 'minimal'
+	})
+
+	vim.wo[source_winid].number = true
+	vim.wo[source_winid].relativenumber = false
+
+	sync_win(source_winid)
+	sync_win(changed_winid)
+
+	api.nvim_win_set_cursor(source_winid, { source.start_line, 0 })
+
+	api.nvim_create_autocmd('WinClosed', {
+		pattern = { tostring(source_winid), tostring(changed_winid) },
+		group = self.augroup,
+		callback = function()
+			api.nvim_win_close(source_winid, true)
+			api.nvim_win_close(changed_winid, true)
+		end
+	})
 end
 
 function Session:change_range()
@@ -356,7 +358,8 @@ function Session:cleanup()
 		api.nvim_buf_delete(self.scratch.source, { force = true })
 	end
 
-	table.remove(sessions, self.id)
+	sessions[self.id] = nil
+	maybe_cleanup_keymap(self.source.bufid)
 end
 
 return Session

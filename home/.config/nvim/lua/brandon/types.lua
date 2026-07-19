@@ -23,13 +23,15 @@ error("Can't require a meta-file")
 ---| brandon.SymbolContext
 
 ---@class brandon.FileContext
+---@field name string Name of the file
 ---@field file_path string Path of the file
----@field is_file boolean Used for reflection
+---@field type "file" Used for reflection
 
 ---@class brandon.SymbolContext
+---@field name string Name of the symbol
 ---@field file_path string File path which contains the symbol
 ---@field range vim.Range Range which contains the symbol
----@field is_symbol boolean Used for reflection
+---@field type "symbol" Used for reflection
 
 ---@class brandon.SessionState
 ---@field done boolean Generation complete?

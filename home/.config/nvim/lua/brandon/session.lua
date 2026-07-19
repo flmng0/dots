@@ -166,7 +166,7 @@ function Session:start(source, instruction, context)
 	init_preview(session)
 	setup_keymap(source.bufid)
 
-	session:prompt(instruction)
+	session:prompt(instruction, context)
 
 	return session
 end
@@ -198,13 +198,13 @@ function Session:open_changes()
 		end, { buf = bufid })
 
 		vim.keymap.set('n', config.keymap.continue, function()
-			input('Next Instruction:', function(instruction)
+			input('Next Instruction:', function(instruction, context)
 				if instruction == nil or #instruction == 0 then
 					return
 				end
 
 				api.nvim_win_close(0, true)
-				self:prompt(instruction)
+				self:prompt(instruction, context)
 			end)
 		end, { buf = bufid })
 	end
@@ -282,9 +282,11 @@ function Session:cursor_inside()
 	return vim.range.has(range, pos)
 end
 
-function Session:prompt(instruction)
+function Session:prompt(instruction, context)
 	self.state:reset()
-	table.insert(self.messages, util.user_message(instruction))
+	table.insert(self.messages, util.user_message(instruction, context))
+
+	vim.print(self.messages)
 
 	local curl_cmd = {
 		'curl',
@@ -296,8 +298,10 @@ function Session:prompt(instruction)
 		'--data', '@-'
 	}
 
+	local request = util.request(self.messages)
+
 	self.system = vim.system(curl_cmd, {
-		stdin = vim.json.encode(util.request(self.messages)),
+		stdin = vim.json.encode(request),
 		text = true,
 		---@diagnostic disable-next-line: unused-local
 		stdout = function(_err, text)

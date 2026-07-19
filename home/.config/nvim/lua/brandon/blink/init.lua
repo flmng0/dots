@@ -88,6 +88,7 @@ function source:get_completions(ctx, callback)
 	local input = require('brandon.input').get_input_by_buf(ctx.bufnr)
 	local provider_completions = providers[ctx.trigger.character]
 
+	vim.print('Got to here at least?')
 	if input == nil or ctx.trigger.kind ~= 'trigger_character' or providers[ctx.trigger.character] == nil then
 		callback({ items = {}, is_incomplete_backward = false, is_incomplete_forward = false })
 		return function() end
@@ -133,9 +134,11 @@ end
 function source:execute(ctx, item, callback, default_implementation)
 	default_implementation()
 
-	-- local input = require('brandon.input').get_input_by_buf(ctx.bufnr)
-	-- local context = item
-	-- table.insert(input.context)
+	local context = item.data.context
+	local input = require('brandon.input').get_input_by_buf(ctx.bufnr)
+	if input ~= nil and context ~= nil then
+		table.insert(input.context, context)
+	end
 
 	callback()
 end

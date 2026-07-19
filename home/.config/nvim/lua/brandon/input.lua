@@ -75,9 +75,6 @@ function input.input(prompt, cb)
 	vim.wo[winid].cursorbind = false
 	vim.wo[winid].wrap = true
 
-	---@type brandon.Context[]
-	local context = {}
-
 	local function cleanup()
 		api.nvim_del_augroup_by_name('brandon.util.input')
 		api.nvim_buf_delete(bufid, { force = true })
@@ -91,13 +88,20 @@ function input.input(prompt, cb)
 
 	local function cancel()
 		cleanup()
-		cb(nil, context)
+		cb(nil, {})
+	end
+
+	local function consolidate_context(text)
+		return vim.iter(state.context):filter(function(ctx)
+			return string.find(text, ctx.name) ~= nil
+		end):totable()
 	end
 
 	local function accept()
 		local lines = api.nvim_buf_get_lines(bufid, 0, -1, false)
 		local text = vim.iter(lines):join('\n')
 		cleanup()
+		local context = consolidate_context(text)
 		cb(text, context)
 	end
 

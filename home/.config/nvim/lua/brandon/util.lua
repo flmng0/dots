@@ -6,13 +6,15 @@ local M = {}
 
 ---@alias brandon.SessionMessageRole "system" | "user" | "assistant"
 
+--TODO: Add proper typing for OpenAI chat content part
+
 ---@class brandon.SessionMessage
 ---@field role brandon.SessionMessageRole
----@field content string
+---@field content string | any[]
 
 
 ---@param role brandon.SessionMessageRole
----@param content string
+---@param content string | any[]
 ---@return brandon.SessionMessage
 function M.message(role, content)
 	return { role = role, content = content }
@@ -80,12 +82,53 @@ function M.system_message(source)
 	return M.message('system', prompt)
 end
 
+local context_to_content = {}
+
+---@param ctx brandon.FileContext
+function context_to_content.file(ctx)
+	local uv = vim.uv
+
+	---@diagnostic disable: redefined-local
+	local fd, err = uv.fs_open(ctx.file_path, 'r', tonumber('644', 8))
+	assert(not err, err)
+
+	---@cast fd integer
+	local stat, err = uv.fs_fstat(fd)
+	assert(not err, err)
+
+	---@cast stat uv.fs_stat.result
+	local content, err = uv.fs_read(fd, stat.size)
+	assert(not err, err)
+
+	local success, err = uv.fs_close(fd)
+	assert(success, err)
+
+	return {
+		type = 'text',
+		text = '--- file: ' .. ctx.name .. ' ---\n' .. content
+	}
+end
+
 ---Make user instruction message
 ---@param instruction string
-function M.user_message(instruction)
-	local user_lines = { "<INSTRUCTION>", instruction, "</INSTRUCTION>" }
+---@param context brandon.Context[]
+function M.user_message(instruction, context)
+	local instruction_lines = { "<INSTRUCTION>", instruction, "</INSTRUCTION>" }
 
-	return M.message('user', vim.iter(user_lines):join('\n'))
+	local parts = {
+		{ type = 'text', text = vim.iter(instruction_lines):join('\n') }
+	}
+
+	for _, ctx in ipairs(context) do
+		local success, content = pcall(context_to_content[ctx.type], ctx)
+		if success then
+			table.insert(parts, content)
+		else
+			vim.notify('Failed to digest context: ' .. content, vim.log.levels.ERROR)
+		end
+	end
+
+	return M.message('user', parts)
 end
 
 function M.request(messages)

@@ -27,14 +27,14 @@ local function make_file_describer(label, path)
 			cb(vim.iter(lines):join('\n'))
 		end
 
-		local okay = pcall(stat_file, path, function(stat)
+		local okay, err = pcall(stat_file, path, function(stat)
 			local size = "**Size**: " .. stat.size
 			table.insert(lines, size)
 			send_lines()
 		end)
 
 		if not okay then
-			local err = "**Error**: Could not stat file"
+			local err = "**Error**: " .. err
 			table.insert(lines, err)
 			send_lines()
 		end
@@ -52,8 +52,9 @@ local function file_to_context(path)
 		label = label,
 		description = make_file_describer(label, path),
 		context = {
-			is_file = true,
+			name = label,
 			file_path = path,
+			type = 'file',
 		}
 	}
 end
@@ -82,6 +83,7 @@ end
 
 ---@type brandon.blink.GetCompletions
 return function(_, callback)
+	vim.print('Calling file completions!')
 	local cwd = vim.uv.cwd()
 	if cwd == nil then
 		callback({})

@@ -21,9 +21,9 @@ local function make_move(dir)
 			local start_line, end_line = session:change_range()
 			start_line = start_line + 1
 
-			if dir == 1 and start_line > pos.row then
+			if dir == 1 and start_line > pos.row + 1 then
 				return math.min(acc == -1 and math.huge or acc, start_line)
-			elseif dir == -1 and end_line < pos.row then
+			elseif dir == -1 and end_line < pos.row - 1 then
 				return math.max(acc == -1 and -math.huge or acc, end_line)
 			else
 				return acc

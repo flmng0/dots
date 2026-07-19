@@ -10,27 +10,73 @@ api.nvim_create_autocmd("BufWritePost", {
 	end
 })
 
+
 api.nvim_create_user_command("DoThing", function(opts)
-	if opts.count == -1 then
+	local uv = vim.uv
+	local cwd = uv.cwd()
+	if cwd == nil then
 		return
 	end
-	local buf = api.nvim_get_current_buf()
-	local m_start = api.nvim_buf_get_mark(buf, '<')
-	local m_end = api.nvim_buf_get_mark(buf, '>')
 
-	local range = vim.range.cursor(buf, m_start, m_end)
-	range:to_extmark()
+	-- local i = 0
+	-- vim.system({ 'fd', '-H' }, {
+	-- 	cwd = cwd,
+	-- 	stdout = function(_, data)
+	-- 		vim.print(i .. ': ' .. data)
+	-- 		i = i + 1
+	-- 	end
+	-- })
+
+	for entry in vim.fs.dir(cwd, { depth = 10 }) do
+		local stat = vim.uv.fs_stat(entry)
+		vim.print(entry .. ": " .. stat.type)
+	end
 
 
-	local ns = api.nvim_create_namespace('scratch')
-	api.nvim_buf_clear_namespace(buf, ns, 0, -1)
-
-	api.nvim_buf_set_extmark(buf, ns, range.start_row, range.start_col, {
-		end_line = range.end_row,
-		end_col = range.end_col + 1,
-		conceal = '',
-		virt_text_hide = true,
-		virt_text_pos = 'inline',
-		virt_text = { { opts.args, "IncSearch" } }
-	})
+	-- local butil = require('brandon.util')
+	-- local system = butil.message('system',
+	-- 	[[You are a text-file searcher. Respond with the answer to the user's question about their files.]])
+	-- local user = {
+	-- 	role = 'user',
+	-- 	content = {
+	-- 		{ type = 'text', text = 'What are the names of my files?' },
+	-- 		{
+	-- 			type = 'text',
+	-- 			text = '--- file: a.txt ---\nfoo bar baz',
+	-- 		},
+	-- 		{
+	-- 			type = 'text',
+	-- 			text = '--- file: b.txt ---\nfoo bar baz',
+	-- 		},
+	-- 		{
+	-- 			type = 'text',
+	-- 			text = '--- file: d.txt ---\nfoo bar baz',
+	-- 		},
+	-- 	}
+	-- }
+	--
+	-- local req = butil.request({ system, user })
+	-- req.stream = nil
+	--
+	-- local curl_cmd = {
+	-- 	'curl',
+	-- 	'--silent',
+	-- 	'--no-buffer',
+	-- 	'--request', 'POST',
+	-- 	'--url', 'http://localhost:8080/v1/chat/completions',
+	-- 	'--header', 'Content-Type: application/json',
+	-- 	'--data', '@-'
+	-- }
+	--
+	-- vim.system(curl_cmd, {
+	-- 	stdin = vim.json.encode(req),
+	-- 	text = true,
+	-- }, function(res)
+	-- 	vim.print(vim.json.decode(res.stdout))
+	-- end)
 end, { range = true, nargs = '?' })
+
+-- local t = { [140] = 12 }
+-- vim.print(t)
+-- t[140] = nil
+-- vim.print(t)

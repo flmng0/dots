@@ -121,11 +121,4 @@ function M.update_extmark(buf, ns_id, id, opts)
 	return true
 end
 
----Calculate the n-th number of the Fibonacci sequence
----@param n integer Which number of the Fibonacci sequence to return
----@return integer x The n-th value of the Fibonacci sequence
-function M.fibonacci(n)
-
-end
-
 return M

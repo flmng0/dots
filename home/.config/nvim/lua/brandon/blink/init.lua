@@ -2,11 +2,14 @@
 ---@class blink.cmp.Source
 local source = {}
 
+---@alias brandon.blink.ResolveDescription fun(cb: fun(content: string))
+
 ---@class brandon.blink.ContextItem
 ---@field label string
 ---@field context brandon.Context
+---@field description? brandon.blink.ResolveDescription
 
----@alias brandon.blink.GetCompletions fun(ctx: blink.cmp.Source, callback: fun(items: brandon.blink.ContextItem[]))
+---@alias brandon.blink.GetCompletions fun(ctx: blink.cmp.Source, callback: fun(items: brandon.blink.ContextItem[])): (fun(): nil)
 
 ---@type table<string, brandon.blink.GetCompletions>
 local providers = {
@@ -36,7 +39,10 @@ local function context_item_to_completion_item(ctx_item)
 		label = ctx_item.label,
 		insertText = ctx_item.label,
 		insertTextFormat = vim.lsp.protocol.InsertTextFormat.PlainText,
-		data = ctx_item.context
+		data = {
+			description = ctx_item.description,
+			context = ctx_item.context
+		}
 	}
 end
 ---@param mapper fun(result: any): lsp.CompletionItem
@@ -87,7 +93,7 @@ function source:get_completions(ctx, callback)
 		return function() end
 	end
 
-	provider_completions(ctx, function(ctx_items)
+	local cancel = provider_completions(ctx, function(ctx_items)
 		local items = vim.iter(ctx_items):map(context_item_to_completion_item)
 
 		callback({
@@ -97,7 +103,31 @@ function source:get_completions(ctx, callback)
 		})
 	end)
 
-	error('Unreachable')
+	return function()
+		if cancel ~= nil then
+			cancel()
+		end
+	end
+end
+
+function source:resolve(item, callback)
+	item = vim.deepcopy(item)
+
+	local description = item.data.description
+	if description ~= nil then
+		---@cast description brandon.blink.ResolveDescription
+		description(function(content)
+			item.documentation = {
+				kind = vim.lsp.protocol.MarkupKind.Markdown,
+				value = content
+			}
+
+			callback(item)
+		end)
+		return
+	end
+
+	callback(item)
 end
 
 function source:execute(ctx, item, callback, default_implementation)

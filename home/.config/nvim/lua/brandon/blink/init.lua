@@ -9,9 +9,11 @@ local source = {}
 ---@field context brandon.Context
 ---@field description? brandon.blink.ResolveDescription
 
----@alias brandon.blink.GetCompletions fun(ctx: blink.cmp.Source, callback: fun(items: brandon.blink.ContextItem[])): (fun(): nil)
+---@class brandon.blink.Provider
+---@field make_context_part? fun(ctx: blink.cmp.Context, item: brandon.blink.ContextItem): any
+---@field get_completions? fun(ctx: blink.cmp.Context, callback: fun(items: brandon.blink.ContextItem[])): (fun(): nil)
 
----@type table<string, brandon.blink.GetCompletions>
+---@type table<string, brandon.blink.Provider>
 local providers = {
 	['@'] = require('brandon.blink.file'),
 	['#'] = require('brandon.blink.buffer_symbol'),
@@ -45,56 +47,17 @@ local function context_item_to_completion_item(ctx_item)
 		}
 	}
 end
----@param mapper fun(result: any): lsp.CompletionItem
-local function lsp_req_callback(mapper, callback)
-	return function(results, _, _)
-		for _, res in pairs(results) do
-			if res.err == nil then
-				local items = vim.iter(res.result):map(mapper)
-
-				callback({
-					items = items:totable(),
-					is_incomplete_backward = false,
-					is_incomplete_forward = false,
-				})
-			end
-		end
-	end
-end
-
----@param bufnr integer Buffer ID for the source buf (not prompt buf)
----@param callback fun(response?: blink.cmp.CompletionResponse)
-local function complete_workspace_symbols(bufnr, callback)
-	local cb = lsp_req_callback(symbol_result_to_completion_item, callback)
-	return vim.lsp.buf_request_all(bufnr, 'workspace/symbol', { query = '' }, cb)
-end
-
----@param bufnr integer Buffer ID for the source buf (not prompt buf)
----@param callback fun(response?: blink.cmp.CompletionResponse)
-local function complete_buffer_symbols(bufnr, callback)
-	local cb = lsp_req_callback(symbol_result_to_completion_item, callback)
-	return vim.lsp.buf_request_all(bufnr, 'textDocument/documentSymbol', {
-		textDocument = vim.lsp.util.make_text_document_params(bufnr)
-	}, cb)
-end
-
-function tmp()
-	lsp_req_callback(nil, nil)
-	complete_buffer_symbols(nil, nil)
-	complete_workspace_symbols(nil, nil)
-end
 
 function source:get_completions(ctx, callback)
 	local input = require('brandon.input').get_input_by_buf(ctx.bufnr)
-	local provider_completions = providers[ctx.trigger.character]
+	local provider = providers[ctx.trigger.character] or {}
 
-	vim.print('Got to here at least?')
-	if input == nil or ctx.trigger.kind ~= 'trigger_character' or providers[ctx.trigger.character] == nil then
+	if input == nil or ctx.trigger.kind ~= 'trigger_character' or provider.get_completions == nil then
 		callback({ items = {}, is_incomplete_backward = false, is_incomplete_forward = false })
 		return function() end
 	end
 
-	local cancel = provider_completions(ctx, function(ctx_items)
+	local cancel = provider.get_completions(ctx, function(ctx_items)
 		local items = vim.iter(ctx_items):map(context_item_to_completion_item)
 
 		callback({

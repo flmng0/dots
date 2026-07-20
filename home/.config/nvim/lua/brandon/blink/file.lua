@@ -1,5 +1,8 @@
 local uv = vim.uv
 
+---@type brandon.blink.Provider
+local provider = {}
+
 ---@param cb fun(stat: uv.fs_stat.result)
 local function stat_file(path, cb)
 	---@diagnostic disable: redefined-local
@@ -81,13 +84,12 @@ local function try_fdfind(cwd, callback)
 	end
 end
 
----@type brandon.blink.GetCompletions
-return function(_, callback)
+function provider.get_completions(_, callback)
 	vim.print('Calling file completions!')
 	local cwd = vim.uv.cwd()
 	if cwd == nil then
 		callback({})
-		return
+		return function() end
 	end
 
 	local success, cancel = pcall(try_fdfind, cwd, callback)
@@ -104,3 +106,5 @@ return function(_, callback)
 
 	return function() end
 end
+
+return provider

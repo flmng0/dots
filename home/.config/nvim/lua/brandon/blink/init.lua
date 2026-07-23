@@ -11,13 +11,13 @@ local source = {}
 
 ---@class brandon.blink.Provider
 ---@field make_context_part? fun(ctx: blink.cmp.Context, item: brandon.blink.ContextItem): any
----@field get_completions? fun(ctx: blink.cmp.Context, callback: fun(items: brandon.blink.ContextItem[])): (fun(): nil)
+---@field get_completions? fun(ctx: blink.cmp.Context, callback: fun(items: brandon.blink.ContextItem[])): ((fun():nil) | nil)
 
 ---@type table<string, brandon.blink.Provider>
 local providers = {
 	['@'] = require('brandon.blink.file'),
-	['#'] = require('brandon.blink.buffer_symbol'),
-	['*'] = require('brandon.blink.workspace_symbol')
+	['#'] = require('brandon.blink.workspace_symbol')
+	-- ['*'] = require('brandon.blink.buffer_symbol'),
 }
 
 function source.new(opts)
